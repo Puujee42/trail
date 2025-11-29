@@ -54,14 +54,15 @@ const FeaturedTrips = ({ trips }: { trips: Trip[] }) => {
               style={{ x: xTitle }}
               className="text-5xl md:text-7xl font-black text-slate-900 mb-6 tracking-tight leading-[0.9]"
             >
-              АЯЛЛЫН <span className="text-transparent bg-clip-text bg-gradient-to-r from-sky-500 to-blue-600">Ертөнц</span>
+              Таны мөрөөдлийн  <span className="text-transparent bg-clip-text bg-gradient-to-r from-sky-500 to-blue-600">аяллыг</span> бодит болгоно.
             </motion.h2>
             
             <motion.p 
               style={{ opacity: opacityDesc }}
               className="text-slate-500 text-lg md:text-xl font-medium max-w-lg"
-            >
-              Дэлхийн өнцөг булан бүрт болон Монгол орны үзэсгэлэнт газруудаар аялах хамгийн сонирхолтой багцуудыг танд санал болгож байна.
+            >Аялал бол хөрөнгө оруулалт.
+Гэхдээ материаллаг зүйлд биш — өөртөө, сэтгэлдээ, харах өнцөгтөө, амьдралынхаа чанарт хийдэг хөрөнгө оруулалт.
+
             </motion.p>
           </div>
 

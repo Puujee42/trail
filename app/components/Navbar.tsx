@@ -1,5 +1,5 @@
 "use client";
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import Link from "next/link";
 import {
   motion,
@@ -7,6 +7,7 @@ import {
   useScroll,
   useMotionValueEvent,
   useTransform,
+  Variants,
 } from "framer-motion";
 import {
   FaFacebookF,
@@ -37,23 +38,36 @@ interface HoveredLink {
   left: number;
 }
 
-/* ────────────────────── Data (Mongolian) ────────────────────── */
+/* ────────────────────── Data ────────────────────── */
 const NAV_LINKS: NavLinkItem[] = [
   { id: "home", label: "Нүүр", href: "/" },
   {
     id: "packages",
     label: "Багцууд",
     href: "/packages",
-    subMenu: [
-      { id: "family", label: "Гэр бүлийн", href: "/packages/family" },
-      { id: "honey", label: "Бал сар", href: "/packages/honeymoon" },
-      { id: "sale", label: "Ганцаарчилсан", href: "/packages/sale" },
-    ],
+    
   },
   { id: "blog", label: "Блог", href: "/blog" },
   { id: "about", label: "Бидний тухай", href: "/about" },
   { id: "contact", label: "Холбоо барих", href: "/contact" },
 ];
+
+/* ────────────────────── Animation Variants ────────────────────── */
+const navContainerVariants: Variants = {
+  hidden: { opacity: 0 },
+  show: {
+    opacity: 1,
+    transition: {
+      staggerChildren: 0.1,
+      delayChildren: 0.2,
+    },
+  },
+};
+
+const navItemVariants: Variants = {
+  hidden: { y: -20, opacity: 0 },
+  show: { y: 0, opacity: 1, transition: { type: "spring", stiffness: 300, damping: 20 } },
+};
 
 /* ────────────────────── Main Navbar ────────────────────── */
 const Navbar: React.FC = () => {
@@ -73,6 +87,7 @@ const Navbar: React.FC = () => {
 
   // Background transparency logic
   const backgroundOpacity = useTransform(scrollY, [0, 150], [0.85, 0.95]);
+  const blurAmount = useTransform(scrollY, [0, 150], ["10px", "20px"]);
 
   return (
     <>
@@ -80,52 +95,78 @@ const Navbar: React.FC = () => {
       <motion.div
         initial={{ y: -100 }}
         animate={{ y: 0 }}
-        transition={{ type: "spring", stiffness: 300, damping: 30 }}
-        className="fixed inset-x-0 top-0 z-50 bg-linear-to-r from-sky-500 via-blue-500 to-teal-500 text-white shadow-lg rounded-b-4xl"
+        transition={{ type: "spring", stiffness: 200, damping: 20 }}
+        className="fixed inset-x-0 top-0 z-50 bg-gradient-to-r from-sky-500 via-blue-500 to-teal-500 text-white shadow-lg rounded-b-[2rem]"
       >
         <div className="max-w-screen-2xl mx-auto flex items-center justify-between px-6 md:px-8 py-2.5 text-sm">
           {/* Slogan */}
           <motion.p
             className="font-medium flex items-center gap-2 text-sm md:text-base"
-            whileHover={{ scale: 1.02 }}
+            initial={{ opacity: 0, x: -20 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ delay: 0.5 }}
           >
-            <FaPlane className="text-yellow-300 -rotate-45" />
+             <motion.span 
+               animate={{ rotate: [0, -45, 0] }}
+               transition={{ duration: 2, repeat: Infinity, repeatDelay: 5 }}
+             >
+               <FaPlane className="text-yellow-300" />
+             </motion.span>
             Euro trails-тэй хамт дэлхийгээр аялаарай
           </motion.p>
 
           <ul className="flex items-center gap-4 md:gap-5">
             {/* Social Icons */}
-            <li className="flex items-center gap-3 text-white/80">
+            <motion.li 
+              className="flex items-center gap-3 text-white/80"
+              initial="hidden"
+              animate="show"
+              variants={{
+                show: { transition: { staggerChildren: 0.1 } }
+              }}
+            >
               {[FaFacebookF, FaTwitter, FaInstagram].map((Icon, idx) => (
                 <motion.a
                   key={idx}
                   href="#"
+                  variants={navItemVariants}
                   whileHover={{ scale: 1.2, y: -2, color: "#fff" }}
+                  whileTap={{ scale: 0.9 }}
                   className="hover:text-white transition-colors"
                 >
                   <Icon />
                 </motion.a>
               ))}
-            </li>
+            </motion.li>
 
-            <li className="text-white/30 hidden md:block">|</li>
+            <motion.li 
+              initial={{ opacity: 0 }} 
+              animate={{ opacity: 1 }} 
+              transition={{ delay: 0.8 }} 
+              className="text-white/30 hidden md:block"
+            >
+              |
+            </motion.li>
 
             {/* START: Clerk Authentication Integration */}
             <SignedOut>
               <li className="hidden md:flex items-center gap-5">
                 <Link
                   href="/sign-in"
-                  className="flex items-center gap-1.5 px-3 py-1.5 rounded-full hover:bg-white/10 text-white font-medium transition-all"
+                  className="group flex items-center gap-1.5 px-3 py-1.5 rounded-full hover:bg-white/10 text-white font-medium transition-all"
                 >
-                  <FaSignInAlt className="text-xs" />
+                  <FaSignInAlt className="text-xs group-hover:translate-x-1 transition-transform" />
                   <span>Нэвтрэх</span>
                 </Link>
                 <Link
                   href="/sign-up"
-                  className="flex items-center gap-1.5 px-4 py-1.5 rounded-full bg-white text-sky-600 font-bold shadow-md hover:bg-sky-50 transition-all"
+                  className="relative flex items-center gap-1.5 px-4 py-1.5 rounded-full bg-white text-sky-600 font-bold shadow-md overflow-hidden group"
                 >
-                  <FaUser className="text-xs" />
-                  <span>Бүртгүүлэх</span>
+                  <span className="absolute inset-0 bg-sky-50 scale-x-0 group-hover:scale-x-100 transition-transform origin-left duration-300 ease-out" />
+                  <span className="relative z-10 flex items-center gap-1.5">
+                    <FaUser className="text-xs" />
+                    <span>Бүртгүүлэх</span>
+                  </span>
                 </Link>
               </li>
             </SignedOut>
@@ -141,45 +182,51 @@ const Navbar: React.FC = () => {
 
       {/* ──────── Main Glass Navbar ──────── */}
       <motion.header
-        variants={{ visible: { y: 0 }, hidden: { y: "-100%" } }}
+        variants={{ visible: { y: 0, opacity: 1 }, hidden: { y: "-120%", opacity: 0 } }}
         animate={hidden ? "hidden" : "visible"}
-        transition={{ duration: 0.4, ease: "easeOut" }}
-        className="fixed inset-x-0 top-13 z-40 flex justify-center pointer-events-none"
+        transition={{ duration: 0.5, ease: [0.33, 1, 0.68, 1] }} // smooth easeInOutCubic
+        className="fixed inset-x-0 top-14 z-40 flex justify-center pointer-events-none"
       >
-        <nav
+        <motion.nav
           ref={navRef}
-          className="relative flex items-center justify-between w-full max-w-screen-2xl mx-auto px-6 md:px-8 py-3 bg-white/80 backdrop-blur-xl rounded-full shadow-lg border border-white/40 pointer-events-auto"
-          style={{ background: `rgba(255, 255, 255, ${backgroundOpacity.get()})` }}
+          initial="hidden"
+          animate="show"
+          variants={navContainerVariants}
+          className="relative flex items-center justify-between w-full max-w-screen-2xl mx-auto px-6 md:px-8 py-3 bg-white/80 rounded-full shadow-lg border border-white/40 pointer-events-auto"
+          style={{ 
+            backgroundColor: `rgba(255, 255, 255, ${backgroundOpacity.get()})`,
+            backdropFilter: `blur(${blurAmount.get()})`
+          }}
         >
-          {/* Active Link Indicator (Ocean Blue) */}
+          {/* Active Link Indicator (Ocean Blue Gradient) */}
           <motion.div
-            className="absolute -bottom-1 h-1 bg-linear-to-r from-sky-400 to-teal-400 rounded-full shadow-md"
-            style={{
+            className="absolute -bottom-1 h-1 bg-gradient-to-r from-sky-400 to-teal-400 rounded-full shadow-md z-0"
+            animate={{
               width: hoveredLink?.width || 0,
               left: hoveredLink?.left || 0,
               opacity: hoveredLink ? 1 : 0,
             }}
-            transition={{ type: "spring", stiffness: 400, damping: 35 }}
+            transition={{ type: "spring", stiffness: 400, damping: 30 }}
           />
 
           {/* Logo */}
-          <motion.div
-            initial={{ opacity: 0, x: -20 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ delay: 0.1 }}
-          >
+          <motion.div variants={navItemVariants} className="z-10">
             <Link href="/" className="flex items-center gap-2 group">
-              <div className="p-2 bg-linear-to-br from-sky-500 to-blue-600 rounded-lg text-white shadow-lg group-hover:rotate-12 transition-transform duration-300">
-                <FaPlane size={20} />
-              </div>
-              <span className="text-xl font-bold bg-clip-text text-transparent bg-linear-to-r from-sky-600 to-teal-600 tracking-tight">
+              <motion.div 
+                className="p-2 bg-gradient-to-br from-sky-500 to-blue-600 rounded-lg text-white shadow-lg"
+                whileHover={{ rotate: 15, scale: 1.1 }}
+                whileTap={{ scale: 0.9 }}
+              >
+                <FaPlane size={20} className="group-hover:-rotate-12 transition-transform duration-300" />
+              </motion.div>
+              <span className="text-xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-sky-600 to-teal-600 tracking-tight">
                 Euro trails
               </span>
             </Link>
           </motion.div>
 
           {/* Desktop Navigation */}
-          <div className="hidden xl:flex items-center gap-6">
+          <div className="hidden xl:flex items-center gap-6 z-10">
             {NAV_LINKS.map((link) => (
               <DesktopNavLink
                 key={link.id}
@@ -191,35 +238,40 @@ const Navbar: React.FC = () => {
           </div>
 
           {/* Right side content */}
-          <div className="flex items-center gap-4">
-            {/* Desktop CTA */}
-            <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }} className="hidden md:block">
+          <motion.div variants={navItemVariants} className="flex items-center gap-4 z-10">
+            {/* Desktop CTA - Breathing Animation */}
+            <motion.div 
+              className="hidden md:block"
+              animate={{ scale: [1, 1.02, 1] }}
+              transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
+            >
               <Link
                 href="/book-now"
-                className="relative inline-flex items-center gap-2 px-6 py-2.5 rounded-full bg-linear-to-r from-sky-400 via-blue-500 to-teal-500 text-white font-bold text-sm shadow-md hover:shadow-xl transition-all duration-300 overflow-hidden"
+                className="relative inline-flex items-center gap-2 px-6 py-2.5 rounded-full bg-gradient-to-r from-sky-400 via-blue-500 to-teal-500 text-white font-bold text-sm shadow-md hover:shadow-xl hover:shadow-sky-200 transition-all duration-300 overflow-hidden group"
               >
+                {/* Shine Effect */}
                 <motion.div
-                  className="absolute inset-0 bg-white/20"
-                  initial={{ x: "-100%" }}
-                  whileHover={{ x: "100%" }}
-                  transition={{ duration: 0.5 }}
+                  className="absolute inset-0 bg-gradient-to-r from-transparent via-white/30 to-transparent skew-x-12"
+                  initial={{ x: "-150%" }}
+                  whileHover={{ x: "150%" }}
+                  transition={{ duration: 0.7, ease: "easeInOut" }}
                 />
-                <FaMapMarkedAlt className="relative z-10" />
+                <FaMapMarkedAlt className="relative z-10 group-hover:rotate-12 transition-transform duration-300" />
                 <span className="relative z-10">Аялал захиалах</span>
               </Link>
             </motion.div>
 
             {/* Mobile Menu Button */}
             <motion.button
-              whileHover={{ scale: 1.1 }}
+              whileHover={{ scale: 1.1, rotate: 90 }}
               whileTap={{ scale: 0.9 }}
               onClick={() => setMobileOpen(true)}
               className="xl:hidden p-2.5 rounded-full bg-sky-50 text-sky-600 hover:bg-sky-100 transition-colors"
             >
               <AnimatedHamburgerIcon isOpen={mobileOpen} />
             </motion.button>
-          </div>
-        </nav>
+          </motion.div>
+        </motion.nav>
       </motion.header>
 
       <MobileMenu
@@ -252,7 +304,8 @@ const DesktopNavLink: React.FC<{
   };
 
   return (
-    <div
+    <motion.div
+      variants={navItemVariants}
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}
       className="relative group"
@@ -266,6 +319,7 @@ const DesktopNavLink: React.FC<{
         {link.subMenu && (
           <motion.div
             animate={{ rotate: open ? 180 : 0 }}
+            transition={{ type: "spring", stiffness: 300 }}
             className="text-slate-400 group-hover:text-sky-500 text-xs"
           >
             <FaChevronDown />
@@ -276,34 +330,47 @@ const DesktopNavLink: React.FC<{
       <AnimatePresence>
         {open && link.subMenu && (
           <motion.div
-            initial={{ opacity: 0, y: 15, scale: 0.95 }}
-            animate={{ opacity: 1, y: 0, scale: 1 }}
-            exit={{ opacity: 0, y: 15, scale: 0.95 }}
-            transition={{ type: "spring", stiffness: 400, damping: 30 }}
-            className="absolute top-full left-1/2 -translate-x-1/2 mt-2 w-64 bg-white/95 backdrop-blur-2xl rounded-xl p-3 shadow-xl border border-sky-100 ring-1 ring-black/5"
+            initial={{ opacity: 0, y: 10, scale: 0.9, rotateX: -10 }}
+            animate={{ opacity: 1, y: 0, scale: 1, rotateX: 0 }}
+            exit={{ opacity: 0, y: 10, scale: 0.9 }}
+            transition={{ type: "spring", stiffness: 400, damping: 25 }}
+            className="absolute top-full left-1/2 -translate-x-1/2 mt-4 w-64 bg-white/95 backdrop-blur-2xl rounded-xl p-3 shadow-2xl border border-sky-100 ring-1 ring-black/5 origin-top"
           >
             {/* Tiny triangle pointer */}
             <div className="absolute -top-1.5 left-1/2 -translate-x-1/2 w-3 h-3 bg-white rotate-45 border-l border-t border-sky-100" />
             
-            <div className="relative space-y-1">
+            <motion.div 
+              className="relative space-y-1"
+              initial="closed"
+              animate="open"
+              variants={{
+                open: { transition: { staggerChildren: 0.07 } }
+              }}
+            >
               {link.subMenu.map((item) => (
-                <Link
+                <motion.div
                   key={item.id}
-                  href={item.href}
-                  className="flex items-center gap-3 px-3 py-2.5 text-sm font-medium text-slate-600 hover:text-sky-600 hover:bg-sky-50 rounded-lg transition-all group/item"
+                  variants={{
+                    closed: { opacity: 0, x: -10 },
+                    open: { opacity: 1, x: 0 }
+                  }}
                 >
-                   {/* Icon Placeholder or Dot */}
-                   <span className="flex items-center justify-center w-6 h-6 rounded-full bg-sky-100 text-sky-500 group-hover/item:bg-sky-500 group-hover/item:text-white transition-colors">
-                      <FaUmbrellaBeach size={12} />
-                   </span>
-                  <span>{item.label}</span>
-                </Link>
+                  <Link
+                    href={item.href}
+                    className="flex items-center gap-3 px-3 py-2.5 text-sm font-medium text-slate-600 hover:text-sky-600 hover:bg-sky-50 rounded-lg transition-all group/item"
+                  >
+                     <span className="flex items-center justify-center w-6 h-6 rounded-full bg-sky-100 text-sky-500 group-hover/item:bg-sky-500 group-hover/item:text-white group-hover/item:scale-110 transition-all duration-300">
+                        <FaUmbrellaBeach size={12} />
+                     </span>
+                    <span>{item.label}</span>
+                  </Link>
+                </motion.div>
               ))}
-            </div>
+            </motion.div>
           </motion.div>
         )}
       </AnimatePresence>
-    </div>
+    </motion.div>
   );
 };
 
@@ -321,7 +388,7 @@ const MobileMenu: React.FC<{
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="fixed inset-0 bg-slate-900/40 backdrop-blur-sm z-999"
+            className="fixed inset-0 bg-slate-900/40 backdrop-blur-md z-[999]"
             onClick={closeMenu}
           />
 
@@ -330,25 +397,31 @@ const MobileMenu: React.FC<{
             initial={{ x: "100%" }}
             animate={{ x: 0 }}
             exit={{ x: "100%" }}
-            transition={{ type: "spring", stiffness: 300, damping: 30 }}
-            className="fixed top-0 right-0 h-full w-[85%] max-w-sm bg-white shadow-2xl z-1000 flex flex-col overflow-hidden"
+            transition={{ type: "spring", stiffness: 300, damping: 35 }}
+            className="fixed top-0 right-0 h-full w-[85%] max-w-sm bg-white shadow-2xl z-[1000] flex flex-col overflow-hidden"
           >
             {/* Header of Mobile Menu */}
-            <div className="p-6 bg-linear-to-br from-sky-500 to-blue-600 text-white relative overflow-hidden">
-               {/* Decorative Circles */}
-               <div className="absolute -top-10 -right-10 w-32 h-32 bg-white/10 rounded-full blur-2xl" />
+            <div className="p-6 bg-gradient-to-br from-sky-500 to-blue-600 text-white relative overflow-hidden">
+               {/* Decorative Circles with Pulse */}
+               <motion.div 
+                 animate={{ scale: [1, 1.1, 1], opacity: [0.1, 0.2, 0.1] }}
+                 transition={{ duration: 4, repeat: Infinity }}
+                 className="absolute -top-10 -right-10 w-32 h-32 bg-white/20 rounded-full blur-2xl" 
+               />
                <div className="absolute bottom-0 left-0 w-24 h-24 bg-white/10 rounded-full blur-xl" />
 
               <div className="flex justify-between items-center relative z-10">
                 <span className="text-xl font-bold flex items-center gap-2">
                    <FaPassport className="text-yellow-300"/> Цэс
                 </span>
-                <button
+                <motion.button
+                  whileHover={{ rotate: 90 }}
+                  whileTap={{ scale: 0.8 }}
                   onClick={closeMenu}
                   className="p-2 rounded-full bg-white/20 hover:bg-white/30 transition-colors"
                 >
                   <FaTimes size={18} />
-                </button>
+                </motion.button>
               </div>
               
               {/* START: Mobile Auth Buttons with Clerk */}
@@ -378,34 +451,41 @@ const MobileMenu: React.FC<{
                   </div>
                 </SignedIn>
               </div>
-              {/* END: Mobile Auth Buttons with Clerk */}
             </div>
 
-            {/* Scrollable Links */}
-            <div className="flex-1 overflow-y-auto p-6 space-y-2">
-              {NAV_LINKS.map((link, i) => (
+            {/* Scrollable Links with Stagger */}
+            <motion.div 
+              className="flex-1 overflow-y-auto p-6 space-y-2"
+              initial="closed"
+              animate="open"
+              variants={{
+                open: { transition: { staggerChildren: 0.1, delayChildren: 0.2 } }
+              }}
+            >
+              {NAV_LINKS.map((link) => (
                 <MobileNavLink
                   key={link.id}
                   link={link}
                   closeMenu={closeMenu}
-                  delay={i * 0.05}
                 />
               ))}
-            </div>
+            </motion.div>
 
             {/* Footer of Mobile Menu */}
             <div className="p-6 border-t border-slate-100 bg-slate-50">
-              <Link
-                href="/book-now"
-                className="block w-full text-center py-3.5 rounded-xl bg-linear-to-r from-sky-500 to-blue-600 text-white font-bold shadow-lg hover:shadow-sky-200 transition-all"
-              >
-                Аялал захиалах
-              </Link>
+              <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>
+                <Link
+                  href="/book-now"
+                  className="block w-full text-center py-3.5 rounded-xl bg-gradient-to-r from-sky-500 to-blue-600 text-white font-bold shadow-lg hover:shadow-sky-200 transition-all"
+                >
+                  Аялал захиалах
+                </Link>
+              </motion.div>
               
               <div className="flex justify-center gap-8 mt-6 text-slate-400">
-                <FaFacebookF className="hover:text-blue-600 transition-colors cursor-pointer" />
-                <FaTwitter className="hover:text-sky-400 transition-colors cursor-pointer" />
-                <FaInstagram className="hover:text-pink-500 transition-colors cursor-pointer" />
+                <motion.div whileHover={{ y: -3, color: "#2563EB" }}><FaFacebookF className="cursor-pointer" /></motion.div>
+                <motion.div whileHover={{ y: -3, color: "#38BDF8" }}><FaTwitter className="cursor-pointer" /></motion.div>
+                <motion.div whileHover={{ y: -3, color: "#EC4899" }}><FaInstagram className="cursor-pointer" /></motion.div>
               </div>
             </div>
           </motion.div>
@@ -419,15 +499,15 @@ const MobileMenu: React.FC<{
 const MobileNavLink: React.FC<{
   link: NavLinkItem;
   closeMenu: () => void;
-  delay: number;
-}> = ({ link, closeMenu, delay }) => {
+}> = ({ link, closeMenu }) => {
   const [open, setOpen] = useState(false);
 
   return (
     <motion.div
-      initial={{ opacity: 0, x: -20 }}
-      animate={{ opacity: 1, x: 0 }}
-      transition={{ delay }}
+      variants={{
+        closed: { opacity: 0, x: -20 },
+        open: { opacity: 1, x: 0 }
+      }}
     >
       <div
         onClick={() => (link.subMenu ? setOpen(!open) : closeMenu())}
