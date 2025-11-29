@@ -1,24 +1,26 @@
 import { getTripById } from "@/lib/mongo/trips";
 import { notFound } from "next/navigation";
-import TourDetailClient from "./TourDetailClient";
+import TourDetailClient from "./TourDetailClient"; 
 
-// Define props for Next.js 15+
+// 1. Update the type definition to be a Promise
 interface PageProps {
-  params: Promise<{ id: string }>;
+  params: Promise<{
+    id: string;
+  }>;
 }
 
-export default async function TourPage(props: PageProps) {
-  // 1. Await the params (Required in Next.js 15)
-  const params = await props.params;
-  
-  // 2. Fetch data from MongoDB using the ID
-  const trip = await getTripById(params.id);
+export default async function TourPage({ params }: PageProps) {
+  // 2. Await the params to get the ID
+  const { id } = await params;
 
-  // 3. If no trip found, show 404 page
+  // 3. Now fetch the data using the resolved ID
+  const trip = await getTripById(id);
+
+  // 4. Handle 404 if trip is not found
   if (!trip) {
-    notFound();
+    return notFound();
   }
 
-  // 4. Pass the data to the Client Component
+  // 5. Pass data to Client Component
   return <TourDetailClient trip={trip} />;
 }

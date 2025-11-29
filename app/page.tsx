@@ -3,7 +3,7 @@ import HeroWrapper from "./components/HeroWrapper";
 import FeaturedTripsWrapper from "./components/FeaturedTripsWrapper";
 import WhyChooseUs from "./components/WhyChooseUs";
 import TripReviews from "./components/TripReviews";
-
+export const revalidate = 3600; 
 
 export default function Home() {
   // NO await here! The page loads instantly.

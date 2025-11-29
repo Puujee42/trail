@@ -27,6 +27,13 @@ export interface Trip {
   socialScore?: number;
   saleMonth?: number;
   seatsLeft?: number;
+  itinerary?: ItineraryItem[];
+}
+
+export interface ItineraryItem {
+  day: number;
+  title: string;
+  desc: string;
 }
 
 function mapTrip(doc: any): Trip {
