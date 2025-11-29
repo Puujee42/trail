@@ -22,7 +22,6 @@ import {
   FaUmbrellaBeach,
   FaPassport,
 } from "react-icons/fa";
-// Import SignedIn and UserButton from Clerk
 import { SignedOut, SignedIn, UserButton } from "@clerk/nextjs";
 
 /* ────────────────────── Types ────────────────────── */
@@ -41,12 +40,7 @@ interface HoveredLink {
 /* ────────────────────── Data ────────────────────── */
 const NAV_LINKS: NavLinkItem[] = [
   { id: "home", label: "Нүүр", href: "/" },
-  {
-    id: "packages",
-    label: "Багцууд",
-    href: "/packages",
-    
-  },
+  { id: "packages", label: "Багцууд", href: "/packages" },
   { id: "blog", label: "Блог", href: "/blog" },
   { id: "about", label: "Бидний тухай", href: "/about" },
   { id: "contact", label: "Холбоо барих", href: "/contact" },
@@ -57,16 +51,74 @@ const navContainerVariants: Variants = {
   hidden: { opacity: 0 },
   show: {
     opacity: 1,
-    transition: {
-      staggerChildren: 0.1,
-      delayChildren: 0.2,
-    },
+    transition: { staggerChildren: 0.1, delayChildren: 0.2 },
   },
 };
 
 const navItemVariants: Variants = {
   hidden: { y: -20, opacity: 0 },
   show: { y: 0, opacity: 1, transition: { type: "spring", stiffness: 300, damping: 20 } },
+};
+
+/* ────────────────────── ❄️ 2D CARTOON SNOW COMPONENT ❄️ ────────────────────── */
+const NavbarSnow = () => {
+  const [flakes, setFlakes] = useState<any[]>([]);
+
+  useEffect(() => {
+    // Generate flakes on client-side to prevent hydration mismatch
+    const newFlakes = Array.from({ length: 50 }).map((_, i) => ({
+      id: i,
+      left: Math.random() * 100, // Horizontal position
+      // Cartoon snow falls at different speeds but usually a bit floaty
+      duration: 3 + Math.random() * 7, 
+      delay: Math.random() * 5,
+      // Cartoon snow is distinct: ranges from small dots to larger chunks
+      size: 3 + Math.random() * 6, 
+      // High opacity for "flat" look
+      opacity: 0.7 + Math.random() * 0.3, 
+    }));
+    setFlakes(newFlakes);
+  }, []);
+
+  return (
+    <div className="absolute inset-0 overflow-hidden pointer-events-none z-0 rounded-b-[2rem]">
+      {flakes.map((flake) => (
+        <div
+          key={flake.id}
+          className="absolute top-[-15px] bg-white rounded-full"
+          style={{
+            left: `${flake.left}%`,
+            width: `${flake.size}px`,
+            height: `${flake.size}px`,
+            opacity: flake.opacity,
+            // Custom CSS variable for random sway direction could be added here
+            animation: `cartoonFall ${flake.duration}s linear infinite`,
+            animationDelay: `-${flake.delay}s`,
+            boxShadow: "0 0 2px rgba(255,255,255,0.8)" // Slight glow but keep edges crisp
+          }}
+        />
+      ))}
+      <style jsx>{`
+        @keyframes cartoonFall {
+          0% {
+            transform: translateY(0) translateX(0);
+            opacity: 0;
+          }
+          10% {
+            opacity: 1;
+            transform: translateY(10px) translateX(-5px); /* Start swaying left */
+          }
+          50% {
+             transform: translateY(60px) translateX(5px); /* Sway right */
+          }
+          100% {
+            transform: translateY(120px) translateX(-5px); /* End sway left */
+            opacity: 0;
+          }
+        }
+      `}</style>
+    </div>
+  );
 };
 
 /* ────────────────────── Main Navbar ────────────────────── */
@@ -78,14 +130,12 @@ const Navbar: React.FC = () => {
   
   const { scrollY } = useScroll();
 
-  // Hide navbar on scroll down, show on scroll up
   useMotionValueEvent(scrollY, "change", (latest) => {
     const prev = scrollY.getPrevious() ?? 0;
     if (latest > prev && latest > 150) setHidden(true);
     else setHidden(false);
   });
 
-  // Background transparency logic
   const backgroundOpacity = useTransform(scrollY, [0, 150], [0.85, 0.95]);
   const blurAmount = useTransform(scrollY, [0, 150], ["10px", "20px"]);
 
@@ -96,9 +146,14 @@ const Navbar: React.FC = () => {
         initial={{ y: -100 }}
         animate={{ y: 0 }}
         transition={{ type: "spring", stiffness: 200, damping: 20 }}
-        className="fixed inset-x-0 top-0 z-50 bg-gradient-to-r from-sky-500 via-blue-500 to-teal-500 text-white shadow-lg rounded-b-[2rem]"
+        // relative + overflow-hidden ensures snow stays inside the blue bar
+        className="fixed inset-x-0 top-0 z-50 bg-gradient-to-r from-sky-500 via-blue-500 to-teal-500 text-white shadow-lg rounded-b-[2rem] relative overflow-hidden"
       >
-        <div className="max-w-screen-2xl mx-auto flex items-center justify-between px-6 md:px-8 py-2.5 text-sm">
+        {/* ❄️ CARTOON SNOW EFFECT IS HERE ❄️ */}
+        <NavbarSnow />
+
+        {/* Content Layer (z-10 ensures text is ABOVE snow) */}
+        <div className="max-w-screen-2xl mx-auto flex items-center justify-between px-6 md:px-8 py-2.5 text-sm relative z-10">
           {/* Slogan */}
           <motion.p
             className="font-medium flex items-center gap-2 text-sm md:text-base"
@@ -148,7 +203,7 @@ const Navbar: React.FC = () => {
               |
             </motion.li>
 
-            {/* START: Clerk Authentication Integration */}
+            {/* Auth Buttons */}
             <SignedOut>
               <li className="hidden md:flex items-center gap-5">
                 <Link
@@ -175,7 +230,6 @@ const Navbar: React.FC = () => {
                 <UserButton afterSignOutUrl="/" />
               </li>
             </SignedIn>
-            {/* END: Clerk Authentication Integration */}
           </ul>
         </div>
       </motion.div>
@@ -184,7 +238,7 @@ const Navbar: React.FC = () => {
       <motion.header
         variants={{ visible: { y: 0, opacity: 1 }, hidden: { y: "-120%", opacity: 0 } }}
         animate={hidden ? "hidden" : "visible"}
-        transition={{ duration: 0.5, ease: [0.33, 1, 0.68, 1] }} // smooth easeInOutCubic
+        transition={{ duration: 0.5, ease: [0.33, 1, 0.68, 1] }}
         className="fixed inset-x-0 top-14 z-40 flex justify-center pointer-events-none"
       >
         <motion.nav
@@ -198,7 +252,7 @@ const Navbar: React.FC = () => {
             backdropFilter: `blur(${blurAmount.get()})`
           }}
         >
-          {/* Active Link Indicator (Ocean Blue Gradient) */}
+          {/* Active Link Indicator */}
           <motion.div
             className="absolute -bottom-1 h-1 bg-gradient-to-r from-sky-400 to-teal-400 rounded-full shadow-md z-0"
             animate={{
@@ -239,7 +293,7 @@ const Navbar: React.FC = () => {
 
           {/* Right side content */}
           <motion.div variants={navItemVariants} className="flex items-center gap-4 z-10">
-            {/* Desktop CTA - Breathing Animation */}
+            {/* Desktop CTA */}
             <motion.div 
               className="hidden md:block"
               animate={{ scale: [1, 1.02, 1] }}
@@ -249,7 +303,6 @@ const Navbar: React.FC = () => {
                 href="/book-now"
                 className="relative inline-flex items-center gap-2 px-6 py-2.5 rounded-full bg-gradient-to-r from-sky-400 via-blue-500 to-teal-500 text-white font-bold text-sm shadow-md hover:shadow-xl hover:shadow-sky-200 transition-all duration-300 overflow-hidden group"
               >
-                {/* Shine Effect */}
                 <motion.div
                   className="absolute inset-0 bg-gradient-to-r from-transparent via-white/30 to-transparent skew-x-12"
                   initial={{ x: "-150%" }}
@@ -336,7 +389,6 @@ const DesktopNavLink: React.FC<{
             transition={{ type: "spring", stiffness: 400, damping: 25 }}
             className="absolute top-full left-1/2 -translate-x-1/2 mt-4 w-64 bg-white/95 backdrop-blur-2xl rounded-xl p-3 shadow-2xl border border-sky-100 ring-1 ring-black/5 origin-top"
           >
-            {/* Tiny triangle pointer */}
             <div className="absolute -top-1.5 left-1/2 -translate-x-1/2 w-3 h-3 bg-white rotate-45 border-l border-t border-sky-100" />
             
             <motion.div 
@@ -383,7 +435,6 @@ const MobileMenu: React.FC<{
     <AnimatePresence>
       {isOpen && (
         <>
-          {/* Backdrop */}
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
@@ -391,8 +442,6 @@ const MobileMenu: React.FC<{
             className="fixed inset-0 bg-slate-900/40 backdrop-blur-md z-[999]"
             onClick={closeMenu}
           />
-
-          {/* Drawer */}
           <motion.div
             initial={{ x: "100%" }}
             animate={{ x: 0 }}
@@ -400,9 +449,7 @@ const MobileMenu: React.FC<{
             transition={{ type: "spring", stiffness: 300, damping: 35 }}
             className="fixed top-0 right-0 h-full w-[85%] max-w-sm bg-white shadow-2xl z-[1000] flex flex-col overflow-hidden"
           >
-            {/* Header of Mobile Menu */}
             <div className="p-6 bg-gradient-to-br from-sky-500 to-blue-600 text-white relative overflow-hidden">
-               {/* Decorative Circles with Pulse */}
                <motion.div 
                  animate={{ scale: [1, 1.1, 1], opacity: [0.1, 0.2, 0.1] }}
                  transition={{ duration: 4, repeat: Infinity }}
@@ -424,7 +471,6 @@ const MobileMenu: React.FC<{
                 </motion.button>
               </div>
               
-              {/* START: Mobile Auth Buttons with Clerk */}
               <div className="mt-8 relative z-10">
                 <SignedOut>
                   <div className="flex gap-3">
@@ -453,7 +499,6 @@ const MobileMenu: React.FC<{
               </div>
             </div>
 
-            {/* Scrollable Links with Stagger */}
             <motion.div 
               className="flex-1 overflow-y-auto p-6 space-y-2"
               initial="closed"
@@ -471,7 +516,6 @@ const MobileMenu: React.FC<{
               ))}
             </motion.div>
 
-            {/* Footer of Mobile Menu */}
             <div className="p-6 border-t border-slate-100 bg-slate-50">
               <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>
                 <Link
