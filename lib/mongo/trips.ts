@@ -1,4 +1,3 @@
-// lib/mongo/trips.ts
 import { ObjectId } from "mongodb";
 import clientPromise from "./index";
 
@@ -7,27 +6,27 @@ const COLLECTION = "trips";
 
 export interface Trip {
   _id: string;
+  type?: string; // Made optional as not all queries strictly return it
   title: string;
   category: string;
   location: string;
   duration: string;
   rating: number;
-  image: string; // The Hero needs this!
-  // Note: The DB seed didn't have a 'desc' field, so we make it optional
+  image: string;
   description?: string; 
   price: number;
-  tags: string[];
-  featured: boolean;
+  tags?: string[];
+  featured?: boolean;
   oldPrice?: number;
   reviews?: number;
-  ageGroup?: string;  // Specific to Family
-  romanceFactor?: string; // e.g. "10/10"
-  perks?: string[];   // Specific to Family
-  tag?:string[];
-  vibe?: string;     // Specific to Solo
-  socialScore?: number; // Specific to Solo
-  saleMonth?: number; // 0 = Jan, 11 = Dec. Filter by this.
-  seatsLeft?: number; // For urgency
+  ageGroup?: string;
+  romanceFactor?: string;
+  perks?: string[];
+  tag?: string; // Singular tag (used in Honeymoon)
+  vibe?: string;
+  socialScore?: number;
+  saleMonth?: number;
+  seatsLeft?: number;
 }
 
 function mapTrip(doc: any): Trip {
@@ -37,11 +36,40 @@ function mapTrip(doc: any): Trip {
   };
 }
 
+/* ──────────────────────────────────────────────────────
+   DATA FETCHING FUNCTIONS
+────────────────────────────────────────────────────── */
+
+// 1. Get ALL trips
+export async function getAllTrips() {
+  const client = await clientPromise;
+  const collection = client.db(DB_NAME).collection(COLLECTION);
+  
+  const trips = await collection
+    .find({})
+    .sort({ featured: -1, _id: -1 }) 
+    .toArray();
+
+  return trips.map(mapTrip);
+}
+
+// 2. ✨ THE MISSING FUNCTION: Get Trips by generic 'type'
+export async function getTripsByType(type: string) {
+  const client = await clientPromise;
+  const collection = client.db(DB_NAME).collection(COLLECTION);
+  
+  const trips = await collection
+    .find({ type: type })
+    .toArray();
+
+  return trips.map(mapTrip);
+}
+
+// 3. Get Featured trips
 export async function getFeaturedTrips() {
   const client = await clientPromise;
   const collection = client.db(DB_NAME).collection(COLLECTION);
   
-  // Fetch only featured trips, limit to 5
   const trips = await collection
     .find({ featured: true })
     .limit(5)
@@ -49,12 +77,12 @@ export async function getFeaturedTrips() {
 
   return trips.map(mapTrip);
 }
-// lib/mongo/trips.ts
+
+// 4. Get Recent trips
 export async function getRecentTrips() {
   const client = await clientPromise;
-  const collection = client.db("travel_db").collection("trips");
+  const collection = client.db(DB_NAME).collection(COLLECTION);
   
-  // Sort by _id (which contains timestamp) descending to get newest
   const trips = await collection
     .find({})
     .sort({ _id: -1 }) 
@@ -63,74 +91,46 @@ export async function getRecentTrips() {
 
   return trips.map(mapTrip);
 }
-export async function getAllTrips() {
-  const client = await clientPromise;
-  const collection = client.db(DB_NAME).collection(COLLECTION);
-  
-  // Sort by featured first, then newest
-  const trips = await collection
-    .find({})
-    .sort({ featured: -1, _id: -1 }) 
-    .toArray();
 
-  return trips.map(mapTrip);
-}
+// 5. Get Family trips
 export async function getFamilyTrips() {
-  const client = await clientPromise;
-  const collection = client.db(DB_NAME).collection(COLLECTION);
-  
-  const trips = await collection
-    .find({ type: "family" }) // Ensure your DB has { type: "family" }
-    .toArray();
-
-  return trips.map(mapTrip);
+  return getTripsByType("family");
 }
+
+// 6. Get Honeymoon trips
 export async function getHoneymoonTrips() {
-  const client = await clientPromise;
-  const collection = client.db(DB_NAME).collection(COLLECTION);
-  
-  const trips = await collection
-    .find({ type: "honeymoon" }) // Ensure your seed data uses 'type: "honeymoon"'
-    .toArray();
-
-  return trips.map(mapTrip);
+  return getTripsByType("honeymoon");
 }
+
+// 7. Get Solo trips
 export async function getSoloTrips() {
-  const client = await clientPromise;
-  const collection = client.db(DB_NAME).collection(COLLECTION);
-  
-  const trips = await collection
-    .find({ type: "solo" }) // Ensure seed data has { type: "solo" }
-    .toArray();
-
-  return trips.map(mapTrip);
+  return getTripsByType("solo");
 }
+
+// 8. Get Sale trips
 export async function getSaleTrips() {
   const client = await clientPromise;
   const collection = client.db(DB_NAME).collection(COLLECTION);
   
-  // Find trips where 'oldPrice' exists and is greater than 'price'
   const trips = await collection
     .find({ 
       oldPrice: { $exists: true, $ne: null } 
     })
-    .sort({ price: 1 }) // Cheapest first
+    .sort({ price: 1 })
     .toArray();
 
   return trips.map(mapTrip);
 }
+
+// 9. Get Single Trip by ID
 export async function getTripById(id: string) {
   const client = await clientPromise;
   const collection = client.db(DB_NAME).collection(COLLECTION);
 
   try {
-    // MongoDB requires the ID to be wrapped in ObjectId()
     const trip = await collection.findOne({ _id: new ObjectId(id) });
-    
-    // If found, clean the data and return it
     return trip ? mapTrip(trip) : null;
   } catch (error) {
-    // If the ID format is invalid (not 24 chars), just return null
     return null;
   }
 }
