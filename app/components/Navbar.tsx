@@ -60,7 +60,7 @@ const Navbar: React.FC = () => {
   const [hidden, setHidden] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
   const [hoveredLink, setHoveredLink] = useState<HoveredLink | null>(null);
-  const navRef = useRef<HTMLDivElement>(null);
+  const navRef = useRef<HTMLDivElement | null>(null);
   
   const { scrollY } = useScroll();
 
@@ -81,7 +81,7 @@ const Navbar: React.FC = () => {
         initial={{ y: -100 }}
         animate={{ y: 0 }}
         transition={{ type: "spring", stiffness: 300, damping: 30 }}
-        className="fixed inset-x-0 top-0 z-50 bg-gradient-to-r from-sky-500 via-blue-500 to-teal-500 text-white shadow-lg rounded-b-[2rem]"
+        className="fixed inset-x-0 top-0 z-50 bg-linear-to-r from-sky-500 via-blue-500 to-teal-500 text-white shadow-lg rounded-b-4xl"
       >
         <div className="max-w-screen-2xl mx-auto flex items-center justify-between px-6 md:px-8 py-2.5 text-sm">
           {/* Slogan */}
@@ -144,7 +144,7 @@ const Navbar: React.FC = () => {
         variants={{ visible: { y: 0 }, hidden: { y: "-100%" } }}
         animate={hidden ? "hidden" : "visible"}
         transition={{ duration: 0.4, ease: "easeOut" }}
-        className="fixed inset-x-0 top-[3.25rem] z-40 flex justify-center pointer-events-none"
+        className="fixed inset-x-0 top-13 z-40 flex justify-center pointer-events-none"
       >
         <nav
           ref={navRef}
@@ -153,7 +153,7 @@ const Navbar: React.FC = () => {
         >
           {/* Active Link Indicator (Ocean Blue) */}
           <motion.div
-            className="absolute -bottom-1 h-1 bg-gradient-to-r from-sky-400 to-teal-400 rounded-full shadow-md"
+            className="absolute -bottom-1 h-1 bg-linear-to-r from-sky-400 to-teal-400 rounded-full shadow-md"
             style={{
               width: hoveredLink?.width || 0,
               left: hoveredLink?.left || 0,
@@ -169,10 +169,10 @@ const Navbar: React.FC = () => {
             transition={{ delay: 0.1 }}
           >
             <Link href="/" className="flex items-center gap-2 group">
-              <div className="p-2 bg-gradient-to-br from-sky-500 to-blue-600 rounded-lg text-white shadow-lg group-hover:rotate-12 transition-transform duration-300">
+              <div className="p-2 bg-linear-to-br from-sky-500 to-blue-600 rounded-lg text-white shadow-lg group-hover:rotate-12 transition-transform duration-300">
                 <FaPlane size={20} />
               </div>
-              <span className="text-xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-sky-600 to-teal-600 tracking-tight">
+              <span className="text-xl font-bold bg-clip-text text-transparent bg-linear-to-r from-sky-600 to-teal-600 tracking-tight">
                 TripExplorer
               </span>
             </Link>
@@ -196,7 +196,7 @@ const Navbar: React.FC = () => {
             <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }} className="hidden md:block">
               <Link
                 href="/book-now"
-                className="relative inline-flex items-center gap-2 px-6 py-2.5 rounded-full bg-gradient-to-r from-sky-400 via-blue-500 to-teal-500 text-white font-bold text-sm shadow-md hover:shadow-xl transition-all duration-300 overflow-hidden"
+                className="relative inline-flex items-center gap-2 px-6 py-2.5 rounded-full bg-linear-to-r from-sky-400 via-blue-500 to-teal-500 text-white font-bold text-sm shadow-md hover:shadow-xl transition-all duration-300 overflow-hidden"
               >
                 <motion.div
                   className="absolute inset-0 bg-white/20"
@@ -234,7 +234,7 @@ const Navbar: React.FC = () => {
 const DesktopNavLink: React.FC<{
   link: NavLinkItem;
   setHoveredLink: (v: HoveredLink | null) => void;
-  navRef: React.RefObject<HTMLDivElement>;
+  navRef: React.RefObject<HTMLDivElement | null>;
 }> = ({ link, setHoveredLink, navRef }) => {
   const [open, setOpen] = useState(false);
   const linkRef = useRef<HTMLAnchorElement>(null);
@@ -321,7 +321,7 @@ const MobileMenu: React.FC<{
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="fixed inset-0 bg-slate-900/40 backdrop-blur-sm z-[999]"
+            className="fixed inset-0 bg-slate-900/40 backdrop-blur-sm z-999"
             onClick={closeMenu}
           />
 
@@ -331,10 +331,10 @@ const MobileMenu: React.FC<{
             animate={{ x: 0 }}
             exit={{ x: "100%" }}
             transition={{ type: "spring", stiffness: 300, damping: 30 }}
-            className="fixed top-0 right-0 h-full w-[85%] max-w-sm bg-white shadow-2xl z-[1000] flex flex-col overflow-hidden"
+            className="fixed top-0 right-0 h-full w-[85%] max-w-sm bg-white shadow-2xl z-1000 flex flex-col overflow-hidden"
           >
             {/* Header of Mobile Menu */}
-            <div className="p-6 bg-gradient-to-br from-sky-500 to-blue-600 text-white relative overflow-hidden">
+            <div className="p-6 bg-linear-to-br from-sky-500 to-blue-600 text-white relative overflow-hidden">
                {/* Decorative Circles */}
                <div className="absolute -top-10 -right-10 w-32 h-32 bg-white/10 rounded-full blur-2xl" />
                <div className="absolute bottom-0 left-0 w-24 h-24 bg-white/10 rounded-full blur-xl" />
@@ -397,7 +397,7 @@ const MobileMenu: React.FC<{
             <div className="p-6 border-t border-slate-100 bg-slate-50">
               <Link
                 href="/book-now"
-                className="block w-full text-center py-3.5 rounded-xl bg-gradient-to-r from-sky-500 to-blue-600 text-white font-bold shadow-lg hover:shadow-sky-200 transition-all"
+                className="block w-full text-center py-3.5 rounded-xl bg-linear-to-r from-sky-500 to-blue-600 text-white font-bold shadow-lg hover:shadow-sky-200 transition-all"
               >
                 Аялал захиалах
               </Link>
