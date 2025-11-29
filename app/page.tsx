@@ -5,12 +5,13 @@ import HeroSection from "./components/HeroSection";
 import FeaturedTrips from "./components/FeaturedTrips";
 import WhyChooseUs from "./components/WhyChooseUs";
 import TripReviews from "./components/TripReviews";
-
-export default function Home() {
+import { getFeaturedTrips } from "@/lib/mongo/trips";
+export default async function Home() {
+  const featuredTrips = await getFeaturedTrips();
   return (
     <>
-      <Hero/>
-      <FeaturedTrips />
+      <Hero trips={featuredTrips}/>
+      <FeaturedTrips trips={featuredTrips} />
       <WhyChooseUs />
       <TripReviews />
     </>

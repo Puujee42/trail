@@ -8,7 +8,6 @@ const SSOCallbackPage = () => {
     <div className="flex items-center justify-center min-h-screen bg-slate-900">
       <AuthenticateWithRedirectCallback
         afterSignInUrl="/"
-        afterSignUpUrl="/"
       />
       <p className="text-white">Completing authentication...</p>
     </div>
