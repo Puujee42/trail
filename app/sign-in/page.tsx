@@ -96,7 +96,7 @@ const SignInPage = () => {
               <FaPlane size={20} />
             </div>
             <span className="text-2xl font-black tracking-tight">
-              TripExplorer
+              Euro trails
             </span>
           </Link>
           <h1 className="text-5xl font-black leading-tight mb-4">

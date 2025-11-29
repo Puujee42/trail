@@ -1,6 +1,5 @@
 import { NextResponse } from "next/server";
 import { getAllTrips, getTripsByType, getTripById } from "@/lib/mongo/trips";
-
 export async function GET(request: Request) {
   try {
     // 1. Get URL parameters (e.g., ?type=family or ?id=123)

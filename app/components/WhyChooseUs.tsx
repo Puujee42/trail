@@ -42,7 +42,7 @@ const WhyChooseUs = () => {
             viewport={{ once: true }}
             className="text-5xl md:text-6xl font-black text-slate-900 mb-6 tracking-tight"
           >
-            Яагаад <span className="text-transparent bg-clip-text bg-gradient-to-r from-sky-500 to-blue-600">TripExplorer</span> гэж?
+            Яагаад <span className="text-transparent bg-clip-text bg-gradient-to-r from-sky-500 to-blue-600">Euro trails</span> гэж?
           </motion.h2>
           
           <motion.p 

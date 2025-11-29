@@ -1,17 +1,25 @@
-import Image from "next/image";
-import BentoCategories from "./components/WhyChooseUs";
-import Hero from "./components/Hero";
-import HeroSection from "./components/HeroSection";
-import FeaturedTrips from "./components/FeaturedTrips";
+import { Suspense } from "react";
+import HeroWrapper from "./components/HeroWrapper";
+import FeaturedTripsWrapper from "./components/FeaturedTripsWrapper";
 import WhyChooseUs from "./components/WhyChooseUs";
 import TripReviews from "./components/TripReviews";
-import { getFeaturedTrips } from "@/lib/mongo/trips";
-export default async function Home() {
-  const featuredTrips = await getFeaturedTrips();
+
+
+export default function Home() {
+  // NO await here! The page loads instantly.
+  
   return (
     <>
-      <Hero trips={featuredTrips}/>
-      <FeaturedTrips trips={featuredTrips} />
+      {/* Load Hero independently */}
+      <Suspense fallback={<div className="h-screen bg-slate-900" />}>
+        <HeroWrapper />
+      </Suspense>
+
+      {/* Load Featured Trips independently */}
+      <Suspense fallback={<div className="h-96 flex items-center justify-center">Loading Trips...</div>}>
+        <FeaturedTripsWrapper />
+      </Suspense>
+
       <WhyChooseUs />
       <TripReviews />
     </>

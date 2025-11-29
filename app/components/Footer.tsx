@@ -67,7 +67,7 @@ const Footer = () => {
                 <FaPlane size={20} />
               </div>
               <span className="text-2xl font-black text-white tracking-tight">
-                TripExplorer
+                Euro trails
               </span>
             </Link>
             <p className="text-slate-400 text-sm leading-relaxed">
@@ -100,7 +100,7 @@ const Footer = () => {
           <div>
             <h4 className="text-white font-bold text-lg mb-6">Эрэлттэй</h4>
             <ul className="space-y-4">
-              {['Бали, Индонез', 'Парис, Франц', 'Токио, Япон', 'Дубай, АНЭУ'].map((item) => (
+              {['Европ',"Швейцарь "].map((item) => (
                 <li key={item}>
                   <Link href="#" className="text-slate-400 hover:text-sky-400 transition-colors text-sm font-medium">
                     {item}
@@ -124,7 +124,7 @@ const Footer = () => {
               </li>
               <li className="flex items-center gap-3 text-slate-400 text-sm">
                 <FaEnvelope className="text-sky-500 flex-shrink-0" />
-                <span>info@tripexplorer.mn</span>
+                <span>info@Euro trails.mn</span>
               </li>
             </ul>
           </div>
@@ -133,7 +133,7 @@ const Footer = () => {
 
         {/* ─── 4. BOTTOM BAR ─── */}
         <div className="border-t border-slate-800 pt-8 flex flex-col md:flex-row justify-between items-center gap-4 text-slate-500 text-sm">
-          <p>© 2025 TripExplorer. Бүх эрх хуулиар хамгаалагдсан.</p>
+          <p>© 2025 Euro trails. Бүх эрх хуулиар хамгаалагдсан.</p>
           <div className="flex gap-6">
             <Link href="#" className="hover:text-white transition-colors">Нууцлалын бодлого</Link>
             <Link href="#" className="hover:text-white transition-colors">Үйлчилгээний нөхцөл</Link>

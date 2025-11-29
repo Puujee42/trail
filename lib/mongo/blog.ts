@@ -16,6 +16,7 @@ export interface BlogPost {
   readTime: string;
   image: string;
   featured: boolean;
+  location?: string;
 }
 
 // Helper to convert MongoDB _id to string

@@ -47,7 +47,7 @@ const NAV_LINKS: NavLinkItem[] = [
     subMenu: [
       { id: "family", label: "Гэр бүлийн", href: "/packages/family" },
       { id: "honey", label: "Бал сар", href: "/packages/honeymoon" },
-      { id: "solo", label: "Ганцаарчилсан", href: "/packages/solo" },
+      { id: "sale", label: "Ганцаарчилсан", href: "/packages/sale" },
     ],
   },
   { id: "blog", label: "Блог", href: "/blog" },
@@ -90,7 +90,7 @@ const Navbar: React.FC = () => {
             whileHover={{ scale: 1.02 }}
           >
             <FaPlane className="text-yellow-300 -rotate-45" />
-            TripExplorer-тэй хамт дэлхийгээр аялаарай
+            Euro trails-тэй хамт дэлхийгээр аялаарай
           </motion.p>
 
           <ul className="flex items-center gap-4 md:gap-5">
@@ -173,7 +173,7 @@ const Navbar: React.FC = () => {
                 <FaPlane size={20} />
               </div>
               <span className="text-xl font-bold bg-clip-text text-transparent bg-linear-to-r from-sky-600 to-teal-600 tracking-tight">
-                TripExplorer
+                Euro trails
               </span>
             </Link>
           </motion.div>
