@@ -9,8 +9,8 @@ const inter = Inter({ subsets: ['latin'] });
 
 // We can keep your project-specific metadata
 export const metadata = {
-  title: 'МСДТ - Сайн Дурын Төв',
-  description: 'Монголын ирээдүйг гэрэлтэй болгоорой',
+  title: 'Европ болон Дэлхийн аялал | Найдвартай аяллын платформ - Euro Trails',
+  description: 'Европ болон дэлхийн аяллын найдвартай платформ. Оновчтой маршрут, тав тухтай байр, 24/7 дэмжлэг. Төлөвлөлтийг бид хийе, та зөвхөн аяллаа мэдэр!.',
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
