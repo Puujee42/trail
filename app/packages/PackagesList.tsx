@@ -6,18 +6,17 @@ import {
   FaSearch, FaMapMarkerAlt, FaClock, FaStar, FaArrowRight, FaHeart, FaFire
 } from "react-icons/fa";
 import Link from "next/link";
-import { Trip } from "@/lib/mongo/trips"; // Import Type
+import { Trip } from "@/lib/mongo/trips"; 
 
 /* ────────────────────── Static Constants ────────────────────── */
-// Ensure these IDs match your MongoDB 'category' values (e.g., 'nature', 'city')
 const categories = [
   { id: "all", label: "Бүгд" },
   { id: "nature", label: "Байгаль" },
   { id: "city", label: "Хотын аялал" },
   { id: "beach", label: "Далайн эрэг" },
   { id: "culture", label: "Соёл" },
-  { id: "theme_park", label: "Парк" }, // Added from your seed data
-  { id: "resort", label: "Амралт" },   // Added from your seed data
+  { id: "theme_park", label: "Парк" },
+  { id: "resort", label: "Амралт" },
 ];
 
 /* ────────────────────── Main Component ────────────────────── */
@@ -43,7 +42,7 @@ const PackagesList = ({ packages }: { packages: Trip[] }) => {
     <div className="min-h-screen bg-slate-50 pb-20 pt-24">
       
       {/* ────────────────── HEADER ────────────────── */}
-      <div className="container mx-auto px-4 mb-12">
+      <div className="container mx-auto px-4 mb-8 md:mb-12">
         <div className="text-center max-w-2xl mx-auto">
           <motion.h1 
             initial={{ opacity: 0, y: -20 }}
@@ -63,9 +62,14 @@ const PackagesList = ({ packages }: { packages: Trip[] }) => {
         </div>
       </div>
 
-      {/* ────────────────── FILTER BAR ────────────────── */}
-      <div className="sticky top-20 z-40 px-4 mb-12">
-        <div className="max-w-5xl mx-auto bg-white/80 backdrop-blur-xl rounded-full p-2 shadow-lg shadow-slate-200/50 border border-white flex flex-col md:flex-row items-center gap-2">
+      {/* ────────────────── FILTER BAR (FIXED HERE) ────────────────── */}
+      {/* 
+         - Removed 'sticky' from mobile default.
+         - Added 'md:sticky md:top-24' so it only sticks on Desktop/Tablet.
+         - On mobile, it just scrolls away normally.
+      */}
+      <div className="relative md:sticky md:top-24 z-40 px-4 mb-8 md:mb-12">
+        <div className="max-w-5xl mx-auto bg-white/80 backdrop-blur-xl rounded-[2rem] p-2 shadow-xl shadow-slate-200/50 border border-white flex flex-col md:flex-row items-center gap-3">
           
           {/* Categories */}
           <div className="flex-1 flex gap-1 overflow-x-auto w-full md:w-auto scrollbar-hide p-1">
@@ -73,7 +77,7 @@ const PackagesList = ({ packages }: { packages: Trip[] }) => {
               <button
                 key={cat.id}
                 onClick={() => setActiveTab(cat.id)}
-                className={`relative px-5 py-2.5 rounded-full text-sm font-bold whitespace-nowrap transition-colors ${
+                className={`relative px-5 py-2.5 rounded-full text-sm font-bold whitespace-nowrap transition-colors flex-shrink-0 ${
                   activeTab === cat.id ? "text-white" : "text-slate-500 hover:bg-slate-100"
                 }`}
               >
