@@ -16,11 +16,13 @@ export default async function MongoliaPackagesPage() {
       // 👇 PASS OBJECTS, NOT STRINGS
       title={{
         mn: "Монгол Аялал",
-        en: "Mongolia Tours"
+        en: "Mongolia Tours",
+        ko: "몽골 여행"
       }}
       subtitle={{
         mn: "Өргөн уудам тал нутаг, нүүдэлчдийн соёлтой танилцаарай.",
-        en: "Discover the vast steppes and nomadic culture."
+        en: "Discover the vast steppes and nomadic culture.",
+        ko: "광활한 초원과 유목민 문화를 발견하세요."
       }}
     />
   );
