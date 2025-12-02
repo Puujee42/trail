@@ -15,11 +15,16 @@ import {
 import { useLanguage } from "../../context/LanguageContext";
 
 /* ────────────────────── Types ────────────────────── */
-// Ensure these match your actual data structure
 interface LocalizedString {
   mn: string;
   en: string;
-   ko: string;
+  ko: string;
+}
+
+interface LocalizedPrice {
+  mn: number;
+  en: number;
+  ko: number;
 }
 
 interface ItineraryItem {
@@ -37,15 +42,37 @@ interface Trip {
   location: LocalizedString;
   duration: LocalizedString;
   description?: LocalizedString;
-  perks?: string[]; // Assuming perks are just strings for now, or update if localized
+  perks?: string[];
   itinerary?: ItineraryItem[];
-  price: number;
-  oldPrice?: number;
+  // Price can be a number (old data) or object (new data)
+  price: LocalizedPrice | number; 
+  oldPrice?: LocalizedPrice | number;
   seatsLeft?: number;
 }
 
 const TourDetailClient = ({ trip }: { trip: Trip }) => {
   const { language } = useLanguage();
+
+  // 1. Helper to safely get numeric price
+  // Handles both old number format and new object format
+  const getPriceValue = (priceObj: any) => {
+    if (typeof priceObj === 'number') return priceObj;
+    if (typeof priceObj === 'object' && priceObj !== null) {
+      // @ts-ignore
+      return priceObj[language] || priceObj.mn || 0;
+    }
+    return 0;
+  };
+
+  const priceValue = getPriceValue(trip.price);
+  const oldPriceValue = trip.oldPrice ? getPriceValue(trip.oldPrice) : null;
+
+  // 2. Format Price with Currency Symbol
+  const formatMoney = (amount: number) => {
+    if (language === 'en') return `$${amount.toLocaleString()}`;
+    if (language === 'ko') return `₩${amount.toLocaleString()}`;
+    return `${amount.toLocaleString()}₮`; // Default MN
+  };
 
   // Translations
   const t = {
@@ -93,7 +120,7 @@ const TourDetailClient = ({ trip }: { trip: Trip }) => {
       questionTitle: "Have Questions?",
       questionDesc: "Contact our manager for more information."
     },
-      ko: {
+    ko: {
       back: "뒤로가기",
       about: "여행 정보",
       features: {
@@ -244,12 +271,16 @@ const TourDetailClient = ({ trip }: { trip: Trip }) => {
                  <div className="mb-6">
                     <p className="text-slate-500 text-sm font-bold uppercase mb-1">{text.priceLabel}</p>
                     <div className="flex items-end gap-3">
+                       
+                       {/* FIXED: Display formatted price correctly */}
                        <span className="text-4xl font-black text-slate-900">
-                          {trip.price.toLocaleString()}₮
+                          {formatMoney(priceValue)}
                        </span>
-                       {trip.oldPrice && (
+
+                       {/* FIXED: Display old price correctly if exists */}
+                       {oldPriceValue && (
                          <span className="text-lg text-slate-400 line-through mb-1 decoration-red-400">
-                            {trip.oldPrice.toLocaleString()}₮
+                            {formatMoney(oldPriceValue)}
                          </span>
                        )}
                     </div>

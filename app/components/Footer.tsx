@@ -13,14 +13,11 @@ import {
   FaMapMarkerAlt,
   FaPlane
 } from "react-icons/fa";
-// 👇 1. Import Hook
 import { useLanguage } from "../context/LanguageContext"; 
 
 const Footer = () => {
-  // 👇 2. Get Language
   const { language } = useLanguage();
 
-  // 👇 3. Define Bilingual Content
   const content = {
     mn: {
       newsletterTitle: "Аяллын мэдээ авах уу?",
@@ -41,8 +38,11 @@ const Footer = () => {
         { label: "Швейцарь", href: "/packages/europe" },
       ],
       contactTitle: "Холбоо барих",
-      address: "Улаанбаатар хот, Сүхбаатар дүүрэг, 1-р хороо, Blue Sky Tower, 4 давхар",
-      copyright: "© 2025 Euro trails. Бүх эрх хуулиар хамгаалагдсан.",
+      // 👇 Updated MN Address
+      address: "Улаанбаатар хот, Баруун 4 зам, Эрхи Төв, 5 давхар, 502 тоот", 
+      phone: "+976 7766-1626", 
+      email: "Eurotrails1@gmail.com", 
+      copyright: "© 2025 Mongolia Trails Agency. Бүх эрх хуулиар хамгаалагдсан.",
       policy: "Нууцлалын бодлого",
       terms: "Үйлчилгээний нөхцөл"
     },
@@ -65,8 +65,11 @@ const Footer = () => {
         { label: "Switzerland", href: "/packages/europe" },
       ],
       contactTitle: "Contact Us",
-      address: "Blue Sky Tower, 4th Floor, 1st Khoroo, Sukhbaatar District, Ulaanbaatar",
-      copyright: "© 2025 Euro trails. All rights reserved.",
+      // 👇 Updated EN Address
+      address: "Room 502, 5th Floor, Erkhi Center, West 4 Road, Ulaanbaatar", 
+      phone: "+976 7766-1626",
+      email: "Eurotrails1@gmail.com",
+      copyright: "© 2025 Mongolia Trails Agency. All rights reserved.",
       policy: "Privacy Policy",
       terms: "Terms of Service"
     },
@@ -89,8 +92,11 @@ const Footer = () => {
         { label: "스위스", href: "/packages/europe" },
       ],
       contactTitle: "문의하기",
-      address: "몽골 울란바토르 수흐바타르구 1호 코루 블루 스카이 타워 4층",
-      copyright: "© 2025 Euro trails. 모든 권리 보유.",
+      // 👇 Updated KO Address
+      address: "울란바토르 서부 4거리, 에르키 센터 5층 502호", 
+      phone: "+976 7766-1626",
+      email: "Eurotrails1@gmail.com",
+      copyright: "© 2025 Mongolia Trails Agency. 모든 권리 보유.",
       policy: "개인 정보 보호 정책",
       terms: "서비스 이용 약관"
     }
@@ -101,14 +107,14 @@ const Footer = () => {
   return (
     <footer className="relative bg-slate-900 pt-32 pb-10 overflow-hidden">
       
-      {/* ─── 1. CURVED TOP WAVE (Seamless Transition) ─── */}
+      {/* ─── 1. CURVED TOP WAVE ─── */}
       <div className="absolute top-0 left-0 w-full overflow-hidden leading-[0]">
         <svg data-name="Layer 1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 120" preserveAspectRatio="none" className="relative block w-[calc(100%+1.3px)] h-[100px] fill-slate-50">
             <path d="M321.39,56.44c58-10.79,114.16-30.13,172-41.86,82.39-16.72,168.19-17.73,250.45-.39C823.78,31,906.67,72,985.66,92.83c70.05,18.48,146.53,26.09,214.34,3V0H0V27.35A600.21,600.21,0,0,0,321.39,56.44Z"></path>
         </svg>
       </div>
 
-      {/* ─── 2. FLOATING NEWSLETTER "TICKET" ─── */}
+      {/* ─── 2. FLOATING NEWSLETTER ─── */}
       <div className="container mx-auto px-4 relative z-20 -mt-24 mb-20">
         <motion.div 
           initial={{ y: 20, opacity: 0 }}
@@ -116,7 +122,6 @@ const Footer = () => {
           viewport={{ once: true }}
           className="bg-gradient-to-r from-blue-600 to-sky-500 rounded-3xl p-8 md:p-12 shadow-2xl shadow-blue-900/50 flex flex-col md:flex-row items-center justify-between gap-8 relative overflow-hidden"
         >
-          {/* Decorative Circles */}
           <div className="absolute -left-10 top-1/2 -translate-y-1/2 w-20 h-20 bg-slate-900 rounded-full" />
           <div className="absolute -right-10 top-1/2 -translate-y-1/2 w-20 h-20 bg-slate-900 rounded-full" />
           <div className="absolute top-0 left-0 w-full h-full bg-[url('https://www.transparenttextures.com/patterns/stardust.png')] opacity-20" />
@@ -150,7 +155,7 @@ const Footer = () => {
                 <FaPlane size={20} />
               </div>
               <span className="text-2xl font-black text-white tracking-tight">
-                Euro trails
+                Mongolia Trails Agency
               </span>
             </Link>
             <p className="text-slate-400 text-sm leading-relaxed">
@@ -193,21 +198,21 @@ const Footer = () => {
             </ul>
           </div>
 
-          {/* Column 4: Contact */}
+          {/* Column 4: Contact (UPDATED) */}
           <div>
             <h4 className="text-white font-bold text-lg mb-6">{t.contactTitle}</h4>
             <ul className="space-y-4">
               <li className="flex items-start gap-3 text-slate-400 text-sm">
                 <FaMapMarkerAlt className="text-sky-500 mt-1 flex-shrink-0" />
-                <span>{t.address}</span>
+                <span className="leading-relaxed">{t.address}</span>
               </li>
               <li className="flex items-center gap-3 text-slate-400 text-sm">
                 <FaPhoneAlt className="text-sky-500 flex-shrink-0" />
-                <span>+976 7711-8888</span>
+                <span>{t.phone}</span>
               </li>
               <li className="flex items-center gap-3 text-slate-400 text-sm">
                 <FaEnvelope className="text-sky-500 flex-shrink-0" />
-                <span>info@Euro trails.mn</span>
+                <span>{t.email}</span>
               </li>
             </ul>
           </div>

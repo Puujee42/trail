@@ -20,7 +20,9 @@ import {
   FaChevronDown,
   FaUmbrellaBeach,
   FaPassport,
-  FaMapMarkedAlt,
+  FaCheck,
+  FaTachometerAlt,
+  FaMapMarkedAlt, // Added Dashboard Icon
 } from "react-icons/fa";
 import { SignedOut, SignedIn, UserButton } from "@clerk/nextjs";
 import { useLanguage } from "../context/LanguageContext"; 
@@ -42,7 +44,7 @@ interface HoveredLink {
 
 /* ────────────────────── Constants ────────────────────── */
 const LANGUAGES: { code: Language; label: string }[] = [
-  { code: "mn", label: "MN" }, // Shortened labels for cleaner horizontal layout
+  { code: "mn", label: "MN" },
   { code: "en", label: "EN" },
   { code: "ko", label: "KO" },
 ];
@@ -98,28 +100,31 @@ const NAV_LINKS_DATA: Record<Language, NavLinkItem[]> = {
 
 const UI_TEXT: Record<Language, any> = {
   mn: {
-    slogan: "Euro trails-тэй хамт дэлхийгээр аялаарай",
+    slogan: "Mongolia Trails Agency-тэй хамт дэлхийгээр аялаарай",
     login: "Нэвтрэх",
     register: "Бүртгүүлэх",
     book: "Аялал захиалах",
     menu: "Цэс",
     myAccount: "Миний бүртгэл",
+    dashboard: "Хяналтын самбар", // Dashboard
   },
   en: {
-    slogan: "Travel the world with Euro trails",
+    slogan: "Travel the world with Mongolia Trails Agency",
     login: "Login",
     register: "Register",
     book: "Book Now",
     menu: "Menu",
     myAccount: "My Account",
+    dashboard: "Dashboard",
   },
   ko: {
-    slogan: "Euro trails와 함께 세계를 여행하세요",
+    slogan: "Mongolia Trails Agency와 함께 세계를 여행하세요",
     login: "로그인",
     register: "회원가입",
     book: "예약하기",
     menu: "메뉴",
     myAccount: "내 계정",
+    dashboard: "대시보드",
   },
 };
 
@@ -157,7 +162,7 @@ const FlagIcon = ({ lang, className = "w-5 h-5" }: { lang: Language, className?:
         <circle cx="320" cy="240" r="120" fill="#c60c30"/>
         <path fill="#003478" d="M320 240c-44.2 0-80 35.8-80 80s35.8 80 80 80 80-35.8 80-80-35.8-80-80-80z"/>
         <path fill="#c60c30" d="M320 240c44.2 0 80-35.8 80-80s-35.8-80-80-80-80 35.8-80 80 35.8 80 80 80z"/>
-        <path fill="#000" d="M120.3 85l37 21.3-8 13.9-37-21.3zm23.1 76l13.9-8 37 21.3-13.9 8zm39.9-106.6l8-13.9 37 21.3-8 13.9zm336.4 22.6l-37 21.3-8-13.9 37-21.3zm23.1 76l-13.9-8 37 21.3-13.9 8zm-63-42.7l-8-13.9 37 21.3-8 13.9zm-359.5 244l37-21.3 8 13.9-37 21.3zm23.1 76l13.9 8 37-21.3-13.9-8zm39.9 30.6l8 13.9 37-21.3-8-13.9zm336.4-146.6l-37-21.3-8 13.9 37 21.3zm23.1 76l-13.9 8 37-21.3-13.9-8zm-63 42.7l-8 13.9 37-21.3-8-13.9z"/>
+        <path fill="#000" d="M120.3 85l37 21.3-8 13.9-37-21.3zm23.1 76l13.9-8 37 21.3-13.9 8zm39.9-106.6l8-13.9 37 21.3-8 13.9zm336.4 22.6l-37 21.3-8-13.9 37-21.3zm23.1 76l-13.9-8 37 21.3-13.9 8zm-63-42.7l-8-13.9 37 21.3-8 13.9zm-359.5 244l37-21.3 8 13.9-37 21.3zm23.1 76l-13.9 8 37-21.3-13.9-8zm39.9 30.6l8 13.9 37-21.3-8-13.9zm336.4-146.6l-37-21.3-8 13.9 37 21.3zm23.1 76l-13.9 8 37-21.3-13.9-8zm-63 42.7l-8 13.9 37-21.3-8-13.9z"/>
       </svg>
     );
   }
@@ -308,7 +313,7 @@ const Navbar: React.FC = () => {
               <FaPlane className="text-yellow-300" />
             </motion.span>
             <span className="hidden sm:inline">{t.slogan}</span>
-            <span className="sm:hidden">Euro Trails</span>
+            <span className="sm:hidden">Mongolia Trails Agency</span>
           </motion.p>
 
           <ul className="flex items-center gap-4 md:gap-5">
@@ -342,7 +347,17 @@ const Navbar: React.FC = () => {
               </li>
             </SignedOut>
             <SignedIn>
-              <li className="hidden md:block"><UserButton afterSignOutUrl="/" /></li>
+                {/* 🌟 ADDED DASHBOARD LINK HERE */}
+                <li className="hidden md:block">
+                  <Link 
+                    href="/dashboard" 
+                    className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-white/20 hover:bg-white/30 transition-all font-medium text-xs border border-white/20"
+                  >
+                    <FaTachometerAlt />
+                    <span>{t.dashboard}</span>
+                  </Link>
+                </li>
+                <li className="hidden md:block"><UserButton afterSignOutUrl="/" /></li>
             </SignedIn>
           </ul>
         </div>
@@ -377,7 +392,7 @@ const Navbar: React.FC = () => {
                 <FaPlane size={20} className="group-hover:-rotate-12 transition-transform duration-300" />
               </motion.div>
               <span className="text-xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-sky-600 to-teal-600 tracking-tight">
-                Euro trails
+                Mongolia Trails Agency
               </span>
             </Link>
           </motion.div>
@@ -474,6 +489,17 @@ const MobileMenu: React.FC<any> = ({ isOpen, closeMenu, links, t, language }) =>
           </div>
 
           <div className="p-6 space-y-2">
+             <SignedOut>
+                <Link href="/sign-in" onClick={closeMenu} className="block py-3 px-6 text-sm text-slate-600 hover:text-sky-600 hover:bg-sky-50">{t.login}</Link>
+             </SignedOut>
+             
+             {/* 🌟 ADDED DASHBOARD LINK TO MOBILE MENU */}
+             <SignedIn>
+                <Link href="/dashboard" onClick={closeMenu} className="flex items-center gap-2 py-3 px-6 text-sm text-blue-600 font-bold bg-blue-50 rounded-lg mb-2">
+                   <FaTachometerAlt /> {t.dashboard}
+                </Link>
+             </SignedIn>
+
              {links.map((link: any) => <MobileNavLink key={link.id} link={link} closeMenu={closeMenu} />)}
           </div>
         </motion.div>

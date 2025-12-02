@@ -18,7 +18,7 @@ const ContactPage = () => {
   // 👇 2. Get Language
   const { language } = useLanguage();
 
-  // 👇 3. Define Translations
+  // 👇 3. Define Translations with NEW DETAILS
   const content = {
     mn: {
       headerTitlePrefix: "Бидэнтэй",
@@ -33,9 +33,11 @@ const ContactPage = () => {
       formMessage: "Таны асуулт...",
       formBtn: "Илгээх",
 
-      infoAddress: "Улаанбаатар хот, Сүхбаатар дүүрэг, Blue Sky Tower, 4 давхар",
-      infoPhone: "+976 7711-8888",
-      infoEmail: "info@Euro trails.mn",
+      // 👇 Updated Info
+      infoAddress: "Улаанбаатар хот, Баруун 4 зам, Эрхи Төв, 5 давхар, 502 тоот",
+      infoPhone: "+976 7766-1626",
+      infoEmail: "Eurotrails1@gmail.com",
+      
       infoHours: "Даваа - Баасан: 09:00 - 18:00",
       infoLabels: ["Манай оффис", "Холбоо барих", "И-мэйл хаяг", "Ажиллах цагийн хуваарь"],
       mapPlaceholder: "Интерактив Газрын Зураг",
@@ -62,9 +64,11 @@ const ContactPage = () => {
       formMessage: "Your message...",
       formBtn: "Send",
 
-      infoAddress: "Blue Sky Tower, 4th Floor, Sukhbaatar District, Ulaanbaatar",
-      infoPhone: "+976 7711-8888",
-      infoEmail: "info@Euro trails.mn",
+      // 👇 Updated Info (Translated)
+      infoAddress: "Room 502, 5th Floor, Erkhi Center, West 4 Intersection, Ulaanbaatar",
+      infoPhone: "+976 7766-1626",
+      infoEmail: "Eurotrails1@gmail.com",
+
       infoHours: "Mon - Fri: 09:00 - 18:00",
       infoLabels: ["Our Office", "Contact Us", "Email Address", "Working Hours"],
       mapPlaceholder: "Interactive Map",
@@ -91,9 +95,11 @@ const ContactPage = () => {
       formMessage: "메시지...",
       formBtn: "보내기",
 
-      infoAddress: "몽골 울란바토르 수흐바타르구 블루 스카이 타워 4층",
-      infoPhone: "+976 7711-8888",
-      infoEmail: "info@Euro trails.mn",
+      // 👇 Updated Info (Translated)
+      infoAddress: "울란바토르 서부 4거리, 에르키 센터 5층 502호",
+      infoPhone: "+976 7766-1626",
+      infoEmail: "Eurotrails1@gmail.com",
+
       infoHours: "월요일 - 금요일: 09:00 - 18:00",
       infoLabels: ["우리 사무실", "문의하기", "이메일 주소", "근무 시간"],
       mapPlaceholder: "인터랙티브 지도",
@@ -207,8 +213,8 @@ const ContactInfo = ({ t }: any) => (
   >
     {/* Map Placeholder */}
     <div className="bg-white rounded-3xl p-4 shadow-lg border border-slate-100">
-      <div className="bg-slate-100 rounded-2xl h-64 flex items-center justify-center text-slate-400">
-        ({t.mapPlaceholder})
+      <div className="bg-slate-100 rounded-2xl h-64 flex items-center justify-center text-slate-400 font-medium">
+        {t.mapPlaceholder}
       </div>
     </div>
 
@@ -244,7 +250,7 @@ const ContactInfo = ({ t }: any) => (
 
 const InfoBlock = ({ icon: Icon, title, text, live }: any) => (
   <div className="flex items-start gap-4">
-    <div className="w-12 h-12 bg-white rounded-xl flex items-center justify-center text-sky-500 shadow-md border border-slate-100">
+    <div className="w-12 h-12 bg-white rounded-xl flex items-center justify-center text-sky-500 shadow-md border border-slate-100 shrink-0">
       <Icon />
     </div>
     <div>
@@ -252,7 +258,7 @@ const InfoBlock = ({ icon: Icon, title, text, live }: any) => (
          <h3 className="font-bold text-slate-800">{title}</h3>
          {live && <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse" />}
       </div>
-      <p className="text-slate-500">{text}</p>
+      <p className="text-slate-500 leading-relaxed">{text}</p>
     </div>
   </div>
 );

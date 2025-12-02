@@ -12,7 +12,8 @@ import {
   FaBalanceScale, 
   FaBolt, 
   FaLayerGroup, 
-  FaArrowRight 
+  FaArrowRight,
+  FaPhoneAlt 
 } from "react-icons/fa";
 // 👇 1. Import Hook
 import { useLanguage } from "../context/LanguageContext";
@@ -22,7 +23,7 @@ const AboutPage = () => {
   // 👇 2. Get Language
   const { language } = useLanguage();
 
-  // 👇 3. Define Translations (Including Korean)
+  // 👇 3. Define Translations
   const content = {
     mn: {
       heroTitlePrefix: "Тав тухтай, Аюулгүй,",
@@ -32,7 +33,7 @@ const AboutPage = () => {
       introTitle: "Бидний тухай",
       introText1: "Манай байгууллага таны аяллыг хамгийн",
       introHighlight: "тав тухтай, аюулгүй, үнэнч шударгаар",
-      introText2: "зохион байгуулахыг зорьдог мэргэжлийн баг юм. Бид олон улсын аялал, визний үйлчилгээ, аяллын зөвлөгөөний чиглэлээр туршлагатай бөгөөд таны хүсэл, цаг хугацаа, төсөвт яг тохирсон шийдлийг санал болгодог.",
+      introText2: "зохион байгуулахыг зорьдог мэргэжлийн баг юм.",
 
       servicesTitle: "Бидний Үзүүлдэг Үйлчилгээ",
       servicesDesc: "Мэргэжлийн түвшинд танд дараах үйлчилгээнүүдийг үзүүлж байна.",
@@ -60,6 +61,7 @@ const AboutPage = () => {
 
       ctaTitle: "Холбоо барих",
       ctaDesc: "Бид таны мөрөөдлийн аяллыг бодит болгоход бэлэн байна.",
+      ctaPhone: "+976 7766-1626", // Updated Phone
       ctaBtnMsg: "Зурвас илгээх"
     },
     en: {
@@ -70,7 +72,7 @@ const AboutPage = () => {
       introTitle: "About Us",
       introText1: "Our organization is a professional team aiming to organize your trip most",
       introHighlight: "comfortably, safely, and honestly.",
-      introText2: "We are experienced in international travel, visa services, and travel consulting, offering solutions tailored exactly to your needs.",
+      introText2: "We are experienced in international travel, visa services, and travel consulting.",
 
       servicesTitle: "Our Services",
       servicesDesc: "We provide the following services at a professional level.",
@@ -98,6 +100,7 @@ const AboutPage = () => {
 
       ctaTitle: "Contact Us",
       ctaDesc: "We are ready to make your dream trip a reality.",
+      ctaPhone: "+976 7766-1626",
       ctaBtnMsg: "Send Message"
     },
     ko: {
@@ -108,7 +111,7 @@ const AboutPage = () => {
       introTitle: "회사 소개",
       introText1: "저희는 고객님의 여행을 가장",
       introHighlight: "편안하고, 안전하며, 정직하게",
-      introText2: "계획하는 것을 목표로 하는 전문 팀입니다. 해외 여행, 비자 서비스, 여행 컨설팅 분야의 경험을 바탕으로 고객님의 요구에 딱 맞는 맞춤형 솔루션을 제공합니다.",
+      introText2: "계획하는 것을 목표로 하는 전문 팀입니다.",
 
       servicesTitle: "제공 서비스",
       servicesDesc: "전문적인 수준의 다양한 서비스를 제공합니다.",
@@ -136,6 +139,7 @@ const AboutPage = () => {
 
       ctaTitle: "문의하기",
       ctaDesc: "당신의 꿈꾸던 여행을 현실로 만들어 드릴 준비가 되어 있습니다.",
+      ctaPhone: "+976 7766-1626",
       ctaBtnMsg: "메시지 보내기"
     }
   };
@@ -315,9 +319,10 @@ const CtaSection = ({ t }: any) => (
          </motion.p>
          
          <div className="flex flex-col md:flex-row items-center justify-center gap-6">
-             <a href="tel:77661626">
+             {/* Updated Phone Link */}
+             <a href={`tel:${t.ctaPhone.replace(/\s+/g, '')}`}>
                 <button className="bg-sky-500 hover:bg-sky-600 text-white font-bold py-4 px-8 rounded-full shadow-lg shadow-sky-500/30 transition-all flex items-center gap-3">
-                   (+976) 7766-1626
+                   <FaPhoneAlt /> {t.ctaPhone}
                 </button>
              </a>
              <Link href="/contact">

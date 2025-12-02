@@ -76,7 +76,7 @@ const WhyChooseUs = () => {
     },
     ko: {
       badge: "우리의 장점",
-      titlePrefix: "왜 Euro trails를 선택해야",
+      titlePrefix: "왜 Mongolia Trails Agency를 선택해야",
       titleSuffix: "까요?",
       desc: "우리는 단순히 여행을 판매하는 것이 아닙니다. 평생 기억에 남을 추억, 안전 및 프리미엄 서비스를 약속합니다.",
       
@@ -130,7 +130,7 @@ const WhyChooseUs = () => {
             viewport={{ once: true }}
             className="text-5xl md:text-6xl font-black text-slate-900 mb-6 tracking-tight"
           >
-            {t.titlePrefix} <span className="text-transparent bg-clip-text bg-gradient-to-r from-sky-500 to-blue-600">Euro trails</span> {t.titleSuffix}
+            {t.titlePrefix} <span className="text-transparent bg-clip-text bg-gradient-to-r from-sky-500 to-blue-600">Mongolia Trails Agency</span> {t.titleSuffix}
           </motion.h2>
           
           <motion.p 

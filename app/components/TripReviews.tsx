@@ -33,7 +33,7 @@ const TripReviews = () => {
       badge: "Аялагчдын сэтгэгдэл",
       titlePrefix: "Бидний тухай",
       titleSuffix: "Тэд юу хэлэв?",
-      desc: "Мянга мянган аялагчид Euro trails-г сонгон дэлхийгээр аялж, мартагдашгүй дурсамжийг бүтээсэн байна.",
+      desc: "Мянга мянган аялагчид Mongolia Trails Agency-г сонгон дэлхийгээр аялж, мартагдашгүй дурсамжийг бүтээсэн байна.",
       drag: "Чирж үзэх",
       reviews: [
         {
@@ -49,7 +49,7 @@ const TripReviews = () => {
           name: "С. Анужин",
           trip: "Парис Тур",
           date: "1 долоо хоногийн өмнө",
-          text: "Мөрөөдлийн аяллаа Euro trails-тэй хамт биелүүллээ. Эйфелийн цамхаг дээр оройн хоол идэх мөч хамгийн гоё нь байсан.",
+          text: "Мөрөөдлийн аяллаа Mongolia Trails Agency-тэй хамт биелүүллээ. Эйфелийн цамхаг дээр оройн хоол идэх мөч хамгийн гоё нь байсан.",
           location: "Парис, Франц"
         },
         {
@@ -82,7 +82,7 @@ const TripReviews = () => {
       badge: "Traveler Reviews",
       titlePrefix: "What do they say",
       titleSuffix: "About Us?",
-      desc: "Thousands of travelers choose Euro trails to explore the world and create unforgettable memories.",
+      desc: "Thousands of travelers choose Mongolia Trails Agency to explore the world and create unforgettable memories.",
       drag: "Drag to view",
       reviews: [
         {
@@ -98,7 +98,7 @@ const TripReviews = () => {
           name: "S. Anujin",
           trip: "Paris Tour",
           date: "1 week ago",
-          text: "I fulfilled my dream trip with Euro trails. Dinner on the Eiffel Tower was the best moment.",
+          text: "I fulfilled my dream trip with Mongolia Trails Agency. Dinner on the Eiffel Tower was the best moment.",
           location: "Paris, France"
         },
         {
@@ -131,7 +131,7 @@ const TripReviews = () => {
       badge: "여행자 리뷰",
       titlePrefix: "그들이 말하는",
       titleSuffix: "우리에게?",
-      desc: "수천 명의 여행자들이 Euro trails를 선택하여 세상을 탐험하고 잊지 못할 추억을 만듭니다.",
+      desc: "수천 명의 여행자들이 Mongolia Trails Agency를 선택하여 세상을 탐험하고 잊지 못할 추억을 만듭니다.",
       drag: "드래그하여 보기",
       reviews: [
         {
@@ -147,7 +147,7 @@ const TripReviews = () => {
           name: "S. 아누진",
           trip: "파리 투어",
           date: "1주일 전",
-          text: "Euro trails와 함께 꿈의 여행을 실현했습니다. 에펠탑에서의 저녁 식사가 가장 멋진 순간이었어요.",
+          text: "Mongolia Trails Agency와 함께 꿈의 여행을 실현했습니다. 에펠탑에서의 저녁 식사가 가장 멋진 순간이었어요.",
           location: "파리, 프랑스"
         },
         {
