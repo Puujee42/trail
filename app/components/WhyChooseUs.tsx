@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef, useState } from "react";
+import { useRef } from "react";
 import { motion, useMotionTemplate, useMotionValue, useSpring } from "framer-motion";
 import { 
   FaShieldAlt, 
@@ -11,9 +11,73 @@ import {
   FaPlane,
   FaCheckCircle
 } from "react-icons/fa";
+// 👇 1. Import Hook
+import { useLanguage } from "../context/LanguageContext"; 
 
 /* ────────────────────── Main Component ────────────────────── */
 const WhyChooseUs = () => {
+  // 👇 2. Get Language
+  const { language } = useLanguage();
+
+  // 👇 3. Define Translations
+  const content = {
+    mn: {
+      badge: "Бидний Давуу Тал",
+      titlePrefix: "Яагаад",
+      titleSuffix: "гэж?",
+      desc: "Бид зүгээр нэг аялал зардаггүй. Бид танд насан туршид мартагдашгүй дурсамж, аюулгүй байдал, дээд зэргийн үйлчилгээг амлаж байна.",
+      
+      // Card 1: Global
+      card1Title: "Дэлхийн хязгааргүй аялал",
+      card1Desc: "Бид дэлхийн 50+ улс, Монгол орны 21 аймагт албан ёсны түншүүдтэй хамтран ажиллаж, таныг хаа ч хүргэнэ.",
+      
+      // Card 2: Support
+      card2Title: "24/7 Дэмжлэг",
+      card2Desc: "Аяллын турш бид тантай хамт. Асуудал гарвал хэзээ ч, хаана ч холбогд.",
+      card2Btn: "Чатлах",
+      
+      // Card 3: Price
+      card3Title: "Хямд Үнэ",
+      card3Desc: "Зах зээлийн хамгийн бодит үнэ.",
+      card3Badge: "-20% ХЯМДРАЛ",
+
+      // Card 4: Safety
+      card4Title: "100% Даатгал",
+      card4Desc: "Таны аюулгүй байдал бидний нэн тэргүүний зорилт. Бүх аялагчид бүрэн даатгагдсан.",
+      card4Tags: ["Гэнэтийн осол", "Эрүүл мэнд", "Ачаа тээш"],
+
+      // Card 5: CTA
+      card5Title: "Бидэнтэй нэгдэх үү?",
+      card5Desc: "Шинэ аяллын мэдээллийг цаг алдалгүй аваарай."
+    },
+    en: {
+      badge: "Our Advantages",
+      titlePrefix: "Why Choose",
+      titleSuffix: "?",
+      desc: "We don't just sell trips. We promise you lifelong memories, safety, and premium service.",
+      
+      card1Title: "Limitless Global Travel",
+      card1Desc: "We partner with official agencies in 50+ countries and 21 Mongolian provinces to take you anywhere.",
+      
+      card2Title: "24/7 Support",
+      card2Desc: "We are with you throughout the journey. Contact us anytime, anywhere if issues arise.",
+      card2Btn: "Chat Now",
+      
+      card3Title: "Best Price",
+      card3Desc: "Most realistic market prices.",
+      card3Badge: "-20% OFF",
+
+      card4Title: "100% Insurance",
+      card4Desc: "Your safety is our priority. All travelers are fully insured.",
+      card4Tags: ["Accidents", "Health", "Luggage"],
+
+      card5Title: "Join Us?",
+      card5Desc: "Get the latest travel updates instantly."
+    }
+  };
+
+  const t = content[language]; // Select current language content
+
   return (
     <section className="py-32 bg-slate-50 relative overflow-hidden">
       
@@ -32,7 +96,7 @@ const WhyChooseUs = () => {
             className="inline-block mb-4"
           >
             <span className="px-4 py-1.5 rounded-full border border-sky-200 bg-sky-50 text-sky-600 text-xs font-bold uppercase tracking-widest">
-              Бидний Давуу Тал
+              {t.badge}
             </span>
           </motion.div>
           
@@ -42,7 +106,7 @@ const WhyChooseUs = () => {
             viewport={{ once: true }}
             className="text-5xl md:text-6xl font-black text-slate-900 mb-6 tracking-tight"
           >
-            Яагаад <span className="text-transparent bg-clip-text bg-gradient-to-r from-sky-500 to-blue-600">Euro trails</span> гэж?
+            {t.titlePrefix} <span className="text-transparent bg-clip-text bg-gradient-to-r from-sky-500 to-blue-600">Euro trails</span> {t.titleSuffix}
           </motion.h2>
           
           <motion.p 
@@ -52,18 +116,16 @@ const WhyChooseUs = () => {
             transition={{ delay: 0.1 }}
             className="text-slate-500 text-xl leading-relaxed"
           >
-            Бид зүгээр нэг аялал зардаггүй. Бид танд насан туршид мартагдашгүй дурсамж, аюулгүй байдал, дээд зэргийн үйлчилгээг амлаж байна.
+            {t.desc}
           </motion.p>
         </div>
 
         {/* ─── SPOTLIGHT BENTO GRID ─── */}
         <SpotlightGrid>
           
-          {/* Card 1: Global Reach (Map Radar) */}
+          {/* Card 1: Global Reach */}
           <BentoCard className="md:col-span-2 md:row-span-2 bg-white relative overflow-hidden group">
              <div className="absolute inset-0 bg-sky-50/50 z-0" />
-             
-             {/* Animated Radar Map Background */}
              <div className="absolute inset-0 opacity-20 group-hover:opacity-30 transition-opacity duration-500">
                 <svg className="w-full h-full text-sky-300" fill="currentColor" viewBox="0 0 100 100" preserveAspectRatio="none">
                    <pattern id="grid" width="10" height="10" patternUnits="userSpaceOnUse">
@@ -71,17 +133,8 @@ const WhyChooseUs = () => {
                    </pattern>
                    <rect width="100" height="100" fill="url(#grid)" />
                 </svg>
-                {/* Pulsing Beacons */}
-                <motion.div 
-                  animate={{ scale: [1, 2], opacity: [1, 0] }} 
-                  transition={{ duration: 2, repeat: Infinity }}
-                  className="absolute top-1/3 left-1/3 w-4 h-4 bg-sky-500 rounded-full" 
-                />
-                <motion.div 
-                  animate={{ scale: [1, 2], opacity: [1, 0] }} 
-                  transition={{ duration: 2, repeat: Infinity, delay: 1 }}
-                  className="absolute top-2/3 right-1/4 w-4 h-4 bg-blue-500 rounded-full" 
-                />
+                <motion.div animate={{ scale: [1, 2], opacity: [1, 0] }} transition={{ duration: 2, repeat: Infinity }} className="absolute top-1/3 left-1/3 w-4 h-4 bg-sky-500 rounded-full" />
+                <motion.div animate={{ scale: [1, 2], opacity: [1, 0] }} transition={{ duration: 2, repeat: Infinity, delay: 1 }} className="absolute top-2/3 right-1/4 w-4 h-4 bg-blue-500 rounded-full" />
              </div>
 
              <div className="relative z-10 h-full flex flex-col justify-between p-8">
@@ -89,83 +142,61 @@ const WhyChooseUs = () => {
                    <FaGlobeAsia size={28} />
                 </div>
                 <div>
-                   <h3 className="text-3xl font-bold text-slate-800 mb-3">Дэлхийн хязгааргүй аялал</h3>
-                   <p className="text-slate-600 text-lg leading-relaxed">
-                     Бид дэлхийн 50+ улс, Монгол орны 21 аймагт албан ёсны түншүүдтэй хамтран ажиллаж, таныг хаа ч хүргэнэ.
-                   </p>
+                   <h3 className="text-3xl font-bold text-slate-800 mb-3">{t.card1Title}</h3>
+                   <p className="text-slate-600 text-lg leading-relaxed">{t.card1Desc}</p>
                 </div>
-                {/* Visual Decorative Plane */}
-                <motion.div 
-                  animate={{ x: [0, 20, 0], y: [0, -10, 0], rotate: [0, 5, 0] }}
-                  transition={{ duration: 6, repeat: Infinity, ease: "easeInOut" }}
-                  className="absolute bottom-8 right-8 text-sky-200"
-                >
+                <motion.div animate={{ x: [0, 20, 0], y: [0, -10, 0], rotate: [0, 5, 0] }} transition={{ duration: 6, repeat: Infinity, ease: "easeInOut" }} className="absolute bottom-8 right-8 text-sky-200">
                    <FaPlane size={120} />
                 </motion.div>
              </div>
           </BentoCard>
 
-          {/* Card 2: 24/7 Support (Chat UI) */}
+          {/* Card 2: Support */}
           <BentoCard className="md:col-span-1 md:row-span-2 bg-slate-900 text-white relative overflow-hidden">
-             {/* Decorative Gradient */}
              <div className="absolute top-0 left-0 w-full h-full bg-gradient-to-b from-slate-800 to-slate-950 z-0" />
-             
              <div className="relative z-10 p-8 h-full flex flex-col items-center text-center justify-center">
-                
-                {/* Floating Chat Bubble Animation */}
-                <motion.div 
-                  animate={{ y: [0, -10, 0] }}
-                  transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
-                  className="mb-8 relative"
-                >
+                <motion.div animate={{ y: [0, -10, 0] }} transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }} className="mb-8 relative">
                    <div className="w-20 h-20 bg-gradient-to-tr from-sky-500 to-blue-600 rounded-3xl flex items-center justify-center shadow-2xl shadow-blue-900/50">
                       <FaHeadset size={36} className="text-white" />
                    </div>
                    <div className="absolute -top-2 -right-2 w-6 h-6 bg-green-500 rounded-full border-4 border-slate-900 animate-pulse" />
                 </motion.div>
-
-                <h3 className="text-2xl font-bold mb-3">24/7 Дэмжлэг</h3>
-                <p className="text-slate-400 text-sm mb-8 leading-relaxed">
-                  Аяллын турш бид тантай хамт. Асуудал гарвал хэзээ ч, хаана ч холбогд.
-                </p>
-                
+                <h3 className="text-2xl font-bold mb-3">{t.card2Title}</h3>
+                <p className="text-slate-400 text-sm mb-8 leading-relaxed">{t.card2Desc}</p>
                 <button className="w-full py-3 rounded-xl bg-white/10 border border-white/10 hover:bg-white hover:text-slate-900 transition-all font-bold text-sm backdrop-blur-md">
-                   Чатлах
+                   {t.card2Btn}
                 </button>
              </div>
           </BentoCard>
 
-          {/* Card 3: Best Price (Wallet) */}
+          {/* Card 3: Price */}
           <BentoCard className="md:col-span-1 md:row-span-1 bg-white border border-slate-100 group">
              <div className="p-6 h-full flex flex-col justify-between">
                 <div className="flex justify-between items-start">
                    <div className="p-3 bg-green-50 text-green-600 rounded-xl">
                       <FaWallet size={24} />
                    </div>
-                   <span className="text-xs font-bold bg-green-100 text-green-700 px-2 py-1 rounded-md">-20% OFF</span>
+                   <span className="text-xs font-bold bg-green-100 text-green-700 px-2 py-1 rounded-md">{t.card3Badge}</span>
                 </div>
                 <div>
-                   <h3 className="text-xl font-bold text-slate-800 mb-1">Хямд Үнэ</h3>
-                   <p className="text-slate-500 text-sm">Зах зээлийн хамгийн бодит үнэ.</p>
+                   <h3 className="text-xl font-bold text-slate-800 mb-1">{t.card3Title}</h3>
+                   <p className="text-slate-500 text-sm">{t.card3Desc}</p>
                 </div>
              </div>
           </BentoCard>
 
-          {/* Card 4: Safety (Shield) */}
+          {/* Card 4: Safety */}
           <BentoCard className="md:col-span-2 md:row-span-1 bg-gradient-to-r from-blue-600 to-sky-500 text-white relative overflow-hidden">
              <div className="absolute right-0 top-0 h-full w-1/2 bg-white/10 skew-x-12 blur-2xl transform translate-x-10" />
-             
              <div className="p-8 flex items-center justify-between h-full relative z-10">
                 <div className="max-w-xs">
                    <h3 className="text-2xl font-bold mb-2 flex items-center gap-2">
-                     <FaShieldAlt /> 100% Даатгал
+                     <FaShieldAlt /> {t.card4Title}
                    </h3>
-                   <p className="text-blue-100 text-sm">
-                     Таны аюулгүй байдал бидний нэн тэргүүний зорилт. Бүх аялагчид бүрэн даатгагдсан.
-                   </p>
+                   <p className="text-blue-100 text-sm">{t.card4Desc}</p>
                 </div>
                 <div className="hidden md:flex flex-col gap-2">
-                   {["Гэнэтийн осол", "Эрүүл мэнд", "Ачаа тээш"].map((item, i) => (
+                   {t.card4Tags.map((item, i) => (
                       <div key={i} className="flex items-center gap-2 text-xs font-bold bg-white/20 px-3 py-1.5 rounded-full backdrop-blur-sm">
                          <FaCheckCircle className="text-green-300" /> {item}
                       </div>
@@ -174,7 +205,7 @@ const WhyChooseUs = () => {
              </div>
           </BentoCard>
 
-          {/* Card 5: Call to Action */}
+          {/* Card 5: CTA */}
           <BentoCard className="md:col-span-2 md:row-span-1 bg-white border border-slate-100 group cursor-pointer">
              <div className="p-8 flex items-center justify-between h-full">
                 <div className="flex items-center gap-4">
@@ -183,9 +214,9 @@ const WhyChooseUs = () => {
                    </div>
                    <div>
                       <h3 className="text-xl font-bold text-slate-800 group-hover:text-sky-600 transition-colors">
-                        Бидэнтэй нэгдэх үү?
+                        {t.card5Title}
                       </h3>
-                      <p className="text-slate-500 text-sm">Шинэ аяллын мэдээллийг цаг алдалгүй аваарай.</p>
+                      <p className="text-slate-500 text-sm">{t.card5Desc}</p>
                    </div>
                 </div>
              </div>
@@ -197,7 +228,7 @@ const WhyChooseUs = () => {
   );
 };
 
-/* ────────────────────── Spotlight Grid Wrapper ────────────────────── */
+/* ────────────────────── Helper Components ────────────────────── */
 const SpotlightGrid = ({ children }: { children: React.ReactNode }) => {
   const divRef = useRef<HTMLDivElement>(null);
   const mouseX = useMotionValue(0);
@@ -234,13 +265,11 @@ const SpotlightGrid = ({ children }: { children: React.ReactNode }) => {
   );
 };
 
-/* ────────────────────── 3D Tilt Card Component ────────────────────── */
 const BentoCard = ({ children, className }: { children: React.ReactNode; className?: string }) => {
   const x = useMotionValue(0);
   const y = useMotionValue(0);
   const mouseX = useSpring(x, { stiffness: 500, damping: 100 });
   const mouseY = useSpring(y, { stiffness: 500, damping: 100 });
-
   const rotateX = useMotionTemplate`${mouseY}deg`;
   const rotateY = useMotionTemplate`${mouseX}deg`;
 
@@ -250,10 +279,8 @@ const BentoCard = ({ children, className }: { children: React.ReactNode; classNa
     const yPos = event.clientY - top;
     const centerX = width / 2;
     const centerY = height / 2;
-    
-    const rotateXValue = ((yPos - centerY) / centerY) * -5; // Max 5 deg
-    const rotateYValue = ((xPos - centerX) / centerX) * 5;  // Max 5 deg
-
+    const rotateXValue = ((yPos - centerY) / centerY) * -5; 
+    const rotateYValue = ((xPos - centerX) / centerX) * 5;  
     x.set(rotateYValue);
     y.set(rotateXValue);
   }
@@ -269,20 +296,13 @@ const BentoCard = ({ children, className }: { children: React.ReactNode; classNa
       transition={{ duration: 0.5 }}
       className={`relative rounded-[2rem] shadow-sm border border-slate-200/60 bg-clip-padding backdrop-filter transition-shadow hover:shadow-2xl hover:shadow-sky-100/50 z-10 ${className}`}
     >
-      {/* Glare Effect */}
       <motion.div 
          style={{ 
-           background: useMotionTemplate`radial-gradient(
-             circle at 50% 0%, 
-             rgba(255,255,255,0.8) 0%, 
-             transparent 60%
-           )`,
+           background: useMotionTemplate`radial-gradient(circle at 50% 0%, rgba(255,255,255,0.8) 0%, transparent 60%)`,
            opacity: x.get() !== 0 ? 0.3 : 0,
          }}
          className="absolute inset-0 rounded-[2rem] pointer-events-none z-20 transition-opacity duration-300"
       />
-      
-      {/* Content */}
       <div style={{ transform: "translateZ(20px)" }} className="h-full">
         {children}
       </div>

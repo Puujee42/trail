@@ -3,39 +3,42 @@ import clientPromise from "./index";
 
 const DB_NAME = "travel_db";
 const COLLECTION = "trips";
+export interface LocalizedString {
+  mn: string;
+  en: string;
+}
+
+export interface ItineraryItem {
+  day: number;
+  title: LocalizedString; // Changed from string
+  desc: LocalizedString;  // Changed from string
+}
 
 export interface Trip {
   _id: string;
-  type?: string; // Made optional as not all queries strictly return it
-  title: string;
+  type?: string;
+  region?: string;
+  
+  // Update these to LocalizedString
+  title: LocalizedString;
+  location: LocalizedString;
+  duration: LocalizedString;
+  description?: LocalizedString; 
+  ageGroup?: LocalizedString;
+
   category: string;
-  location: string;
-  duration: string;
   rating: number;
   image: string;
-  description?: string; 
   price: number;
   tags?: string[];
   featured?: boolean;
   oldPrice?: number;
   reviews?: number;
-  ageGroup?: string;
-  romanceFactor?: string;
   perks?: string[];
-  tag?: string; // Singular tag (used in Honeymoon)
-  vibe?: string;
-  socialScore?: number;
   saleMonth?: number;
   seatsLeft?: number;
   itinerary?: ItineraryItem[];
 }
-
-export interface ItineraryItem {
-  day: number;
-  title: string;
-  desc: string;
-}
-
 function mapTrip(doc: any): Trip {
   return {
     ...doc,
@@ -60,7 +63,7 @@ export async function getAllTrips() {
   return trips.map(mapTrip);
 }
 
-// 2. ✨ THE MISSING FUNCTION: Get Trips by generic 'type'
+// 2. Get Trips by generic 'type' (family, solo, etc)
 export async function getTripsByType(type: string) {
   const client = await clientPromise;
   const collection = client.db(DB_NAME).collection(COLLECTION);
@@ -72,7 +75,28 @@ export async function getTripsByType(type: string) {
   return trips.map(mapTrip);
 }
 
-// 3. Get Featured trips
+// 3. ✨ NEW: Get Trips by REGION (Europe/Mongolia)
+export async function getTripsByRegion(region: string) {
+  const client = await clientPromise;
+  const collection = client.db(DB_NAME).collection(COLLECTION);
+  
+  const trips = await collection
+    .find({ region: region })
+    .toArray();
+
+  return trips.map(mapTrip);
+}
+
+// 4. ✨ NEW: Specific Region Helpers
+export async function getEuropeTrips() {
+  return getTripsByRegion("europe");
+}
+
+export async function getMongoliaTrips() {
+  return getTripsByRegion("mongolia");
+}
+
+// 5. Get Featured trips
 export async function getFeaturedTrips() {
   const client = await clientPromise;
   const collection = client.db(DB_NAME).collection(COLLECTION);
@@ -85,7 +109,7 @@ export async function getFeaturedTrips() {
   return trips.map(mapTrip);
 }
 
-// 4. Get Recent trips
+// 6. Get Recent trips
 export async function getRecentTrips() {
   const client = await clientPromise;
   const collection = client.db(DB_NAME).collection(COLLECTION);
@@ -99,22 +123,22 @@ export async function getRecentTrips() {
   return trips.map(mapTrip);
 }
 
-// 5. Get Family trips
+// 7. Get Family trips
 export async function getFamilyTrips() {
   return getTripsByType("family");
 }
 
-// 6. Get Honeymoon trips
+// 8. Get Honeymoon trips
 export async function getHoneymoonTrips() {
   return getTripsByType("honeymoon");
 }
 
-// 7. Get Solo trips
+// 9. Get Solo trips
 export async function getSoloTrips() {
   return getTripsByType("solo");
 }
 
-// 8. Get Sale trips
+// 10. Get Sale trips
 export async function getSaleTrips() {
   const client = await clientPromise;
   const collection = client.db(DB_NAME).collection(COLLECTION);
@@ -129,7 +153,7 @@ export async function getSaleTrips() {
   return trips.map(mapTrip);
 }
 
-// 9. Get Single Trip by ID
+// 11. Get Single Trip by ID
 export async function getTripById(id: string) {
   const client = await clientPromise;
   const collection = client.db(DB_NAME).collection(COLLECTION);

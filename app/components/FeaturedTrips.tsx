@@ -11,11 +11,12 @@ import {
   FaHeart
 } from "react-icons/fa";
 import Link from "next/link";
-import { Trip } from "@/lib/mongo/trips"; // Ensure this import path is correct
+import { Trip } from "@/lib/mongo/trips"; 
+import { useLanguage } from "../context/LanguageContext"; 
 
 /* ────────────────────── Main Component ────────────────────── */
-// Accept trips as props
 const FeaturedTrips = ({ trips }: { trips: Trip[] }) => {
+  const { language } = useLanguage(); // Get current language (mn/en)
   const targetRef = useRef<HTMLDivElement>(null);
   const { scrollYProgress } = useScroll({ target: targetRef });
 
@@ -23,6 +24,28 @@ const FeaturedTrips = ({ trips }: { trips: Trip[] }) => {
   const opacityDesc = useTransform(scrollYProgress, [0, 0.5], [1, 0.5]);
 
   if (!trips || trips.length === 0) return null;
+
+  // Static Translations
+  const t = {
+    mn: {
+      bestOffer: "Шилдэг Санал",
+      titleMain: "Таны мөрөөдлийн",
+      titleAccent: "аяллыг",
+      titleEnd: "бодит болгоно.",
+      desc: "Аялал бол хөрөнгө оруулалт. Гэхдээ материаллаг зүйлд биш — өөртөө, сэтгэлдээ, харах өнцөгтөө, амьдралынхаа чанарт хийдэг хөрөнгө оруулалт.",
+      viewAll: "Бүх аяллыг үзэх"
+    },
+    en: {
+      bestOffer: "Best Offers",
+      titleMain: "Make your dream",
+      titleAccent: "trip",
+      titleEnd: "a reality.",
+      desc: "Travel is an investment. Not in material things — but in yourself, your soul, your perspective, and the quality of your life.",
+      viewAll: "View All Trips"
+    }
+  };
+
+  const text = t[language];
 
   return (
     <section ref={targetRef} className="py-24 bg-slate-50 relative overflow-hidden">
@@ -46,7 +69,7 @@ const FeaturedTrips = ({ trips }: { trips: Trip[] }) => {
                className="inline-block mb-4"
             >
                <span className="bg-white border border-sky-100 text-sky-600 px-4 py-1.5 rounded-full text-xs font-bold uppercase tracking-widest shadow-sm flex items-center gap-2">
-                 <FaPlaneDeparture className="text-sky-400" /> Шилдэг Санал
+                 <FaPlaneDeparture className="text-sky-400" /> {text.bestOffer}
                </span>
             </motion.div>
             
@@ -54,15 +77,14 @@ const FeaturedTrips = ({ trips }: { trips: Trip[] }) => {
               style={{ x: xTitle }}
               className="text-5xl md:text-7xl font-black text-slate-900 mb-6 tracking-tight leading-[0.9]"
             >
-              Таны мөрөөдлийн  <span className="text-transparent bg-clip-text bg-gradient-to-r from-sky-500 to-blue-600">аяллыг</span> бодит болгоно.
+              {text.titleMain} <span className="text-transparent bg-clip-text bg-gradient-to-r from-sky-500 to-blue-600">{text.titleAccent}</span> {text.titleEnd}
             </motion.h2>
             
             <motion.p 
               style={{ opacity: opacityDesc }}
               className="text-slate-500 text-lg md:text-xl font-medium max-w-lg"
-            >Аялал бол хөрөнгө оруулалт.
-Гэхдээ материаллаг зүйлд биш — өөртөө, сэтгэлдээ, харах өнцөгтөө, амьдралынхаа чанарт хийдэг хөрөнгө оруулалт.
-
+            >
+              {text.desc}
             </motion.p>
           </div>
 
@@ -71,9 +93,11 @@ const FeaturedTrips = ({ trips }: { trips: Trip[] }) => {
              whileInView={{ opacity: 1, scale: 1 }}
              viewport={{ once: true }}
           >
-            <Link href="/destinations">
+            <Link href="/packages">
               <button className="group flex items-center gap-3 px-8 py-4 bg-white border border-slate-200 rounded-full shadow-lg hover:shadow-sky-100 hover:border-sky-200 transition-all duration-300">
-                <span className="font-bold text-slate-700 group-hover:text-sky-600 transition-colors">Бүх аяллыг үзэх</span>
+                <span className="font-bold text-slate-700 group-hover:text-sky-600 transition-colors">
+                  {text.viewAll}
+                </span>
                 <div className="w-8 h-8 rounded-full bg-slate-100 group-hover:bg-sky-500 group-hover:text-white flex items-center justify-center transition-all duration-300">
                   <FaArrowRight className="text-sm -rotate-45 group-hover:rotate-0 transition-transform" />
                 </div>
@@ -85,7 +109,7 @@ const FeaturedTrips = ({ trips }: { trips: Trip[] }) => {
         {/* ─── CAROUSEL SCROLL ─── */}
         <div className="flex gap-8 overflow-x-auto pb-12 pt-4 px-2 snap-x snap-mandatory scrollbar-hide -mx-4 md:mx-0">
           {trips.map((trip, i) => (
-            <TripCard key={trip._id} trip={trip} index={i} />
+            <TripCard key={trip._id} trip={trip} index={i} language={language} />
           ))}
           <div className="min-w-[20px]" />
         </div>
@@ -96,7 +120,7 @@ const FeaturedTrips = ({ trips }: { trips: Trip[] }) => {
 };
 
 /* ────────────────────── 3D Tilt Card Component ────────────────────── */
-const TripCard = ({ trip, index }: { trip: Trip, index: number }) => {
+const TripCard = ({ trip, index, language }: { trip: Trip, index: number, language: "mn" | "en" }) => {
   const x = useMotionValue(0);
   const y = useMotionValue(0);
   const rotateX = useSpring(useTransform(y, [-100, 100], [5, -5]), { stiffness: 150, damping: 20 });
@@ -148,7 +172,7 @@ const TripCard = ({ trip, index }: { trip: Trip, index: number }) => {
 
             <img 
                src={trip.image} 
-               alt={trip.title}
+               alt={trip.title[language]} // FIXED
                className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
             />
          </div>
@@ -157,7 +181,7 @@ const TripCard = ({ trip, index }: { trip: Trip, index: number }) => {
          <div className="p-5 flex flex-col flex-grow">
             <div className="flex justify-between items-start mb-3">
                <h3 className="text-xl font-bold text-slate-800 leading-tight group-hover:text-sky-600 transition-colors">
-                  {trip.title}
+                  {trip.title[language]} {/* FIXED */}
                </h3>
                <div className="flex items-center gap-1 bg-yellow-50 px-2 py-1 rounded-lg border border-yellow-100">
                   <FaStar className="text-yellow-400 text-xs" />
@@ -167,11 +191,11 @@ const TripCard = ({ trip, index }: { trip: Trip, index: number }) => {
             
             <div className="flex items-center gap-4 text-slate-500 text-sm mb-6">
                <div className="flex items-center gap-1.5">
-                  <FaMapMarkerAlt className="text-sky-400" /> {trip.location}
+                  <FaMapMarkerAlt className="text-sky-400" /> {trip.location[language]} {/* FIXED */}
                </div>
                <div className="w-1 h-1 bg-slate-300 rounded-full" />
                <div className="flex items-center gap-1.5">
-                  <FaClock className="text-sky-400" /> {trip.duration}
+                  <FaClock className="text-sky-400" /> {trip.duration[language]} {/* FIXED */}
                </div>
             </div>
 

@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion } from "framer-motion";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useUser } from "@clerk/nextjs";
@@ -9,9 +9,14 @@ import {
   FaCalendarAlt, FaUserFriends, FaCheckCircle, FaArrowLeft, FaShieldAlt, FaPlane 
 } from "react-icons/fa";
 import { Trip } from "@/lib/mongo/trips";
+// 👇 1. Import Hook
+import { useLanguage } from "../../context/LanguageContext";
 
 export default function BookingForm({ trip }: { trip: Trip }) {
-  const { user, isLoaded } = useUser();
+  // 👇 2. Get Language
+  const { language } = useLanguage();
+  
+  const { user } = useUser();
   const router = useRouter();
 
   // State
@@ -19,6 +24,76 @@ export default function BookingForm({ trip }: { trip: Trip }) {
   const [selectedDate, setSelectedDate] = useState("");
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState(false);
+
+  // 👇 3. Define Translations
+  const content = {
+    mn: {
+      header: "Захиалга баталгаажуулах",
+      
+      // Success View
+      successTitle: "Захиалга амжилттай!",
+      successDesc: "Таны захиалгыг хүлээн авлаа. Бид тантай удахгүй холбогдож баталгаажуулах болно.",
+      backHome: "Нүүр хуудас руу буцах",
+
+      // Form
+      travelerInfo: "Аялагчийн мэдээлэл",
+      nameLabel: "Овог нэр",
+      namePlace: "Жишээ: Бат-Эрдэнэ",
+      phoneLabel: "Утасны дугаар",
+      phonePlace: "9911-XXXX",
+      emailLabel: "И-мэйл хаяг",
+      emailPlace: "name@email.com",
+      
+      tripSchedule: "Аяллын тов",
+      selectDate: "Эхлэх өдөр сонгох",
+      travelerCount: "Аялагчийн тоо",
+      
+      submitBtn: "Захиалга илгээх",
+      errorDate: "Аяллын өдрөө сонгоно уу.",
+
+      // Summary
+      pricePerPerson: "Нэг хүний үнэ:",
+      travelerCountLabel: "Аялагчийн тоо:",
+      totalLabel: "Нийт дүн:",
+      
+      trustTitle: "Төлбөрийн баталгаа",
+      trustDesc: "Таны захиалга илгээгдсэний дараа манай менежер холбогдож төлбөрийн нөхцөлийг танилцуулна."
+    },
+    en: {
+      header: "Confirm Booking",
+      
+      // Success View
+      successTitle: "Booking Successful!",
+      successDesc: "We have received your booking. We will contact you shortly to confirm details.",
+      backHome: "Back to Home",
+
+      // Form
+      travelerInfo: "Traveler Information",
+      nameLabel: "Full Name",
+      namePlace: "Ex: John Doe",
+      phoneLabel: "Phone Number",
+      phonePlace: "+1 234 567 890",
+      emailLabel: "Email Address",
+      emailPlace: "name@email.com",
+      
+      tripSchedule: "Trip Schedule",
+      selectDate: "Select Start Date",
+      travelerCount: "Travelers",
+      
+      submitBtn: "Submit Booking",
+      errorDate: "Please select a start date.",
+
+      // Summary
+      pricePerPerson: "Price per person:",
+      travelerCountLabel: "Travelers:",
+      totalLabel: "Total Amount:",
+      
+      trustTitle: "Payment Security",
+      trustDesc: "After submitting your order, our manager will contact you with payment terms and confirmation."
+    }
+  };
+
+  const t = content[language];
 
   // Generate next 3 upcoming dates (Mock logic)
   const upcomingDates = [
@@ -36,7 +111,6 @@ export default function BookingForm({ trip }: { trip: Trip }) {
     // Simulate API Call
     await new Promise((resolve) => setTimeout(resolve, 2000));
 
-    // Here you would normally POST to /api/bookings
     console.log("Booking Submitted", { tripId: trip._id, travelers, selectedDate, price: totalPrice });
 
     setLoading(false);
@@ -54,13 +128,13 @@ export default function BookingForm({ trip }: { trip: Trip }) {
           <div className="w-20 h-20 bg-green-100 text-green-500 rounded-full flex items-center justify-center mx-auto mb-6">
             <FaCheckCircle size={40} />
           </div>
-          <h2 className="text-2xl font-black text-slate-800 mb-2">Захиалга амжилттай!</h2>
+          <h2 className="text-2xl font-black text-slate-800 mb-2">{t.successTitle}</h2>
           <p className="text-slate-500 mb-8">
-            Таны захиалгыг хүлээн авлаа. Бид тантай удахгүй холбогдож баталгаажуулах болно.
+            {t.successDesc}
           </p>
           <Link href="/">
             <button className="w-full py-4 rounded-xl bg-slate-900 text-white font-bold hover:bg-slate-800 transition-colors">
-              Нүүр хуудас руу буцах
+              {t.backHome}
             </button>
           </Link>
         </motion.div>
@@ -79,7 +153,7 @@ export default function BookingForm({ trip }: { trip: Trip }) {
               <FaArrowLeft />
             </button>
           </Link>
-          <h1 className="text-2xl md:text-3xl font-black text-slate-800">Захиалга баталгаажуулах</h1>
+          <h1 className="text-2xl md:text-3xl font-black text-slate-800">{t.header}</h1>
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
@@ -92,7 +166,7 @@ export default function BookingForm({ trip }: { trip: Trip }) {
               className="bg-white rounded-3xl p-8 shadow-sm border border-slate-200"
             >
               <h2 className="text-xl font-bold text-slate-800 mb-6 flex items-center gap-2">
-                <FaUserFriends className="text-sky-500" /> Аялагчийн мэдээлэл
+                <FaUserFriends className="text-sky-500" /> {t.travelerInfo}
               </h2>
 
               <form onSubmit={handleSubmit} className="space-y-6">
@@ -100,32 +174,32 @@ export default function BookingForm({ trip }: { trip: Trip }) {
                 {/* Personal Info */}
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   <div className="space-y-2">
-                    <label className="text-sm font-bold text-slate-600">Овог нэр</label>
+                    <label className="text-sm font-bold text-slate-600">{t.nameLabel}</label>
                     <input 
                       type="text" 
                       required
                       defaultValue={user?.fullName || ""}
                       className="w-full px-4 py-3 rounded-xl bg-slate-50 border border-slate-200 focus:border-sky-500 focus:ring-2 focus:ring-sky-200 outline-none transition-all"
-                      placeholder="Жишээ: Бат-Эрдэнэ"
+                      placeholder={t.namePlace}
                     />
                   </div>
                   <div className="space-y-2">
-                    <label className="text-sm font-bold text-slate-600">Утасны дугаар</label>
+                    <label className="text-sm font-bold text-slate-600">{t.phoneLabel}</label>
                     <input 
                       type="tel" 
                       required
                       className="w-full px-4 py-3 rounded-xl bg-slate-50 border border-slate-200 focus:border-sky-500 focus:ring-2 focus:ring-sky-200 outline-none transition-all"
-                      placeholder="9911-XXXX"
+                      placeholder={t.phonePlace}
                     />
                   </div>
                   <div className="space-y-2 md:col-span-2">
-                    <label className="text-sm font-bold text-slate-600">И-мэйл хаяг</label>
+                    <label className="text-sm font-bold text-slate-600">{t.emailLabel}</label>
                     <input 
                       type="email" 
                       required
                       defaultValue={user?.primaryEmailAddress?.emailAddress || ""}
                       className="w-full px-4 py-3 rounded-xl bg-slate-50 border border-slate-200 focus:border-sky-500 focus:ring-2 focus:ring-sky-200 outline-none transition-all"
-                      placeholder="name@email.com"
+                      placeholder={t.emailPlace}
                     />
                   </div>
                 </div>
@@ -134,13 +208,13 @@ export default function BookingForm({ trip }: { trip: Trip }) {
 
                 {/* Trip Details */}
                 <h2 className="text-xl font-bold text-slate-800 mb-6 flex items-center gap-2">
-                  <FaCalendarAlt className="text-sky-500" /> Аяллын тов
+                  <FaCalendarAlt className="text-sky-500" /> {t.tripSchedule}
                 </h2>
 
                 <div className="space-y-6">
                   {/* Date Selection */}
                   <div className="space-y-3">
-                    <label className="text-sm font-bold text-slate-600">Эхлэх өдөр сонгох</label>
+                    <label className="text-sm font-bold text-slate-600">{t.selectDate}</label>
                     <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
                       {upcomingDates.map((date) => (
                         <div 
@@ -160,7 +234,7 @@ export default function BookingForm({ trip }: { trip: Trip }) {
 
                   {/* Travelers Count */}
                   <div className="space-y-2">
-                    <label className="text-sm font-bold text-slate-600">Аялагчийн тоо</label>
+                    <label className="text-sm font-bold text-slate-600">{t.travelerCount}</label>
                     <div className="flex items-center gap-4">
                       <button 
                         type="button"
@@ -192,12 +266,12 @@ export default function BookingForm({ trip }: { trip: Trip }) {
                       <div className="w-6 h-6 border-2 border-white border-t-transparent rounded-full animate-spin" />
                     ) : (
                       <>
-                        Захиалга илгээх <FaPlane />
+                        {t.submitBtn} <FaPlane />
                       </>
                     )}
                   </button>
                   {!selectedDate && (
-                    <p className="text-red-500 text-xs mt-2 text-center">Аяллын өдрөө сонгоно уу.</p>
+                    <p className="text-red-500 text-xs mt-2 text-center">{t.errorDate}</p>
                   )}
                 </div>
 
@@ -217,31 +291,31 @@ export default function BookingForm({ trip }: { trip: Trip }) {
                 className="bg-white rounded-3xl p-6 shadow-xl shadow-slate-200/50 border border-slate-200"
               >
                 <div className="aspect-video w-full rounded-2xl overflow-hidden mb-4 relative">
-                  <img src={trip.image} alt={trip.title} className="w-full h-full object-cover" />
+                  <img src={trip.image} alt={trip.title[language]} className="w-full h-full object-cover" />
                   <div className="absolute inset-0 bg-black/10" />
                 </div>
 
                 <h3 className="text-lg font-bold text-slate-800 leading-tight mb-2">
-                  {trip.title}
+                  {trip.title[language]}
                 </h3>
                 <p className="text-sm text-slate-500 mb-6 flex items-center gap-2">
-                  <FaPlane className="text-sky-500" /> {trip.duration}
+                  <FaPlane className="text-sky-500" /> {trip.duration[language]}
                 </p>
 
                 <div className="space-y-3 py-4 border-t border-dashed border-slate-200">
                   <div className="flex justify-between text-sm text-slate-600">
-                    <span>Нэг хүний үнэ:</span>
+                    <span>{t.pricePerPerson}</span>
                     <span className="font-bold">{trip.price.toLocaleString()}₮</span>
                   </div>
                   <div className="flex justify-between text-sm text-slate-600">
-                    <span>Аялагчийн тоо:</span>
+                    <span>{t.travelerCountLabel}</span>
                     <span className="font-bold">x {travelers}</span>
                   </div>
                 </div>
 
                 <div className="pt-4 border-t border-slate-200 mt-2">
                   <div className="flex justify-between items-end">
-                    <span className="text-sm font-bold text-slate-500">Нийт дүн:</span>
+                    <span className="text-sm font-bold text-slate-500">{t.totalLabel}</span>
                     <span className="text-3xl font-black text-sky-600">
                       {totalPrice.toLocaleString()}₮
                     </span>
@@ -253,9 +327,9 @@ export default function BookingForm({ trip }: { trip: Trip }) {
               <div className="bg-sky-50 rounded-2xl p-4 flex items-start gap-3 border border-sky-100">
                 <FaShieldAlt className="text-sky-500 text-xl mt-1 shrink-0" />
                 <div>
-                  <h4 className="font-bold text-sky-900 text-sm">Төлбөрийн баталгаа</h4>
+                  <h4 className="font-bold text-sky-900 text-sm">{t.trustTitle}</h4>
                   <p className="text-xs text-sky-700 mt-1 leading-relaxed">
-                    Таны захиалга илгээгдсэний дараа манай менежер холбогдож төлбөрийн нөхцөлийг танилцуулна.
+                    {t.trustDesc}
                   </p>
                 </div>
               </div>

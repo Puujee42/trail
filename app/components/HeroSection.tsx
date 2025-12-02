@@ -1,7 +1,6 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import Link from "next/link";
 import { motion, useScroll, useTransform } from "framer-motion";
 import CountUp from "react-countup";
 import { TypeAnimation } from "react-type-animation";
@@ -15,17 +14,43 @@ import {
   FaUmbrellaBeach,
   FaMountain
 } from "react-icons/fa";
+// 👇 1. Import the actual hook
+import { useLanguage } from "../context/LanguageContext";
 
-// Mocking context: Defaulting to Mongolian ('mn')
-const useLanguage = () => { return { language: "mn" } }; 
+/* ────────────────────── Types ────────────────────── */
+interface StatItem {
+  icon: React.ElementType;
+  end: number;
+  label: string;
+}
+
+interface TagItem {
+  icon: React.ElementType;
+  text: string;
+}
+
+interface Content {
+  badge: string;
+  headlinePrefix: string;
+  typeSequence: (string | number)[];
+  subheadline: string;
+  searchPlaceholder: string;
+  searchLabelDest: string;
+  searchLabelDate: string;
+  searchDateValue: string;
+  btnSearch: string;
+  stats: StatItem[];
+  tags: TagItem[];
+}
 
 const HeroSection = () => {
-  // @ts-ignore
-  const { language } = useLanguage();
+  // 👇 2. Use the hook to get current language
+  const { language } = useLanguage(); 
+  
   const [hasScrolled, setHasScrolled] = useState(false);
   const { scrollY } = useScroll();
 
-  // Parallax effects for floating background elements
+  // Parallax effects
   const yOrb = useTransform(scrollY, [0, 500], [0, 200]);
   const yClouds = useTransform(scrollY, [0, 500], [0, -100]);
 
@@ -35,11 +60,12 @@ const HeroSection = () => {
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
-  const content = {
+  /* ────────────────────── Content Data ────────────────────── */
+  const content: Record<"mn" | "en", Content> = {
     mn: {
       badge: "Аялагчдын #1 Сонголт",
       headlinePrefix: "Дараагийн аялал тань",
-      typeSequence: ["Бали руу.", "Парис руу.", "Киото руу.", "Дэлхий даяар."],
+      typeSequence: ["Бали руу.", 2000, "Парис руу.", 2000, "Киото руу.", 2000, "Дэлхий даяар.", 4000],
       subheadline: "Бид танд хамгийн таатай нислэг, буудал, мартагдашгүй дурсамжийг бүтээхэд тусална. Ачаагаа бэлд, бусдыг нь бидэнд даатга.",
       searchPlaceholder: "Мөрөөдлийн аяллаа хайх...",
       searchLabelDest: "Чиглэл",
@@ -60,7 +86,7 @@ const HeroSection = () => {
     en: {
       badge: "Travellers' #1 Choice",
       headlinePrefix: "Explore the unseen corners of",
-      typeSequence: ["Bali.", "Paris.", "Kyoto.", "The World."],
+      typeSequence: ["Bali.", 2000, "Paris.", 2000, "Kyoto.", 2000, "The World.", 4000],
       subheadline: "We curate luxury experiences and budget-friendly adventures. Pack your bags and let us handle the rest.",
       searchPlaceholder: "Where is your dream trip?",
       searchLabelDest: "Destination",
@@ -80,7 +106,6 @@ const HeroSection = () => {
     },
   };
 
-  // @ts-ignore
   const t = content[language];
 
   return (
@@ -88,16 +113,13 @@ const HeroSection = () => {
       
       {/* ────────────────── ATMOSPHERIC BACKGROUND ────────────────── */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        {/* Sky Gradient: Starts Sky Blue, fades to white */}
         <div className="absolute inset-0 bg-gradient-to-b from-sky-300 via-blue-50 to-white" />
         
-        {/* Floating Sun / Glow */}
         <motion.div
           style={{ y: yOrb }}
           className="absolute top-[-10%] right-[-5%] w-[600px] h-[600px] bg-yellow-200/40 rounded-full blur-[100px] mix-blend-screen"
         />
 
-        {/* Animated Clouds */}
         <motion.div 
           style={{ y: yClouds }}
           animate={{ x: [-50, 50] }}
@@ -111,7 +133,6 @@ const HeroSection = () => {
           className="absolute bottom-[20%] right-[-10%] w-[500px] h-[500px] bg-cyan-100/60 rounded-full blur-[90px]"
         />
 
-        {/* Flight Path SVG Line */}
         <svg className="absolute inset-0 w-full h-full opacity-30" viewBox="0 0 1440 800" fill="none">
           <motion.path
             d="M-100,600 C300,500 600,700 1500,200"
@@ -149,14 +170,13 @@ const HeroSection = () => {
           >
             {t.headlinePrefix} <br />
             <span className="text-transparent bg-clip-text bg-gradient-to-r from-sky-500 to-blue-600">
+               {/* 
+                  KEY PROP IS IMPORTANT: 
+                  When language changes, 'key' changes, forcing TypeAnimation to restart with new words 
+               */}
                <TypeAnimation
-                key={language}
-                sequence={[
-                  t.typeSequence[0], 2000,
-                  t.typeSequence[1], 2000,
-                  t.typeSequence[2], 2000,
-                  t.typeSequence[3], 4000,
-                ]}
+                key={language} 
+                sequence={t.typeSequence}
                 speed={50}
                 repeat={Infinity}
                 cursor={true}
@@ -218,7 +238,7 @@ const HeroSection = () => {
 
           {/* Quick Tags below search */}
           <div className="flex flex-wrap justify-center gap-3 mt-6">
-            {t.tags.map((tag: any, i: number) => (
+            {t.tags.map((tag, i) => (
               <motion.span 
                 key={i} 
                 whileHover={{ scale: 1.05 }}
@@ -232,7 +252,7 @@ const HeroSection = () => {
 
         {/* ────────────────── FLOATING STATS ────────────────── */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-4xl mx-auto">
-          {t.stats.map((stat: any, i: number) => (
+          {t.stats.map((stat, i) => (
             <motion.div
               key={i}
               initial={{ opacity: 0, y: 20 }}
@@ -245,7 +265,7 @@ const HeroSection = () => {
                 <stat.icon size={20} />
               </div>
               <div className="text-3xl font-black text-slate-800 mb-1">
-                <CountUp end={stat.end} duration={2.5} separator="," />{stat.label.includes('%') || stat.label === 'Сэтгэл ханамж' ? '%' : '+'}
+                <CountUp end={stat.end} duration={2.5} separator="," />{stat.label.includes('%') || (language === "mn" ? stat.label === 'Сэтгэл ханамж' : stat.label === 'Satisfaction') ? '%' : '+'}
               </div>
               <div className="text-sm font-bold text-slate-400 uppercase tracking-wide">
                 {stat.label}
@@ -257,8 +277,6 @@ const HeroSection = () => {
       </div>
 
       {/* ────────────────── DECORATIVE ELEMENTS ────────────────── */}
-      
-      {/* Paper Plane Animation - Crossing the screen */}
       <motion.div
         animate={{ 
           x: ["-10vw", "110vw"], 
@@ -276,7 +294,6 @@ const HeroSection = () => {
         <FaPlaneDeparture size={200} />
       </motion.div>
 
-      {/* Bottom Gradient Fade to White (Seamless transition to next section) */}
       <div className="absolute bottom-0 left-0 w-full h-32 bg-gradient-to-t from-white to-transparent pointer-events-none" />
       
     </section>

@@ -9,14 +9,92 @@ import {
   FaArrowLeft, 
   FaPlane, 
   FaUtensils, 
-  FaPassport,      // Added for Visa
-  FaClipboardList  // Added for Planning
+  FaPassport,      
+  FaClipboardList  
 } from "react-icons/fa";
-import { Trip } from "@/lib/mongo/trips";
+import { useLanguage } from "../../context/LanguageContext";
+
+/* ────────────────────── Types ────────────────────── */
+// Ensure these match your actual data structure
+interface LocalizedString {
+  mn: string;
+  en: string;
+}
+
+interface ItineraryItem {
+  day: number;
+  title: LocalizedString;
+  desc: LocalizedString;
+}
+
+interface Trip {
+  _id: string;
+  image: string;
+  title: LocalizedString;
+  category: string;
+  rating: number;
+  location: LocalizedString;
+  duration: LocalizedString;
+  description?: LocalizedString;
+  perks?: string[]; // Assuming perks are just strings for now, or update if localized
+  itinerary?: ItineraryItem[];
+  price: number;
+  oldPrice?: number;
+  seatsLeft?: number;
+}
 
 const TourDetailClient = ({ trip }: { trip: Trip }) => {
-  
-  // 1. USE DB DATA (Fallback to empty array if undefined)
+  const { language } = useLanguage();
+
+  // Translations
+  const t = {
+    mn: {
+      back: "Буцах",
+      about: "Аяллын тухай",
+      features: {
+        flight: "Нислэг",
+        food: "Хоол",
+        visa: "Визний цогц үйлчилгээ",
+        planning: "Аяллын төлөвлөгөө бичих үйлчилгээ"
+      },
+      itineraryTitle: "Аяллын хөтөлбөр",
+      itineraryEmpty: "Дэлгэрэнгүй хөтөлбөр удахгүй орно.",
+      priceLabel: "Нийт үнэ (1 хүн)",
+      typeLabel: "Аяллын төрөл:",
+      durationLabel: "Хугацаа:",
+      seatsLabel: "Боломжит суудал:",
+      seatsLeft: "Суудал үлдсэн",
+      open: "Нээлттэй",
+      bookBtn: "Захиалга өгөх",
+      terms: "Захиалга өгснөөр та манай үйлчилгээний нөхцөлийг зөвшөөрч байна.",
+      questionTitle: "Асуух зүйл байна уу?",
+      questionDesc: "Манай менежертэй холбогдож дэлгэрэнгүй мэдээлэл аваарай."
+    },
+    en: {
+      back: "Back",
+      about: "About the Trip",
+      features: {
+        flight: "Flight",
+        food: "Meals",
+        visa: "Visa Services",
+        planning: "Itinerary Planning"
+      },
+      itineraryTitle: "Itinerary",
+      itineraryEmpty: "Detailed itinerary coming soon.",
+      priceLabel: "Total Price (per person)",
+      typeLabel: "Trip Type:",
+      durationLabel: "Duration:",
+      seatsLabel: "Available Seats:",
+      seatsLeft: "Seats Left",
+      open: "Open",
+      bookBtn: "Book Now",
+      terms: "By booking, you agree to our terms of service.",
+      questionTitle: "Have Questions?",
+      questionDesc: "Contact our manager for more information."
+    }
+  };
+
+  const text = t[language];
   const itinerary = trip.itinerary || [];
 
   return (
@@ -27,7 +105,7 @@ const TourDetailClient = ({ trip }: { trip: Trip }) => {
         <div className="absolute inset-0">
            <img 
              src={trip.image} 
-             alt={trip.title} 
+             alt={trip.title[language]} 
              className="w-full h-full object-cover"
            />
            <div className="absolute inset-0 bg-gradient-to-t from-slate-900 via-slate-900/40 to-transparent" />
@@ -36,7 +114,7 @@ const TourDetailClient = ({ trip }: { trip: Trip }) => {
         <div className="absolute top-24 left-4 md:left-10 z-20">
           <Link href="/">
              <button className="flex items-center gap-2 bg-white/20 backdrop-blur-md text-white px-4 py-2 rounded-full hover:bg-white hover:text-slate-900 transition-all font-bold text-sm border border-white/30">
-                <FaArrowLeft /> Буцах
+                <FaArrowLeft /> {text.back}
              </button>
           </Link>
         </div>
@@ -56,11 +134,11 @@ const TourDetailClient = ({ trip }: { trip: Trip }) => {
                  </span>
               </div>
               <h1 className="text-4xl md:text-6xl font-black text-white mb-4 leading-tight shadow-sm">
-                {trip.title}
+                {trip.title[language]}
               </h1>
               <div className="flex items-center gap-6 text-slate-200 font-bold text-sm md:text-base">
-                 <span className="flex items-center gap-2"><FaMapMarkerAlt className="text-sky-400" /> {trip.location}</span>
-                 <span className="flex items-center gap-2"><FaClock className="text-sky-400" /> {trip.duration}</span>
+                 <span className="flex items-center gap-2"><FaMapMarkerAlt className="text-sky-400" /> {trip.location[language]}</span>
+                 <span className="flex items-center gap-2"><FaClock className="text-sky-400" /> {trip.duration[language]}</span>
               </div>
            </motion.div>
         </div>
@@ -77,12 +155,12 @@ const TourDetailClient = ({ trip }: { trip: Trip }) => {
             animate={{ opacity: 1, y: 0 }}
             className="bg-white rounded-3xl p-8 shadow-xl shadow-slate-200/50 border border-slate-100"
           >
-             <h2 className="text-2xl font-bold text-slate-800 mb-4">Аяллын тухай</h2>
+             <h2 className="text-2xl font-bold text-slate-800 mb-4">{text.about}</h2>
              <p className="text-slate-600 leading-relaxed text-lg">
-               {trip.description}
+               {trip.description?.[language]}
              </p>
 
-             {/* DYNAMIC PERKS (If exist) */}
+             {/* DYNAMIC PERKS */}
              {trip.perks && (
                <div className="flex flex-wrap gap-2 mt-4">
                  {trip.perks.map((perk, i) => (
@@ -93,23 +171,19 @@ const TourDetailClient = ({ trip }: { trip: Trip }) => {
                </div>
              )}
 
-             {/* ────────────────── UPDATED ICONS GRID ────────────────── */}
+             {/* ICONS GRID */}
              <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mt-8 pt-8 border-t border-slate-100">
-                <FeatureIcon icon={FaPlane} label="Нислэг" />
-                <FeatureIcon icon={FaUtensils} label="Хоол" />
-                
-                {/* Replaced Hotel with Visa Service */}
-                <FeatureIcon icon={FaPassport} label="Визний цогц үйлчилгээ" />
-                
-                {/* Replaced Photographer with Planning Service */}
-                <FeatureIcon icon={FaClipboardList} label="Аяллын төлөвлөгөө бичих үйлчилгээ" />
+                <FeatureIcon icon={FaPlane} label={text.features.flight} />
+                <FeatureIcon icon={FaUtensils} label={text.features.food} />
+                <FeatureIcon icon={FaPassport} label={text.features.visa} />
+                <FeatureIcon icon={FaClipboardList} label={text.features.planning} />
              </div>
 
           </motion.div>
 
           {/* DYNAMIC ITINERARY */}
           <div className="bg-white rounded-3xl p-8 shadow-xl shadow-slate-200/50 border border-slate-100">
-             <h2 className="text-2xl font-bold text-slate-800 mb-6">Аяллын хөтөлбөр</h2>
+             <h2 className="text-2xl font-bold text-slate-800 mb-6">{text.itineraryTitle}</h2>
              
              {itinerary.length > 0 ? (
                <div className="space-y-0">
@@ -122,14 +196,14 @@ const TourDetailClient = ({ trip }: { trip: Trip }) => {
                           {day.day}
                        </div>
                        <div>
-                          <h4 className="font-bold text-slate-800 text-lg mb-1">{day.title}</h4>
-                          <p className="text-slate-500 text-sm leading-relaxed">{day.desc}</p>
+                          <h4 className="font-bold text-slate-800 text-lg mb-1">{day.title[language]}</h4>
+                          <p className="text-slate-500 text-sm leading-relaxed">{day.desc[language]}</p>
                        </div>
                     </div>
                   ))}
                </div>
              ) : (
-               <p className="text-slate-500 italic">Дэлгэрэнгүй хөтөлбөр удахгүй орно.</p>
+               <p className="text-slate-500 italic">{text.itineraryEmpty}</p>
              )}
           </div>
 
@@ -145,7 +219,7 @@ const TourDetailClient = ({ trip }: { trip: Trip }) => {
                  className="bg-white rounded-3xl p-6 shadow-2xl shadow-sky-100 border border-slate-100"
               >
                  <div className="mb-6">
-                    <p className="text-slate-500 text-sm font-bold uppercase mb-1">Нийт үнэ (1 хүн)</p>
+                    <p className="text-slate-500 text-sm font-bold uppercase mb-1">{text.priceLabel}</p>
                     <div className="flex items-end gap-3">
                        <span className="text-4xl font-black text-slate-900">
                           {trip.price.toLocaleString()}₮
@@ -160,40 +234,38 @@ const TourDetailClient = ({ trip }: { trip: Trip }) => {
 
                  <div className="space-y-3 mb-8">
                     <div className="flex justify-between text-sm text-slate-600 pb-2 border-b border-slate-50">
-                       <span>Аяллын төрөл:</span>
+                       <span>{text.typeLabel}</span>
                        <span className="font-bold text-slate-800 capitalize">{trip.category}</span>
                     </div>
                     <div className="flex justify-between text-sm text-slate-600 pb-2 border-b border-slate-50">
-                       <span>Хугацаа:</span>
-                       <span className="font-bold text-slate-800">{trip.duration}</span>
+                       <span>{text.durationLabel}</span>
+                       <span className="font-bold text-slate-800">{trip.duration[language]}</span>
                     </div>
                     
-                    {/* DYNAMIC SEATS LOGIC */}
                     <div className="flex justify-between text-sm text-slate-600 pb-2 border-b border-slate-50">
-                       <span>Боломжит суудал:</span>
+                       <span>{text.seatsLabel}</span>
                        <span className={`font-bold ${
                          (trip.seatsLeft || 0) < 5 ? "text-red-500" : "text-green-500"
                        }`}>
-                          {trip.seatsLeft ? `${trip.seatsLeft} Суудал үлдсэн` : "Нээлттэй"}
+                          {trip.seatsLeft ? `${trip.seatsLeft} ${text.seatsLeft}` : text.open}
                        </span>
                     </div>
                  </div>
 
-                 {/* LINK WITH ID */}
                  <Link href={`/book/${trip._id}`}>
                     <button className="w-full py-4 rounded-xl bg-slate-900 text-white font-bold text-lg shadow-lg hover:bg-sky-600 transition-all active:scale-95 mb-3">
-                       Захиалга өгөх
+                       {text.bookBtn}
                     </button>
                  </Link>
                  
                  <p className="text-xs text-center text-slate-400">
-                    Захиалга өгснөөр та манай үйлчилгээний нөхцөлийг зөвшөөрч байна.
+                    {text.terms}
                  </p>
               </motion.div>
               
               <div className="mt-6 bg-sky-50 rounded-2xl p-6 border border-sky-100 text-center">
-                 <h4 className="font-bold text-sky-900 mb-2">Асуух зүйл байна уу?</h4>
-                 <p className="text-sm text-sky-700 mb-4">Манай менежертэй холбогдож дэлгэрэнгүй мэдээлэл аваарай.</p>
+                 <h4 className="font-bold text-sky-900 mb-2">{text.questionTitle}</h4>
+                 <p className="text-sm text-sky-700 mb-4">{text.questionDesc}</p>
                  <a href="tel:+97699118888" className="text-sky-600 font-bold hover:underline">
                     +976 9911-8888
                  </a>

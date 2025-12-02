@@ -8,32 +8,80 @@ import {
   FaMapMarkerAlt, 
   FaPaperPlane, 
   FaChevronDown,
-  FaChevronUp,
   FaClock
 } from "react-icons/fa";
-
-/* ────────────────────── Mock Data ────────────────────── */
-const faqs = [
-  {
-    question: "Аялал захиалахад урьдчилгаа төлбөр шаардлагатай юу?",
-    answer: "Тийм, ихэнх аяллын хувьд нийт үнийн дүнгийн 30%-ийн урьдчилгаа төлбөр шаардлагатай. Энэ нь таны нислэгийн тийз болон зочид буудлын захиалгыг баталгаажуулахад ашиглагдана."
-  },
-  {
-    question: "Визний материал бүрдүүлэхэд туслах уу?",
-    answer: "Мэдээж. Манай баг танд виз мэдүүлэхэд шаардлагатай бүх бичиг баримтыг бүрдүүлэх, анкет бөглөх, цаг товлоход мэргэжлийн зөвлөгөө өгч, тусална."
-  },
-  {
-    question: "Аяллаа цуцлах боломжтой юу?",
-    answer: "Аялал эхлэхээс 14-өөс доошгүй хоногийн өмнө цуцлахад урьдчилгаа төлбөрийг буцаан олгох боломжтой. Дэлгэрэнгүй мэдээллийг манай үйлчилгээний нөхцөлөөс харна уу."
-  },
-  {
-    question: "Ганцаараа аялахад аюулгүй юу?",
-    answer: "Бидний зохион байгуулдаг бүх аялал аюулгүй байдлын стандартыг бүрэн хангасан байдаг. Манай туршлагатай хөтөч таны аяллын турш хамт байж, туслалцаа үзүүлнэ."
-  }
-];
+// 👇 1. Import Hook
+import { useLanguage } from "../context/LanguageContext";
 
 /* ────────────────────── Main Page Component ────────────────────── */
 const ContactPage = () => {
+  // 👇 2. Get Language
+  const { language } = useLanguage();
+
+  // 👇 3. Define Translations
+  const content = {
+    mn: {
+      headerTitlePrefix: "Бидэнтэй",
+      headerTitleSuffix: "Холбогдоорой",
+      headerDesc: "Таны дараагийн аяллын талаар ярилцахад бид үргэлж бэлэн. Асуух зүйл байвал доорх хэсгийг ашиглана уу.",
+      
+      formTitle: "Зурвас үлдээх",
+      formDesc: "Бид тантай 24 цагийн дотор эргэн холбогдох болно.",
+      formName: "Нэр",
+      formEmail: "И-мэйл",
+      formSubject: "Гарчиг",
+      formMessage: "Таны асуулт...",
+      formBtn: "Илгээх",
+
+      infoAddress: "Улаанбаатар хот, Сүхбаатар дүүрэг, Blue Sky Tower, 4 давхар",
+      infoPhone: "+976 7711-8888",
+      infoEmail: "info@Euro trails.mn",
+      infoHours: "Даваа - Баасан: 09:00 - 18:00",
+      infoLabels: ["Манай оффис", "Холбоо барих", "И-мэйл хаяг", "Ажиллах цагийн хуваарь"],
+      mapPlaceholder: "Интерактив Газрын Зураг",
+
+      faqTitle: "Түгээмэл Асуултууд",
+      faqDesc: "Таны асуултын хариулт энд байж магадгүй.",
+      faqs: [
+        { q: "Аялал захиалахад урьдчилгаа төлбөр шаардлагатай юу?", a: "Тийм, ихэнх аяллын хувьд нийт үнийн дүнгийн 30%-ийн урьдчилгаа төлбөр шаардлагатай." },
+        { q: "Визний материал бүрдүүлэхэд туслах уу?", a: "Мэдээж. Манай баг танд виз мэдүүлэхэд шаардлагатай бүх бичиг баримтыг бүрдүүлэхэд тусална." },
+        { q: "Аяллаа цуцлах боломжтой юу?", a: "Аялал эхлэхээс 14-өөс доошгүй хоногийн өмнө цуцлахад урьдчилгаа төлбөрийг буцаан олгох боломжтой." },
+        { q: "Ганцаараа аялахад аюулгүй юу?", a: "Бидний зохион байгуулдаг бүх аялал аюулгүй байдлын стандартыг бүрэн хангасан байдаг." }
+      ]
+    },
+    en: {
+      headerTitlePrefix: "Get In",
+      headerTitleSuffix: "Touch",
+      headerDesc: "We are always ready to discuss your next trip. Please use the form below for any inquiries.",
+      
+      formTitle: "Leave a Message",
+      formDesc: "We will get back to you within 24 hours.",
+      formName: "Name",
+      formEmail: "Email",
+      formSubject: "Subject",
+      formMessage: "Your message...",
+      formBtn: "Send",
+
+      infoAddress: "Blue Sky Tower, 4th Floor, Sukhbaatar District, Ulaanbaatar",
+      infoPhone: "+976 7711-8888",
+      infoEmail: "info@Euro trails.mn",
+      infoHours: "Mon - Fri: 09:00 - 18:00",
+      infoLabels: ["Our Office", "Contact Us", "Email Address", "Working Hours"],
+      mapPlaceholder: "Interactive Map",
+
+      faqTitle: "Frequently Asked Questions",
+      faqDesc: "You might find your answer here.",
+      faqs: [
+        { q: "Is a deposit required to book a trip?", a: "Yes, a 30% deposit of the total amount is required for most trips." },
+        { q: "Do you help with visa applications?", a: "Absolutely. Our team will assist you in preparing all necessary documents for your visa application." },
+        { q: "Can I cancel my trip?", a: "Deposits are refundable if cancelled at least 14 days before the trip starts." },
+        { q: "Is it safe to travel alone?", a: "All our organized trips fully meet safety standards. Our experienced guides will assist you throughout the journey." }
+      ]
+    }
+  };
+
+  const t = content[language];
+
   return (
     <div className="bg-slate-50 min-h-screen pt-24 pb-20">
       <div className="container mx-auto px-4 max-w-7xl">
@@ -45,7 +93,7 @@ const ContactPage = () => {
             animate={{ opacity: 1, y: 0 }}
             className="text-4xl md:text-6xl font-black text-slate-800 mb-4"
           >
-            Бидэнтэй <span className="text-transparent bg-clip-text bg-gradient-to-r from-sky-500 to-blue-600">Холбогдоорой</span>
+            {t.headerTitlePrefix} <span className="text-transparent bg-clip-text bg-gradient-to-r from-sky-500 to-blue-600">{t.headerTitleSuffix}</span>
           </motion.h1>
           <motion.p
             initial={{ opacity: 0 }}
@@ -53,22 +101,18 @@ const ContactPage = () => {
             transition={{ delay: 0.1 }}
             className="text-slate-500 text-lg max-w-2xl mx-auto"
           >
-            Таны дараагийн аяллын талаар ярилцахад бид үргэлж бэлэн. Асуух зүйл байвал доорх хэсгийг ашиглана уу.
+            {t.headerDesc}
           </motion.p>
         </div>
 
         {/* ─── 2. Split Screen Layout ─── */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 lg:gap-16">
-          
-          {/* Left Side: Contact Form */}
-          <ContactForm />
-          
-          {/* Right Side: Contact Info & Map */}
-          <ContactInfo />
+          <ContactForm t={t} />
+          <ContactInfo t={t} />
         </div>
 
         {/* ─── 3. FAQ Section ─── */}
-        <FaqSection />
+        <FaqSection t={t} />
 
       </div>
     </div>
@@ -78,7 +122,7 @@ const ContactPage = () => {
 /* ────────────────────── Sub-Components ────────────────────── */
 
 // 1. Contact Form
-const ContactForm = () => (
+const ContactForm = ({ t }: any) => (
   <motion.div
     initial={{ opacity: 0, x: -50 }}
     animate={{ opacity: 1, x: 0 }}
@@ -88,18 +132,18 @@ const ContactForm = () => (
     <div className="absolute top-0 right-0 w-40 h-40 bg-sky-100/50 rounded-full blur-[60px] -mr-10 -mt-10" />
     
     <div className="relative z-10">
-      <h2 className="text-3xl font-bold text-slate-800 mb-2">Зурвас үлдээх</h2>
-      <p className="text-slate-500 mb-8">Бид тантай 24 цагийн дотор эргэн холбогдох болно.</p>
+      <h2 className="text-3xl font-bold text-slate-800 mb-2">{t.formTitle}</h2>
+      <p className="text-slate-500 mb-8">{t.formDesc}</p>
       
       <form className="space-y-6">
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
-          <FormInput type="text" placeholder="Нэр" />
-          <FormInput type="email" placeholder="И-мэйл" />
+          <FormInput type="text" placeholder={t.formName} />
+          <FormInput type="email" placeholder={t.formEmail} />
         </div>
-        <FormInput type="text" placeholder="Гарчиг" />
+        <FormInput type="text" placeholder={t.formSubject} />
         <div>
           <textarea 
-            placeholder="Таны асуулт..." 
+            placeholder={t.formMessage} 
             rows={5} 
             className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-sm font-medium text-slate-700 focus:outline-none focus:ring-2 focus:ring-sky-200 focus:bg-white transition-all"
           />
@@ -109,7 +153,7 @@ const ContactForm = () => (
           whileTap={{ scale: 0.95 }}
           className="w-full py-4 rounded-xl bg-gradient-to-r from-sky-500 to-blue-600 text-white font-bold text-lg shadow-lg shadow-sky-200 hover:shadow-sky-300 transition-all flex items-center justify-center gap-2"
         >
-          <FaPaperPlane /> Илгээх
+          <FaPaperPlane /> {t.formBtn}
         </motion.button>
       </form>
     </div>
@@ -125,7 +169,7 @@ const FormInput = ({ type, placeholder }: { type: string; placeholder: string })
 );
 
 // 2. Contact Info
-const ContactInfo = () => (
+const ContactInfo = ({ t }: any) => (
   <motion.div
     initial={{ opacity: 0, x: 50 }}
     animate={{ opacity: 1, x: 0 }}
@@ -135,7 +179,7 @@ const ContactInfo = () => (
     {/* Map Placeholder */}
     <div className="bg-white rounded-3xl p-4 shadow-lg border border-slate-100">
       <div className="bg-slate-100 rounded-2xl h-64 flex items-center justify-center text-slate-400">
-        (Интерактив Газрын Зураг)
+        ({t.mapPlaceholder})
       </div>
     </div>
 
@@ -143,26 +187,26 @@ const ContactInfo = () => (
     <div className="space-y-6">
       <InfoBlock 
         icon={FaMapMarkerAlt} 
-        title="Манай оффис"
-        text="Улаанбаатар хот, Сүхбаатар дүүрэг, Blue Sky Tower, 4 давхар"
+        title={t.infoLabels[0]}
+        text={t.infoAddress}
         live={false}
       />
       <InfoBlock 
         icon={FaPhoneAlt} 
-        title="Холбоо барих"
-        text="+976 7711-8888"
+        title={t.infoLabels[1]}
+        text={t.infoPhone}
         live={true}
       />
       <InfoBlock 
         icon={FaEnvelope} 
-        title="И-мэйл хаяг"
-        text="info@tripexplorer.mn"
+        title={t.infoLabels[2]}
+        text={t.infoEmail}
         live={true}
       />
       <InfoBlock 
         icon={FaClock} 
-        title="Ажиллах цагийн хуваарь"
-        text="Даваа - Баасан: 09:00 - 18:00"
+        title={t.infoLabels[3]}
+        text={t.infoHours}
         live={false}
       />
     </div>
@@ -185,17 +229,17 @@ const InfoBlock = ({ icon: Icon, title, text, live }: any) => (
 );
 
 // 3. FAQ Section
-const FaqSection = () => {
+const FaqSection = ({ t }: any) => {
   const [openIndex, setOpenIndex] = useState<number | null>(0);
 
   return (
     <div className="mt-24 max-w-4xl mx-auto">
       <div className="text-center mb-12">
-        <h2 className="text-3xl font-bold text-slate-800 mb-2">Түгээмэл Асуултууд</h2>
-        <p className="text-slate-500">Таны асуултын хариулт энд байж магадгүй.</p>
+        <h2 className="text-3xl font-bold text-slate-800 mb-2">{t.faqTitle}</h2>
+        <p className="text-slate-500">{t.faqDesc}</p>
       </div>
       <div className="space-y-4">
-        {faqs.map((faq, index) => (
+        {t.faqs.map((faq: any, index: number) => (
           <FaqItem 
             key={index}
             faq={faq}
@@ -216,7 +260,7 @@ const FaqItem = ({ faq, isOpen, onClick }: any) => (
   >
     <button onClick={onClick} className="w-full flex justify-between items-center p-6 text-left">
       <h3 className={`font-bold text-lg transition-colors ${isOpen ? 'text-sky-600' : 'text-slate-800'}`}>
-        {faq.question}
+        {faq.q}
       </h3>
       <motion.div animate={{ rotate: isOpen ? 180 : 0 }} className={`text-slate-400 ${isOpen ? 'text-sky-500' : ''}`}>
         <FaChevronDown />
@@ -231,7 +275,7 @@ const FaqItem = ({ faq, isOpen, onClick }: any) => (
           className="overflow-hidden"
         >
           <p className="px-6 pb-6 pt-2 text-slate-600 border-t border-slate-100">
-            {faq.answer}
+            {faq.a}
           </p>
         </motion.div>
       )}

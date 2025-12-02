@@ -13,8 +13,67 @@ import {
   FaMapMarkerAlt,
   FaPlane
 } from "react-icons/fa";
+// 👇 1. Import Hook
+import { useLanguage } from "../context/LanguageContext"; 
 
 const Footer = () => {
+  // 👇 2. Get Language
+  const { language } = useLanguage();
+
+  // 👇 3. Define Bilingual Content
+  const content = {
+    mn: {
+      newsletterTitle: "Аяллын мэдээ авах уу?",
+      newsletterDesc: "Шинэ хямдрал, урамшууллын мэдээллийг цаг алдалгүй аваарай.",
+      emailPlaceholder: "И-мэйл хаяг...",
+      brandDesc: "Бид танд дэлхийн өнцөг булан бүрт хүрэх хамгийн таатай, аюулгүй, мартагдашгүй аяллыг санал болгож байна.",
+      menuTitle: "Цэс",
+      menuItems: [
+        { label: "Нүүр", href: "/" },
+        { label: "Чиглэлүүд", href: "/packages" },
+        { label: "Багцууд", href: "/packages" },
+        { label: "Блог", href: "/blog" },
+        { label: "Бидний тухай", href: "/about" },
+      ],
+      trendingTitle: "Эрэлттэй",
+      trendingItems: [
+        { label: "Европ", href: "/packages/europe" },
+        { label: "Швейцарь", href: "/packages/europe" },
+      ],
+      contactTitle: "Холбоо барих",
+      address: "Улаанбаатар хот, Сүхбаатар дүүрэг, 1-р хороо, Blue Sky Tower, 4 давхар",
+      copyright: "© 2025 Euro trails. Бүх эрх хуулиар хамгаалагдсан.",
+      policy: "Нууцлалын бодлого",
+      terms: "Үйлчилгээний нөхцөл"
+    },
+    en: {
+      newsletterTitle: "Subscribe to Newsletter?",
+      newsletterDesc: "Get the latest updates on sales and promotions instantly.",
+      emailPlaceholder: "Email address...",
+      brandDesc: "We offer you the most pleasant, safe, and unforgettable journeys to every corner of the world.",
+      menuTitle: "Menu",
+      menuItems: [
+        { label: "Home", href: "/" },
+        { label: "Destinations", href: "/packages" },
+        { label: "Packages", href: "/packages" },
+        { label: "Blog", href: "/blog" },
+        { label: "About Us", href: "/about" },
+      ],
+      trendingTitle: "Trending",
+      trendingItems: [
+        { label: "Europe", href: "/packages/europe" },
+        { label: "Switzerland", href: "/packages/europe" },
+      ],
+      contactTitle: "Contact Us",
+      address: "Blue Sky Tower, 4th Floor, 1st Khoroo, Sukhbaatar District, Ulaanbaatar",
+      copyright: "© 2025 Euro trails. All rights reserved.",
+      policy: "Privacy Policy",
+      terms: "Terms of Service"
+    }
+  };
+
+  const t = content[language];
+
   return (
     <footer className="relative bg-slate-900 pt-32 pb-10 overflow-hidden">
       
@@ -39,14 +98,14 @@ const Footer = () => {
           <div className="absolute top-0 left-0 w-full h-full bg-[url('https://www.transparenttextures.com/patterns/stardust.png')] opacity-20" />
 
           <div className="text-white relative z-10 text-center md:text-left">
-            <h3 className="text-2xl md:text-3xl font-black mb-2">Аяллын мэдээ авах уу?</h3>
-            <p className="text-blue-100 font-medium">Шинэ хямдрал, урамшууллын мэдээллийг цаг алдалгүй аваарай.</p>
+            <h3 className="text-2xl md:text-3xl font-black mb-2">{t.newsletterTitle}</h3>
+            <p className="text-blue-100 font-medium">{t.newsletterDesc}</p>
           </div>
 
           <div className="flex w-full md:w-auto relative z-10 bg-white/10 p-1.5 rounded-full border border-white/20 backdrop-blur-sm">
              <input 
                type="email" 
-               placeholder="И-мэйл хаяг..." 
+               placeholder={t.emailPlaceholder} 
                className="bg-transparent border-none text-white placeholder:text-blue-200 focus:ring-0 px-6 py-3 w-full md:w-80 outline-none"
              />
              <button className="bg-white text-blue-600 w-12 h-12 rounded-full flex items-center justify-center hover:scale-110 transition-transform shadow-lg">
@@ -71,7 +130,7 @@ const Footer = () => {
               </span>
             </Link>
             <p className="text-slate-400 text-sm leading-relaxed">
-              Бид танд дэлхийн өнцөг булан бүрт хүрэх хамгийн таатай, аюулгүй, мартагдашгүй аяллыг санал болгож байна.
+              {t.brandDesc}
             </p>
             <div className="flex gap-4">
                <SocialIcon icon={FaFacebookF} />
@@ -83,13 +142,13 @@ const Footer = () => {
 
           {/* Column 2: Quick Links */}
           <div>
-            <h4 className="text-white font-bold text-lg mb-6">Цэс</h4>
+            <h4 className="text-white font-bold text-lg mb-6">{t.menuTitle}</h4>
             <ul className="space-y-4">
-              {['Нүүр', 'Чиглэлүүд', 'Багцууд', 'Блог', 'Бидний тухай'].map((item) => (
-                <li key={item}>
-                  <Link href="#" className="text-slate-400 hover:text-sky-400 transition-colors text-sm font-medium flex items-center gap-2 group">
+              {t.menuItems.map((item) => (
+                <li key={item.label}>
+                  <Link href={item.href} className="text-slate-400 hover:text-sky-400 transition-colors text-sm font-medium flex items-center gap-2 group">
                     <span className="w-0 group-hover:w-2 h-0.5 bg-sky-400 transition-all duration-300" />
-                    {item}
+                    {item.label}
                   </Link>
                 </li>
               ))}
@@ -98,12 +157,12 @@ const Footer = () => {
 
           {/* Column 3: Top Destinations */}
           <div>
-            <h4 className="text-white font-bold text-lg mb-6">Эрэлттэй</h4>
+            <h4 className="text-white font-bold text-lg mb-6">{t.trendingTitle}</h4>
             <ul className="space-y-4">
-              {['Европ',"Швейцарь "].map((item) => (
-                <li key={item}>
-                  <Link href="#" className="text-slate-400 hover:text-sky-400 transition-colors text-sm font-medium">
-                    {item}
+              {t.trendingItems.map((item) => (
+                <li key={item.label}>
+                  <Link href={item.href} className="text-slate-400 hover:text-sky-400 transition-colors text-sm font-medium">
+                    {item.label}
                   </Link>
                 </li>
               ))}
@@ -112,11 +171,11 @@ const Footer = () => {
 
           {/* Column 4: Contact */}
           <div>
-            <h4 className="text-white font-bold text-lg mb-6">Холбоо барих</h4>
+            <h4 className="text-white font-bold text-lg mb-6">{t.contactTitle}</h4>
             <ul className="space-y-4">
               <li className="flex items-start gap-3 text-slate-400 text-sm">
                 <FaMapMarkerAlt className="text-sky-500 mt-1 flex-shrink-0" />
-                <span>Улаанбаатар хот, Сүхбаатар дүүрэг, 1-р хороо, Blue Sky Tower, 4 давхар</span>
+                <span>{t.address}</span>
               </li>
               <li className="flex items-center gap-3 text-slate-400 text-sm">
                 <FaPhoneAlt className="text-sky-500 flex-shrink-0" />
@@ -133,19 +192,17 @@ const Footer = () => {
 
         {/* ─── 4. BOTTOM BAR ─── */}
         <div className="border-t border-slate-800 pt-8 flex flex-col md:flex-row justify-between items-center gap-4 text-slate-500 text-sm">
-          <p>© 2025 Euro trails. Бүх эрх хуулиар хамгаалагдсан.</p>
+          <p>{t.copyright}</p>
           <div className="flex gap-6">
-            <Link href="#" className="hover:text-white transition-colors">Нууцлалын бодлого</Link>
-            <Link href="#" className="hover:text-white transition-colors">Үйлчилгээний нөхцөл</Link>
+            <Link href="#" className="hover:text-white transition-colors">{t.policy}</Link>
+            <Link href="#" className="hover:text-white transition-colors">{t.terms}</Link>
           </div>
         </div>
       </div>
 
       {/* ─── 5. BACKGROUND DECORATION ─── */}
-      {/* World Map Overlay */}
       <div className="absolute inset-0 opacity-5 pointer-events-none bg-[url('https://upload.wikimedia.org/wikipedia/commons/8/80/World_map_-_low_resolution.svg')] bg-center bg-no-repeat bg-cover mix-blend-overlay" />
       
-      {/* Moving Plane Animation */}
       <motion.div
         animate={{ x: ["-10vw", "110vw"] }}
         transition={{ duration: 30, repeat: Infinity, ease: "linear" }}
