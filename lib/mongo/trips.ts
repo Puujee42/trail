@@ -6,6 +6,7 @@ const COLLECTION = "trips";
 export interface LocalizedString {
   mn: string;
   en: string;
+  ko: string;
 }
 
 export interface ItineraryItem {
@@ -13,7 +14,11 @@ export interface ItineraryItem {
   title: LocalizedString; // Changed from string
   desc: LocalizedString;  // Changed from string
 }
-
+export interface LocalizedPrice {
+  mn: number;
+  en: number;
+  ko: number;
+}
 export interface Trip {
   _id: string;
   type?: string;
@@ -29,7 +34,7 @@ export interface Trip {
   category: string;
   rating: number;
   image: string;
-  price: number;
+  price: LocalizedPrice;
   tags?: string[];
   featured?: boolean;
   oldPrice?: number;

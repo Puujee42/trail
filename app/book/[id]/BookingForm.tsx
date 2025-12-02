@@ -9,33 +9,40 @@ import {
   FaCalendarAlt, FaUserFriends, FaCheckCircle, FaArrowLeft, FaShieldAlt, FaPlane 
 } from "react-icons/fa";
 import { Trip } from "@/lib/mongo/trips";
-// 👇 1. Import Hook
-import { useLanguage } from "../../context/LanguageContext";
+import { useLanguage } from "../../context/LanguageContext"; // Check path
 
 export default function BookingForm({ trip }: { trip: Trip }) {
-  // 👇 2. Get Language
   const { language } = useLanguage();
-  
   const { user } = useUser();
-  const router = useRouter();
-
+  
   // State
   const [travelers, setTravelers] = useState(1);
   const [selectedDate, setSelectedDate] = useState("");
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState(false);
 
-  // 👇 3. Define Translations
+  // 1. CALCULATE PRICE BASED ON LANGUAGE
+  // Cast language to specific keys to avoid TypeScript errors if LanguageContext is generic string
+  const currentLangKey = language as 'mn' | 'en' | 'ko';
+  
+  // Get the numeric price for the current language (fallback to MN if missing)
+  const unitPrice = trip.price[currentLangKey] || trip.price.mn;
+  const totalPrice = unitPrice * travelers;
+
+  // 2. HELPER TO FORMAT CURRENCY SYMBOLS
+  const formatMoney = (amount: number) => {
+    if (language === 'en') return `$${amount.toLocaleString()}`;
+    if (language === 'ko') return `₩${amount.toLocaleString()}`;
+    return `${amount.toLocaleString()}₮`; // Default MN
+  };
+
+  // Translations
   const content = {
     mn: {
       header: "Захиалга баталгаажуулах",
-      
-      // Success View
       successTitle: "Захиалга амжилттай!",
       successDesc: "Таны захиалгыг хүлээн авлаа. Бид тантай удахгүй холбогдож баталгаажуулах болно.",
       backHome: "Нүүр хуудас руу буцах",
-
-      // Form
       travelerInfo: "Аялагчийн мэдээлэл",
       nameLabel: "Овог нэр",
       namePlace: "Жишээ: Бат-Эрдэнэ",
@@ -43,31 +50,22 @@ export default function BookingForm({ trip }: { trip: Trip }) {
       phonePlace: "9911-XXXX",
       emailLabel: "И-мэйл хаяг",
       emailPlace: "name@email.com",
-      
       tripSchedule: "Аяллын тов",
       selectDate: "Эхлэх өдөр сонгох",
       travelerCount: "Аялагчийн тоо",
-      
       submitBtn: "Захиалга илгээх",
       errorDate: "Аяллын өдрөө сонгоно уу.",
-
-      // Summary
       pricePerPerson: "Нэг хүний үнэ:",
       travelerCountLabel: "Аялагчийн тоо:",
       totalLabel: "Нийт дүн:",
-      
       trustTitle: "Төлбөрийн баталгаа",
       trustDesc: "Таны захиалга илгээгдсэний дараа манай менежер холбогдож төлбөрийн нөхцөлийг танилцуулна."
     },
     en: {
       header: "Confirm Booking",
-      
-      // Success View
       successTitle: "Booking Successful!",
       successDesc: "We have received your booking. We will contact you shortly to confirm details.",
       backHome: "Back to Home",
-
-      // Form
       travelerInfo: "Traveler Information",
       nameLabel: "Full Name",
       namePlace: "Ex: John Doe",
@@ -75,44 +73,53 @@ export default function BookingForm({ trip }: { trip: Trip }) {
       phonePlace: "+1 234 567 890",
       emailLabel: "Email Address",
       emailPlace: "name@email.com",
-      
       tripSchedule: "Trip Schedule",
       selectDate: "Select Start Date",
       travelerCount: "Travelers",
-      
       submitBtn: "Submit Booking",
       errorDate: "Please select a start date.",
-
-      // Summary
       pricePerPerson: "Price per person:",
       travelerCountLabel: "Travelers:",
       totalLabel: "Total Amount:",
-      
       trustTitle: "Payment Security",
       trustDesc: "After submitting your order, our manager will contact you with payment terms and confirmation."
+    },
+    ko: {
+      header: "예약 확인",
+      successTitle: "예약 성공!",
+      successDesc: "귀하의 예약을 접수했습니다. 세부 사항을 확인하기 위해 곧 연락드리겠습니다.",
+      backHome: "홈으로 돌아가기",
+      travelerInfo: "여행자 정보",
+      nameLabel: "성명",
+      namePlace: "예: 홍길동",
+      phoneLabel: "전화번호",
+      phonePlace: "+82 10 1234 5678",
+      emailLabel: "이메일 주소",
+      emailPlace: "name@email.com",
+      tripSchedule: "여행 일정",
+      selectDate: "시작 날짜 선택",
+      travelerCount: "여행자 수",
+      submitBtn: "예약 제출",
+      errorDate: "시작 날짜를 선택해주세요.",
+      pricePerPerson: "1인당 가격:",
+      travelerCountLabel: "여행자 수:",
+      totalLabel: "총 금액:",
+      trustTitle: "결제 보안",
+      trustDesc: "주문을 제출한 후, 저희 매니저가 결제 조건 및 확인 사항으로 연락드릴 것입니다."
     }
   };
 
   const t = content[language];
 
-  // Generate next 3 upcoming dates (Mock logic)
-  const upcomingDates = [
-    "2025-06-15", 
-    "2025-07-20", 
-    "2025-08-10"
-  ];
-
-  const totalPrice = trip.price * travelers;
+  // Mock Dates
+  const upcomingDates = ["2025-06-15", "2025-07-20", "2025-08-10"];
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
-
     // Simulate API Call
     await new Promise((resolve) => setTimeout(resolve, 2000));
-
     console.log("Booking Submitted", { tripId: trip._id, travelers, selectedDate, price: totalPrice });
-
     setLoading(false);
     setSuccess(true);
   };
@@ -129,9 +136,7 @@ export default function BookingForm({ trip }: { trip: Trip }) {
             <FaCheckCircle size={40} />
           </div>
           <h2 className="text-2xl font-black text-slate-800 mb-2">{t.successTitle}</h2>
-          <p className="text-slate-500 mb-8">
-            {t.successDesc}
-          </p>
+          <p className="text-slate-500 mb-8">{t.successDesc}</p>
           <Link href="/">
             <button className="w-full py-4 rounded-xl bg-slate-900 text-white font-bold hover:bg-slate-800 transition-colors">
               {t.backHome}
@@ -291,21 +296,21 @@ export default function BookingForm({ trip }: { trip: Trip }) {
                 className="bg-white rounded-3xl p-6 shadow-xl shadow-slate-200/50 border border-slate-200"
               >
                 <div className="aspect-video w-full rounded-2xl overflow-hidden mb-4 relative">
-                  <img src={trip.image} alt={trip.title[language]} className="w-full h-full object-cover" />
+                  <img src={trip.image} alt={trip.title[currentLangKey]} className="w-full h-full object-cover" />
                   <div className="absolute inset-0 bg-black/10" />
                 </div>
 
                 <h3 className="text-lg font-bold text-slate-800 leading-tight mb-2">
-                  {trip.title[language]}
+                  {trip.title[currentLangKey]}
                 </h3>
                 <p className="text-sm text-slate-500 mb-6 flex items-center gap-2">
-                  <FaPlane className="text-sky-500" /> {trip.duration[language]}
+                  <FaPlane className="text-sky-500" /> {trip.duration[currentLangKey]}
                 </p>
 
                 <div className="space-y-3 py-4 border-t border-dashed border-slate-200">
                   <div className="flex justify-between text-sm text-slate-600">
                     <span>{t.pricePerPerson}</span>
-                    <span className="font-bold">{trip.price.toLocaleString()}₮</span>
+                    <span className="font-bold">{formatMoney(unitPrice)}</span>
                   </div>
                   <div className="flex justify-between text-sm text-slate-600">
                     <span>{t.travelerCountLabel}</span>
@@ -317,7 +322,7 @@ export default function BookingForm({ trip }: { trip: Trip }) {
                   <div className="flex justify-between items-end">
                     <span className="text-sm font-bold text-slate-500">{t.totalLabel}</span>
                     <span className="text-3xl font-black text-sky-600">
-                      {totalPrice.toLocaleString()}₮
+                      {formatMoney(totalPrice)}
                     </span>
                   </div>
                 </div>

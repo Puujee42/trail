@@ -61,7 +61,7 @@ const HeroSection = () => {
   }, []);
 
   /* ────────────────────── Content Data ────────────────────── */
-  const content: Record<"mn" | "en", Content> = {
+  const content: Record<"mn" | "en" | "ko", Content> = {
     mn: {
       badge: "Аялагчдын #1 Сонголт",
       headlinePrefix: "Дараагийн аялал тань",
@@ -104,6 +104,27 @@ const HeroSection = () => {
         { icon: FaPassport, text: "Culture" },
       ]
     },
+    ko: {
+      badge: "여행자의 #1 선택",
+      headlinePrefix: "당신의 다음 여행지를",
+      typeSequence: ["발리로.", 2000, "파리로.", 2000, "교토로.", 2000, "전 세계로.", 4000],
+      subheadline: "럭셔리 경험과 예산 친화적인 모험을 큐레이션합니다. 짐을 싸고 나머지는 저희에게 맡기세요.",
+      searchPlaceholder: "당신의 꿈의 여행지는 어디인가요?",
+      searchLabelDest: "목적지",
+      searchLabelDate: "날짜",
+      searchDateValue: "날짜 추가",
+      btnSearch: "검색",
+      stats: [
+        { icon: FaMapMarkedAlt, end: 150, label: "목적지" },
+        { icon: FaSuitcaseRolling, end: 12000, label: "여행자" },
+        { icon: FaStar, end: 99, label: "만족도" },
+      ],
+      tags: [
+        { icon: FaUmbrellaBeach, text: "휴식" },
+        { icon: FaMountain, text: "모험" },
+        { icon: FaPassport, text: "문화" },
+      ]
+    }
   };
 
   const t = content[language];

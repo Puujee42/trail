@@ -19,6 +19,7 @@ import { useLanguage } from "../../context/LanguageContext";
 interface LocalizedString {
   mn: string;
   en: string;
+   ko: string;
 }
 
 interface ItineraryItem {
@@ -91,6 +92,28 @@ const TourDetailClient = ({ trip }: { trip: Trip }) => {
       terms: "By booking, you agree to our terms of service.",
       questionTitle: "Have Questions?",
       questionDesc: "Contact our manager for more information."
+    },
+      ko: {
+      back: "뒤로가기",
+      about: "여행 정보",
+      features: {
+        flight: "항공편",
+        food: "식사",
+        visa: "비자 서비스",
+        planning: "여행 일정 계획"
+      },
+      itineraryTitle: "여행 일정",
+      itineraryEmpty: "자세한 일정은 곧 제공됩니다.",
+      priceLabel: "총 가격 (1인당)",
+      typeLabel: "여행 유형:",
+      durationLabel: "기간:",
+      seatsLabel: "남은 좌석:",
+      seatsLeft: "남은 좌석",
+      open: "오픈",
+      bookBtn: "지금 예약",
+      terms: "예약함으로써 귀하는 당사의 서비스 약관에 동의하게 됩니다.",
+      questionTitle: "질문이 있으신가요?",
+      questionDesc: "자세한 정보를 원하시면 매니저에게 문의하세요."
     }
   };
 

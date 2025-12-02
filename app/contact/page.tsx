@@ -77,6 +77,35 @@ const ContactPage = () => {
         { q: "Can I cancel my trip?", a: "Deposits are refundable if cancelled at least 14 days before the trip starts." },
         { q: "Is it safe to travel alone?", a: "All our organized trips fully meet safety standards. Our experienced guides will assist you throughout the journey." }
       ]
+    },
+    ko: {
+      headerTitlePrefix: "문의하기",
+      headerTitleSuffix: "연락하세요",
+      headerDesc: "다음 여행에 대해 논의할 준비가 항상 되어 있습니다. 문의 사항이 있으시면 아래 양식을 사용하십시오.",
+      
+      formTitle: "메시지 남기기",
+      formDesc: "24시간 이내에 연락드리겠습니다.",
+      formName: "이름",
+      formEmail: "이메일",
+      formSubject: "제목",
+      formMessage: "메시지...",
+      formBtn: "보내기",
+
+      infoAddress: "몽골 울란바토르 수흐바타르구 블루 스카이 타워 4층",
+      infoPhone: "+976 7711-8888",
+      infoEmail: "info@Euro trails.mn",
+      infoHours: "월요일 - 금요일: 09:00 - 18:00",
+      infoLabels: ["우리 사무실", "문의하기", "이메일 주소", "근무 시간"],
+      mapPlaceholder: "인터랙티브 지도",
+
+      faqTitle: "자주 묻는 질문",
+      faqDesc: "여기에서 답을 찾을 수 있습니다.",
+      faqs: [
+        { q: "여행 예약에 보증금이 필요합니까?", a: "예, 대부분의 여행에는 총 금액의 30% 보증금이 필요합니다." },
+        { q: "비자 신청을 도와주나요?", a: "물론입니다. 저희 팀이 비자 신청에 필요한 모든 서류 준비를 도와드립니다." },
+        { q: "여행을 취소할 수 있나요?", a: "여행 시작 최소 14일 전에 취소하는 경우 보증금은 환불됩니다." },
+        { q: "혼자 여행하는 것이 안전한가요?", a: "저희가 조직하는 모든 여행은 안전 기준을 완전히 충족합니다. 경험이 풍부한 가이드가 여행 내내 도와드릴 것입니다." }
+      ]
     }
   };
 

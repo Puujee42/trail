@@ -69,6 +69,30 @@ const Footer = () => {
       copyright: "© 2025 Euro trails. All rights reserved.",
       policy: "Privacy Policy",
       terms: "Terms of Service"
+    },
+    ko: {
+      newsletterTitle: "뉴스레터 구독?",
+      newsletterDesc: "최신 업데이트를 즉시 받아보세요.",
+      emailPlaceholder: "이메일 주소...",
+      brandDesc: "우리는 세계의 모든 코너에 가장 쾌적하고 안전하며 잊지 못할 여행을 제공합니다.",
+      menuTitle: "메뉴",
+      menuItems: [
+        { label: "홈", href: "/" },
+        { label: "목적지", href: "/packages" },
+        { label: "패키지", href: "/packages" },
+        { label: "블로그", href: "/blog" },
+        { label: "회사 소개", href: "/about" },
+      ],
+      trendingTitle: "인기 여행지",
+      trendingItems: [
+        { label: "유럽", href: "/packages/europe" },
+        { label: "스위스", href: "/packages/europe" },
+      ],
+      contactTitle: "문의하기",
+      address: "몽골 울란바토르 수흐바타르구 1호 코루 블루 스카이 타워 4층",
+      copyright: "© 2025 Euro trails. 모든 권리 보유.",
+      policy: "개인 정보 보호 정책",
+      terms: "서비스 이용 약관"
     }
   };
 

@@ -73,6 +73,30 @@ const WhyChooseUs = () => {
 
       card5Title: "Join Us?",
       card5Desc: "Get the latest travel updates instantly."
+    },
+    ko: {
+      badge: "우리의 장점",
+      titlePrefix: "왜 Euro trails를 선택해야",
+      titleSuffix: "까요?",
+      desc: "우리는 단순히 여행을 판매하는 것이 아닙니다. 평생 기억에 남을 추억, 안전 및 프리미엄 서비스를 약속합니다.",
+      
+      card1Title: "무한한 글로벌 여행",
+      card1Desc: "우리는 50개 이상의 국가와 몽골의 21개 지방에서 공식 기관과 협력하여 어디든지 데려다 드립니다.",
+      
+      card2Title: "24/7 지원",
+      card2Desc: "여행 내내 함께합니다. 문제가 발생하면 언제 어디서나 문의하세요.",
+      card2Btn: "지금 채팅하기",
+      
+      card3Title: "최고의 가격",
+      card3Desc: "가장 현실적인 시장 가격.",
+      card3Badge: "-20% 할인",
+
+      card4Title: "100% 보험",
+      card4Desc: "여러분의 안전이 우리의 최우선 과제입니다. 모든 여행자는 완전한 보험에 가입되어 있습니다.",
+      card4Tags: ["사고", "건강", "수하물"],
+
+      card5Title: "함께 하시겠습니까?",
+      card5Desc: "최신 여행 업데이트를 즉시 받아보세요."
     }
   };
 

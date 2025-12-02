@@ -11,21 +11,20 @@ import { useLanguage } from "../context/LanguageContext";
 
 /* ────────────────────── Static Constants ────────────────────── */
 const categories = [
-  { id: "all", label: { mn: "Бүгд", en: "All" } },
-  { id: "nature", label: { mn: "Байгаль", en: "Nature" } },
-  { id: "city", label: { mn: "Хотын аялал", en: "City Tours" } },
-  { id: "beach", label: { mn: "Далайн эрэг", en: "Beach" } },
-  { id: "culture", label: { mn: "Соёл", en: "Culture" } },
-  { id: "theme_park", label: { mn: "Парк", en: "Theme Parks" } },
-  { id: "resort", label: { mn: "Амралт", en: "Resort" } },
+  { id: "all", label: { mn: "Бүгд", en: "All", ko: "전체" } },
+  { id: "nature", label: { mn: "Байгаль", en: "Nature", ko: "자연" } },
+  { id: "city", label: { mn: "Хотын аялал", en: "City Tours", ko: "도시 투어" } },
+  { id: "beach", label: { mn: "Далайн эрэг", en: "Beach", ko: "해변" } },
+  { id: "culture", label: { mn: "Соёл", en: "Culture", ko: "문화" } },
+  { id: "theme_park", label: { mn: "Парк", en: "Theme Parks", ko: "테마파크" } },
+  { id: "resort", label: { mn: "Амралт", en: "Resort", ko: "리조트" } },
 ];
 
 /* ────────────────────── Interfaces ────────────────────── */
 interface PackagesListProps {
   packages: Trip[];
-  // UPDATED: Allow passing bilingual objects
-  title?: { mn: string; en: string };
-  subtitle?: { mn: string; en: string };
+  title?: { mn: string; en: string; ko: string };
+  subtitle?: { mn: string; en: string; ko: string };
 }
 
 /* ────────────────────── Main Component ────────────────────── */
@@ -39,23 +38,27 @@ const PackagesList = ({
   const [activeTab, setActiveTab] = useState("all");
   const [searchQuery, setSearchQuery] = useState("");
 
-  // UPDATED: Logic to choose prop text vs default text
+  // Default texts based on language
   const displayTitle = title 
     ? title[language] 
-    : (language === "mn" ? "Аяллын Багцууд" : "Travel Packages");
+    : (language === "mn" ? "Аяллын Багцууд" : language === "ko" ? "여행 패키지" : "Travel Packages");
 
   const displaySubtitle = subtitle 
     ? subtitle[language] 
     : (language === "mn" 
       ? "Таны дараагийн адал явдал эндээс эхэлнэ." 
+      : language === "ko"
+      ? "다음 모험이 여기에서 시작됩니다."
       : "Your next adventure starts here.");
+
+  const noResultsText = language === "mn" ? "Илэрц олдсонгүй" : language === "ko" ? "결과 없음" : "No results found";
+  const searchPlaceholder = language === "mn" ? "Аялал хайх..." : language === "ko" ? "여행 검색..." : "Search trips...";
 
   // Filtering Logic
   const filteredPackages = packages.filter((pkg) => {
-    // 1. Category Filter
     const matchesCategory = activeTab === "all" || pkg.category === activeTab;
     
-    // 2. Search Filter (Safe Access)
+    // Safe access for trilingual titles/locations
     const currentTitle = pkg.title?.[language] || ""; 
     const currentLocation = pkg.location?.[language] || "";
     
@@ -74,7 +77,7 @@ const PackagesList = ({
       <div className="container mx-auto px-4 mb-8 md:mb-12">
         <div className="text-center max-w-2xl mx-auto">
           <motion.h1 
-            key={language} // FORCE RE-RENDER ON LANG CHANGE
+            key={language} 
             initial={{ opacity: 0, y: -20 }}
             animate={{ opacity: 1, y: 0 }}
             className="text-4xl md:text-5xl font-black text-slate-800 mb-4"
@@ -115,7 +118,8 @@ const PackagesList = ({
                     transition={{ type: "spring", bounce: 0.2, duration: 0.6 }}
                   />
                 )}
-                <span className="relative z-10">{cat.label[language]}</span>
+                {/* Safe access for category label */}
+                <span className="relative z-10">{cat.label[language] || cat.label.mn}</span>
               </button>
             ))}
           </div>
@@ -124,7 +128,7 @@ const PackagesList = ({
              <FaSearch className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 group-focus-within:text-sky-500 transition-colors" />
              <input 
                type="text" 
-               placeholder={language === "mn" ? "Аялал хайх..." : "Search trips..."}
+               placeholder={searchPlaceholder}
                value={searchQuery}
                onChange={(e) => setSearchQuery(e.target.value)}
                className="w-full bg-slate-100/50 border border-slate-200 rounded-full pl-10 pr-4 py-3 text-sm font-bold text-slate-700 focus:outline-none focus:ring-2 focus:ring-sky-200 focus:bg-white transition-all"
@@ -154,11 +158,8 @@ const PackagesList = ({
                   <FaSearch />
                 </div>
                 <h3 className="text-xl font-bold text-slate-700">
-                  {language === "mn" ? "Илэрц олдсонгүй" : "No results found"}
+                  {noResultsText}
                 </h3>
-                <p className="text-slate-500">
-                  {language === "mn" ? "Өөр түлхүүр үгээр хайгаад үзнэ үү." : "Try searching with a different keyword."}
-                </p>
               </motion.div>
             )}
           </AnimatePresence>
@@ -169,8 +170,26 @@ const PackagesList = ({
   );
 };
 
-/* ────────────────────── PACKAGE CARD ────────────────────── */
-const PackageCard = ({ pkg, language }: { pkg: Trip, language: "mn" | "en" }) => {
+/* ────────────────────── PACKAGE CARD (FIXED PRICE LOGIC) ────────────────────── */
+const PackageCard = ({ pkg, language }: { pkg: Trip, language: "mn" | "en" | "ko" }) => {
+  
+  // 1. Helper to extract numeric price safely
+  const getPriceValue = (priceObj: any) => {
+    if (typeof priceObj === 'number') return priceObj; // Handle legacy data
+    if (typeof priceObj === 'object') return priceObj[language] || priceObj.mn; // Handle new data
+    return 0;
+  };
+
+  const priceValue = getPriceValue(pkg.price);
+  const oldPriceValue = pkg.oldPrice ? getPriceValue(pkg.oldPrice) : null;
+
+  // 2. Format with Currency Symbol
+  const formatMoney = (amount: number) => {
+    if (language === 'en') return `$${amount.toLocaleString()}`;
+    if (language === 'ko') return `₩${amount.toLocaleString()}`;
+    return `${amount.toLocaleString()}₮`; // Default MN
+  };
+
   return (
     <motion.div
       layout
@@ -184,7 +203,7 @@ const PackageCard = ({ pkg, language }: { pkg: Trip, language: "mn" | "en" }) =>
         <Link href={`/tours/${pkg._id}`}>
           <img 
             src={pkg.image} 
-            alt={pkg.title?.[language]} 
+            alt={pkg.title[language] || "Trip"} 
             className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110 cursor-pointer" 
           />
         </Link>
@@ -208,29 +227,32 @@ const PackageCard = ({ pkg, language }: { pkg: Trip, language: "mn" | "en" }) =>
               <FaStar /> {pkg.rating} <span className="text-slate-300 font-medium">({pkg.reviews || 0})</span>
            </div>
            <div className="flex items-center gap-1 text-sky-500 text-xs font-bold bg-sky-50 px-2 py-1 rounded-md">
-              <FaClock /> {pkg.duration?.[language]}
+              <FaClock /> {pkg.duration[language]}
            </div>
         </div>
 
         <Link href={`/tours/${pkg._id}`}>
-          <h3 className="text-xl font-bold text-slate-800 mb-2 leading-tight group-hover:text-sky-600 transition-colors">
-            {pkg.title?.[language]}
+          <h3 className="text-xl font-bold text-slate-800 mb-2 leading-tight group-hover:text-sky-600 transition-colors line-clamp-2 min-h-[56px]">
+            {pkg.title[language]}
           </h3>
         </Link>
 
         <p className="flex items-center gap-2 text-slate-500 text-sm mb-6">
-           <FaMapMarkerAlt className="text-slate-300" /> {pkg.location?.[language]}
+           <FaMapMarkerAlt className="text-slate-300" /> {pkg.location[language]}
         </p>
 
         <div className="mt-auto pt-4 border-t border-slate-100 flex items-center justify-between">
            <div>
-              {pkg.oldPrice && (
+              {/* FIXED: Old Price Logic */}
+              {oldPriceValue && (
                 <span className="block text-xs text-slate-400 line-through decoration-red-400">
-                  {pkg.oldPrice.toLocaleString()}₮
+                  {formatMoney(oldPriceValue)}
                 </span>
               )}
+              
+              {/* FIXED: Current Price Logic */}
               <span className="text-lg font-black text-slate-900">
-                {pkg.price.toLocaleString()}₮
+                {formatMoney(priceValue)}
               </span>
            </div>
            <Link href={`/tours/${pkg._id}`}>

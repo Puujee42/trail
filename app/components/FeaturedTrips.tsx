@@ -16,7 +16,7 @@ import { useLanguage } from "../context/LanguageContext";
 
 /* ────────────────────── Main Component ────────────────────── */
 const FeaturedTrips = ({ trips }: { trips: Trip[] }) => {
-  const { language } = useLanguage(); // Get current language (mn/en)
+  const { language } = useLanguage(); 
   const targetRef = useRef<HTMLDivElement>(null);
   const { scrollYProgress } = useScroll({ target: targetRef });
 
@@ -42,10 +42,18 @@ const FeaturedTrips = ({ trips }: { trips: Trip[] }) => {
       titleEnd: "a reality.",
       desc: "Travel is an investment. Not in material things — but in yourself, your soul, your perspective, and the quality of your life.",
       viewAll: "View All Trips"
+    },
+    ko: {
+      bestOffer: "최고의 상품",
+      titleMain: "당신의 꿈의",
+      titleAccent: "여행을",
+      titleEnd: "현실로 만드세요.",
+      desc: "여행은 투자입니다. 물질적인 것에 대한 투자가 아니라 자신, 영혼, 관점, 그리고 삶의 질에 대한 투자입니다.",
+      viewAll: "모든 여행 보기"
     }
   };
 
-  const text = t[language];
+  const text = t[language as "mn" | "en" | "ko"] || t.mn;
 
   return (
     <section ref={targetRef} className="py-24 bg-slate-50 relative overflow-hidden">
@@ -109,7 +117,7 @@ const FeaturedTrips = ({ trips }: { trips: Trip[] }) => {
         {/* ─── CAROUSEL SCROLL ─── */}
         <div className="flex gap-8 overflow-x-auto pb-12 pt-4 px-2 snap-x snap-mandatory scrollbar-hide -mx-4 md:mx-0">
           {trips.map((trip, i) => (
-            <TripCard key={trip._id} trip={trip} index={i} language={language} />
+            <TripCard key={trip._id} trip={trip} index={i} language={language as "mn" | "en" | "ko"} />
           ))}
           <div className="min-w-[20px]" />
         </div>
@@ -120,7 +128,7 @@ const FeaturedTrips = ({ trips }: { trips: Trip[] }) => {
 };
 
 /* ────────────────────── 3D Tilt Card Component ────────────────────── */
-const TripCard = ({ trip, index, language }: { trip: Trip, index: number, language: "mn" | "en" }) => {
+const TripCard = ({ trip, index, language }: { trip: Trip, index: number, language: "mn" | "en" | "ko"}) => {
   const x = useMotionValue(0);
   const y = useMotionValue(0);
   const rotateX = useSpring(useTransform(y, [-100, 100], [5, -5]), { stiffness: 150, damping: 20 });
@@ -134,8 +142,29 @@ const TripCard = ({ trip, index, language }: { trip: Trip, index: number, langua
     y.set(event.clientY - centerY);
   }
 
-  // Format Price to MNT currency
-  const formattedPrice = new Intl.NumberFormat('mn-MN').format(trip.price) + '₮';
+  // ────────────────── PRICE CALCULATION FIX ──────────────────
+  // Helper to safely get price number regardless of DB format (Old number vs New Object)
+  const getPriceValue = () => {
+    // Case 1: Price is just a number (Old DB data)
+    if (typeof trip.price === 'number') {
+      return trip.price; 
+    }
+    // Case 2: Price is an object (New DB data)
+    if (typeof trip.price === 'object' && trip.price !== null) {
+      // @ts-ignore - Handle dynamic key access safely
+      return trip.price[language] || trip.price.mn || 0;
+    }
+    return 0; // Fallback
+  };
+
+  const priceValue = getPriceValue();
+
+  // Format based on currency
+  const formattedPrice = 
+    language === 'en' ? `$${priceValue.toLocaleString()}` :
+    language === 'ko' ? `₩${priceValue.toLocaleString()}` :
+    `${priceValue.toLocaleString()}₮`; 
+  // ──────────────────────────────────────────────────────────
 
   return (
     <motion.div 
@@ -164,6 +193,7 @@ const TripCard = ({ trip, index, language }: { trip: Trip, index: number, langua
                <FaHeart />
             </button>
 
+            {/* Price Badge */}
             <div className="absolute bottom-4 right-4 z-20">
                <div className="bg-white text-slate-900 text-sm font-bold px-4 py-2 rounded-xl shadow-lg flex items-center gap-1">
                  {formattedPrice}
@@ -172,7 +202,7 @@ const TripCard = ({ trip, index, language }: { trip: Trip, index: number, langua
 
             <img 
                src={trip.image} 
-               alt={trip.title[language]} // FIXED
+               alt={trip.title[language] || "Trip Image"} 
                className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
             />
          </div>
@@ -180,10 +210,10 @@ const TripCard = ({ trip, index, language }: { trip: Trip, index: number, langua
          {/* 2. Content */}
          <div className="p-5 flex flex-col flex-grow">
             <div className="flex justify-between items-start mb-3">
-               <h3 className="text-xl font-bold text-slate-800 leading-tight group-hover:text-sky-600 transition-colors">
-                  {trip.title[language]} {/* FIXED */}
+               <h3 className="text-xl font-bold text-slate-800 leading-tight group-hover:text-sky-600 transition-colors line-clamp-2 min-h-[56px]">
+                  {trip.title[language] || trip.title["mn"]}
                </h3>
-               <div className="flex items-center gap-1 bg-yellow-50 px-2 py-1 rounded-lg border border-yellow-100">
+               <div className="flex items-center gap-1 bg-yellow-50 px-2 py-1 rounded-lg border border-yellow-100 flex-shrink-0">
                   <FaStar className="text-yellow-400 text-xs" />
                   <span className="text-xs font-bold text-yellow-700">{trip.rating}</span>
                </div>
@@ -191,11 +221,11 @@ const TripCard = ({ trip, index, language }: { trip: Trip, index: number, langua
             
             <div className="flex items-center gap-4 text-slate-500 text-sm mb-6">
                <div className="flex items-center gap-1.5">
-                  <FaMapMarkerAlt className="text-sky-400" /> {trip.location[language]} {/* FIXED */}
+                  <FaMapMarkerAlt className="text-sky-400" /> {trip.location[language] || trip.location["mn"]}
                </div>
                <div className="w-1 h-1 bg-slate-300 rounded-full" />
                <div className="flex items-center gap-1.5">
-                  <FaClock className="text-sky-400" /> {trip.duration[language]} {/* FIXED */}
+                  <FaClock className="text-sky-400" /> {trip.duration[language] || trip.duration["mn"]}
                </div>
             </div>
 

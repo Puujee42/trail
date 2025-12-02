@@ -56,6 +56,23 @@ const SignInPage = () => {
       noAccount: "Don't have an account?",
       signUp: "Sign Up",
       errorGeneric: "An unexpected error occurred."
+    },
+    ko: {
+      brand: "Euro trails",
+      heroTitle: "새로운 여정에 참여하세요.",
+      heroDesc: "로그인하여 모든 기능에 액세스하고 다음 여행을 예약하세요.",
+      formTitle: "로그인",
+      formDesc: "등록된 계정으로 로그인",
+      socialGoogle: "Google로 로그인",
+      socialFacebook: "Facebook로 로그인",
+      divider: "또는",
+      emailPlaceholder: "이메일 주소",
+      passwordPlaceholder: "비밀번호",
+      btnLoading: "로그인 중...",
+      btnDefault: "로그인",
+      noAccount: "계정이 없으신가요?",
+      signUp: "가입하기",
+      errorGeneric: "예기치 않은 오류가 발생했습니다."
     }
   };
 

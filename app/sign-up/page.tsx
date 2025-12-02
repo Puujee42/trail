@@ -78,6 +78,33 @@ const SignUpPage = () => {
       btnVerify: "Verify",
       
       errorGeneric: "An unexpected error occurred."
+    },
+    ko: {
+      brand: "Euro trails",
+      heroTitle: "새로운 여정에 참여하세요.",
+      heroDesc: "가입하여 모든 기능을 잠금 해제하고 여행 계획을 시작하세요.",
+      
+      // Form View
+      formTitle: "가입하기",
+      formDesc: "새 계정 만들기",
+      socialGoogle: "Google로 가입하기",
+      socialFacebook: "Facebook로 가입하기",
+      divider: "또는",
+      emailPlaceholder: "이메일 주소",
+      passwordPlaceholder: "비밀번호",
+      btnLoading: "가입 중...",
+      btnDefault: "가입하기",
+      hasAccount: "이미 계정이 있으신가요?",
+      signIn: "로그인",
+      
+      // Verification View
+      verifyTitle: "인증 코드",
+      verifyDesc: "이메일로 전송된 6자리 코드를 입력하세요.",
+      codePlaceholder: "코드 입력",
+      btnVerifyLoading: "확인 중...",
+      btnVerify: "확인",
+      
+      errorGeneric: "예기치 않은 오류가 발생했습니다."
     }
   };
 

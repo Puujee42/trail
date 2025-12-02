@@ -12,6 +12,7 @@ import { useLanguage } from "../../context/LanguageContext";
 interface LocalizedString {
   mn: string;
   en: string;
+  ko: string;
 }
 
 interface BlogPost {
@@ -52,6 +53,16 @@ const BlogPostClient = ({ post }: { post: BlogPost }) => {
       ctaDesc: "Subscribe to our newsletter to get the latest travel updates instantly.",
       emailPlace: "Email address",
       subscribe: "Subscribe"
+    },
+    ko: {
+      back: "블로그로 돌아가기",
+      read: "읽기",
+      authorRole: "여행 작가",
+      share: "공유하기",
+      ctaTitle: "이 기사가 마음에 드셨나요?",
+      ctaDesc: "최신 여행 업데이트를 즉시 받으려면 뉴스레터를 구독하세요.",
+      emailPlace: "이메일 주소",
+      subscribe: "구독하기"
     }
   };
 

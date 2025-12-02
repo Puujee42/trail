@@ -18,18 +18,15 @@ import {
   FaPlane,
   FaUser,
   FaChevronDown,
-  FaMapMarkedAlt,
   FaUmbrellaBeach,
   FaPassport,
-  FaGlobe, 
+  FaMapMarkedAlt,
 } from "react-icons/fa";
 import { SignedOut, SignedIn, UserButton } from "@clerk/nextjs";
-// 👇 IMPORT THE HOOK
 import { useLanguage } from "../context/LanguageContext"; 
 
 /* ────────────────────── Types ────────────────────── */
-// Use the type from context if available, or define locally matches
-type Language = "mn" | "en";
+type Language = "mn" | "en" | "ko";
 
 interface NavLinkItem {
   id: string;
@@ -43,8 +40,14 @@ interface HoveredLink {
   left: number;
 }
 
+/* ────────────────────── Constants ────────────────────── */
+const LANGUAGES: { code: Language; label: string }[] = [
+  { code: "mn", label: "MN" }, // Shortened labels for cleaner horizontal layout
+  { code: "en", label: "EN" },
+  { code: "ko", label: "KO" },
+];
+
 /* ────────────────────── Bilingual Data ────────────────────── */
-// Same data as before...
 const NAV_LINKS_DATA: Record<Language, NavLinkItem[]> = {
   mn: [
     { id: "home", label: "Нүүр", href: "/" },
@@ -76,6 +79,21 @@ const NAV_LINKS_DATA: Record<Language, NavLinkItem[]> = {
     { id: "about", label: "About Us", href: "/about" },
     { id: "contact", label: "Contact", href: "/contact" },
   ],
+  ko: [
+    { id: "home", label: "홈", href: "/" },
+    {
+      id: "packages",
+      label: "패키지",
+      href: "/packages",
+      subMenu: [
+        { id: "europe", label: "유럽", href: "/packages/europe" },
+        { id: "mongolia", label: "몽골", href: "/packages/mongolia" },
+      ],
+    },
+    { id: "blog", label: "블로그", href: "/blog" },
+    { id: "about", label: "회사 소개", href: "/about" },
+    { id: "contact", label: "연락처", href: "/contact" },
+  ],
 };
 
 const UI_TEXT: Record<Language, any> = {
@@ -95,9 +113,57 @@ const UI_TEXT: Record<Language, any> = {
     menu: "Menu",
     myAccount: "My Account",
   },
+  ko: {
+    slogan: "Euro trails와 함께 세계를 여행하세요",
+    login: "로그인",
+    register: "회원가입",
+    book: "예약하기",
+    menu: "메뉴",
+    myAccount: "내 계정",
+  },
 };
 
-/* ────────────────────── Animation Variants ────────────────────── */
+/* ────────────────────── Components ────────────────────── */
+
+// 🏁 Flag Icon Component
+const FlagIcon = ({ lang, className = "w-5 h-5" }: { lang: Language, className?: string }) => {
+  if (lang === "mn") {
+    return (
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 480" className={`${className} rounded-full object-cover shadow-sm border border-white/20`}>
+        <g fillRule="evenodd" strokeWidth="1pt">
+          <path fill="#ce1126" d="M0 0h640v480H0z"/>
+          <path fill="#003580" d="M213.3 0h213.4v480H213.3z"/>
+          <path fill="#fcd116" d="M117.3 348.4L136 339l-5.7-19.7 18.7 8.3 8-18.8 3.8 20.2 19.9-5-12.7 16.2 17.6 10.6-20.2 1.7L160 372l-15-13.8-16.7 11.7 4-20.2-19 7.4zM96 117.3h21.3v85.4H96zM96 234.7h21.3v21.3H96zM117.3 224a21.3 21.3 0 100-42.7 21.3 21.3 0 000 42.7z"/>
+          <path fill="#fcd116" d="M106.7 277.3l10.6-21.3 10.7 21.3H96zM106.7 106.7l-10.7 10.6h21.4z"/>
+        </g>
+      </svg>
+    );
+  }
+  if (lang === "en") {
+    return (
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 480" className={`${className} rounded-full object-cover shadow-sm border border-white/20`}>
+        <path fill="#012169" d="M0 0h640v480H0z"/>
+        <path fill="#FFF" d="M75 0l244 181L562 0h78v62L400 241l240 178v61h-80L320 301 81 480H0v-60l239-178L0 64V0h75z"/>
+        <path fill="#C8102E" d="M424 281l216 159v40L369 281h55zm-184 20l6 35L54 480H0l240-179zM640 0v3L391 191l2-44L590 0h50zM0 0l239 176h-60L0 42V0z"/>
+        <path fill="#FFF" d="M241 0v480h160V0H241zM0 160v160h640V160H0z"/>
+        <path fill="#C8102E" d="M0 193v96h640v-96H0zM273 0v480h96V0h-96z"/>
+      </svg>
+    );
+  }
+  if (lang === "ko") {
+    return (
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 480" className={`${className} rounded-full object-cover shadow-sm border border-white/20`}>
+        <path fill="#fff" d="M0 0h640v480H0z"/>
+        <circle cx="320" cy="240" r="120" fill="#c60c30"/>
+        <path fill="#003478" d="M320 240c-44.2 0-80 35.8-80 80s35.8 80 80 80 80-35.8 80-80-35.8-80-80-80z"/>
+        <path fill="#c60c30" d="M320 240c44.2 0 80-35.8 80-80s-35.8-80-80-80-80 35.8-80 80 35.8 80 80 80z"/>
+        <path fill="#000" d="M120.3 85l37 21.3-8 13.9-37-21.3zm23.1 76l13.9-8 37 21.3-13.9 8zm39.9-106.6l8-13.9 37 21.3-8 13.9zm336.4 22.6l-37 21.3-8-13.9 37-21.3zm23.1 76l-13.9-8 37 21.3-13.9 8zm-63-42.7l-8-13.9 37 21.3-8 13.9zm-359.5 244l37-21.3 8 13.9-37 21.3zm23.1 76l13.9 8 37-21.3-13.9-8zm39.9 30.6l8 13.9 37-21.3-8-13.9zm336.4-146.6l-37-21.3-8 13.9 37 21.3zm23.1 76l-13.9 8 37-21.3-13.9-8zm-63 42.7l-8 13.9 37-21.3-8-13.9z"/>
+      </svg>
+    );
+  }
+  return null;
+};
+
 const navContainerVariants: Variants = {
   hidden: { opacity: 0 },
   show: {
@@ -156,10 +222,46 @@ const NavbarSnow = () => {
   );
 };
 
+/* ────────────────────── Language Horizontal Selector (Desktop) ────────────────────── */
+const LanguageSelector = () => {
+  const { language, setLanguage } = useLanguage();
+
+  return (
+    <div className="flex items-center bg-white/10 backdrop-blur-sm rounded-full p-1 border border-white/20">
+      {LANGUAGES.map((lang) => {
+        const isActive = language === lang.code;
+        return (
+          <button
+            key={lang.code}
+            onClick={() => setLanguage(lang.code)}
+            className={`relative flex items-center justify-center gap-1.5 px-3 py-1 rounded-full text-[10px] font-bold uppercase transition-all duration-300 ${
+              isActive ? "text-blue-900" : "text-white hover:bg-white/10"
+            }`}
+          >
+            {/* Sliding Background Pill */}
+            {isActive && (
+              <motion.div
+                layoutId="activeLangPill"
+                className="absolute inset-0 bg-white rounded-full shadow-sm"
+                transition={{ type: "spring", stiffness: 300, damping: 20 }}
+              />
+            )}
+            
+            {/* Content (Above Background) */}
+            <span className="relative z-10 flex items-center gap-1.5">
+              <FlagIcon lang={lang.code} className="w-4 h-4 shadow-sm" />
+              <span>{lang.label}</span>
+            </span>
+          </button>
+        );
+      })}
+    </div>
+  );
+};
+
 /* ────────────────────── Main Navbar ────────────────────── */
 const Navbar: React.FC = () => {
-  // 👇 FIX: Use Global Context instead of local useState
-  const { language, setLanguage } = useLanguage(); 
+  const { language } = useLanguage(); 
 
   const [hidden, setHidden] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
@@ -177,14 +279,9 @@ const Navbar: React.FC = () => {
   const backgroundOpacity = useTransform(scrollY, [0, 150], [0.85, 0.95]);
   const blurAmount = useTransform(scrollY, [0, 150], ["10px", "20px"]);
 
-  // Helpers to get current language data
-  const currentLinks = NAV_LINKS_DATA[language];
-  const t = UI_TEXT[language];
-
-  // 👇 FIX: Toggle function uses the context setter
-  const toggleLanguage = () => {
-    setLanguage(language === "mn" ? "en" : "mn");
-  };
+  const currentLang = language as Language;
+  const currentLinks = NAV_LINKS_DATA[currentLang] || NAV_LINKS_DATA['mn'];
+  const t = UI_TEXT[currentLang] || UI_TEXT['mn'];
 
   return (
     <>
@@ -216,20 +313,14 @@ const Navbar: React.FC = () => {
 
           <ul className="flex items-center gap-4 md:gap-5">
             
-            {/* 🌍 Language Toggler (Connected to Global Context) */}
+            {/* 🌍 Horizontal Language Selector (Replaced Dropdown) */}
             <li>
-              <button
-                onClick={toggleLanguage}
-                className="flex items-center gap-1.5 px-3 py-1 rounded-full bg-white/20 hover:bg-white/30 transition-all text-xs font-bold uppercase tracking-wider border border-white/20 cursor-pointer"
-              >
-                <FaGlobe className="text-yellow-300" />
-                {language}
-              </button>
+              <LanguageSelector />
             </li>
 
             <li className="text-white/30 hidden md:block">|</li>
 
-            {/* Socials & Auth ... (Rest of code remains same) */}
+            {/* Socials & Auth */}
             <motion.li className="flex items-center gap-3 text-white/80 hidden sm:flex">
               {[FaFacebookF, FaTwitter, FaInstagram].map((Icon, idx) => (
                 <motion.a
@@ -275,13 +366,11 @@ const Navbar: React.FC = () => {
             backdropFilter: `blur(${blurAmount.get()})`,
           }}
         >
-          {/* Active Link Indicator */}
           <motion.div
             className="absolute -bottom-1 h-1 bg-gradient-to-r from-sky-400 to-teal-400 rounded-full shadow-md z-0"
             animate={{ width: hoveredLink?.width || 0, left: hoveredLink?.left || 0, opacity: hoveredLink ? 1 : 0 }}
           />
 
-          {/* Logo */}
           <motion.div variants={navItemVariants} className="z-10">
             <Link href="/" className="flex items-center gap-2 group">
               <motion.div className="p-2 bg-gradient-to-br from-sky-500 to-blue-600 rounded-lg text-white shadow-lg">
@@ -293,14 +382,12 @@ const Navbar: React.FC = () => {
             </Link>
           </motion.div>
 
-          {/* Desktop Nav */}
           <div className="hidden xl:flex items-center gap-6 z-10">
             {currentLinks.map((link) => (
               <DesktopNavLink key={link.id} link={link} setHoveredLink={setHoveredLink} navRef={navRef} />
             ))}
           </div>
 
-          {/* Right Side */}
           <motion.div variants={navItemVariants} className="flex items-center gap-4 z-10">
             <motion.div className="hidden md:block">
               <Link href="/book-now" className="relative inline-flex items-center gap-2 px-6 py-2.5 rounded-full bg-gradient-to-r from-sky-400 to-teal-500 text-white font-bold text-sm shadow-md hover:shadow-xl group overflow-hidden">
@@ -315,15 +402,12 @@ const Navbar: React.FC = () => {
       </motion.header>
 
       {/* Mobile Menu */}
-      <MobileMenu isOpen={mobileOpen} closeMenu={() => setMobileOpen(false)} links={currentLinks} t={t} />
+      <MobileMenu isOpen={mobileOpen} closeMenu={() => setMobileOpen(false)} links={currentLinks} t={t} language={currentLang} />
     </>
   );
 };
 
 /* ────────────────────── Helper Components ────────────────────── */
-// (Keep DesktopNavLink, MobileMenu, MobileNavLink, AnimatedHamburgerIcon EXACTLY as they were in previous code)
-// They will automatically work because they receive 'links' and 't' as props from the parent Navbar
-// which is now correctly updating via context.
 
 const DesktopNavLink: React.FC<any> = ({ link, setHoveredLink, navRef }) => {
   const [open, setOpen] = useState(false);
@@ -357,21 +441,46 @@ const DesktopNavLink: React.FC<any> = ({ link, setHoveredLink, navRef }) => {
   );
 };
 
-const MobileMenu: React.FC<any> = ({ isOpen, closeMenu, links, t }) => (
-  <AnimatePresence>
-    {isOpen && (
-      <motion.div initial={{ x: "100%" }} animate={{ x: 0 }} exit={{ x: "100%" }} className="fixed top-0 right-0 h-full w-[85%] max-w-sm bg-white shadow-2xl z-[1000] overflow-y-auto">
-        <div className="p-6 bg-gradient-to-br from-sky-500 to-blue-600 text-white flex justify-between items-center">
-           <span className="text-xl font-bold flex gap-2"><FaPassport className="text-yellow-300"/> {t.menu}</span>
-           <button onClick={closeMenu}><FaTimes size={18} /></button>
-        </div>
-        <div className="p-6 space-y-2">
-           {links.map((link: any) => <MobileNavLink key={link.id} link={link} closeMenu={closeMenu} />)}
-        </div>
-      </motion.div>
-    )}
-  </AnimatePresence>
-);
+const MobileMenu: React.FC<any> = ({ isOpen, closeMenu, links, t, language }) => {
+  const { setLanguage } = useLanguage();
+  
+  return (
+    <AnimatePresence>
+      {isOpen && (
+        <motion.div initial={{ x: "100%" }} animate={{ x: 0 }} exit={{ x: "100%" }} className="fixed top-0 right-0 h-full w-[85%] max-w-sm bg-white shadow-2xl z-[1000] overflow-y-auto">
+          <div className="p-6 bg-gradient-to-br from-sky-500 to-blue-600 text-white flex justify-between items-center">
+             <span className="text-xl font-bold flex gap-2"><FaPassport className="text-yellow-300"/> {t.menu}</span>
+             <button onClick={closeMenu}><FaTimes size={18} /></button>
+          </div>
+          
+          {/* Mobile Language Switcher (Side-by-Side) */}
+          <div className="px-6 pt-4">
+             <div className="flex gap-2">
+                {LANGUAGES.map((lang) => (
+                  <button 
+                    key={lang.code}
+                    onClick={() => setLanguage(lang.code)}
+                    className={`flex-1 flex flex-col items-center justify-center gap-1 py-3 rounded-xl border transition-all ${
+                      language === lang.code 
+                        ? "bg-blue-50 border-blue-200 text-blue-700 font-bold shadow-sm" 
+                        : "bg-slate-50 border-slate-100 text-slate-500 hover:bg-slate-100"
+                    }`}
+                  >
+                     <FlagIcon lang={lang.code} className="w-6 h-6 shadow-sm" />
+                     <span className="text-[10px] uppercase tracking-wider">{lang.code}</span>
+                  </button>
+                ))}
+             </div>
+          </div>
+
+          <div className="p-6 space-y-2">
+             {links.map((link: any) => <MobileNavLink key={link.id} link={link} closeMenu={closeMenu} />)}
+          </div>
+        </motion.div>
+      )}
+    </AnimatePresence>
+  );
+};
 
 const MobileNavLink: React.FC<any> = ({ link, closeMenu }) => {
    const [open, setOpen] = useState(false);

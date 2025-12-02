@@ -1,38 +1,280 @@
-import clientPromise from "./index";
+import clientPromise from "@/lib/mongo";
+import { NextResponse } from "next/server";
 
-// 1. Paste your raw arrays here (I combined them for you below)
-const rawData = [
-  // Standard Packages
-  { type: "standard", title: "Хөвсгөл Далайн Аялал", category: "nature", location: "Хөвсгөл, Монгол", duration: "4 Өдөр", rating: 4.9, reviews: 120, price: 450000, oldPrice: 550000, image: "/lake.jpg", tags: ["Best Seller", "Хямдрал"], featured: true },
-  { type: "standard", title: "Парис & Европын Тур", category: "city", location: "Парис, Франц", duration: "7 Өдөр", rating: 5.0, reviews: 85, price: 4500000, image: "/paris.jpg", tags: ["Тансаг"], featured: false },
-  // ... Add the rest of 'packages' here ...
+// Prevents caching so you can run this multiple times to reset DB
+export const dynamic = "force-dynamic"; 
 
-  // Family Packages
-  { type: "family", title: "Токио Диснейленд Аялал", category: "theme_park", location: "Токио, Япон", duration: "5 Өдөр", rating: 4.9, price: 3800000, image: "/tokyo.jpg", ageGroup: "3+ нас", perks: ["Дисней тасалбар", "Өглөөний цай"], featured: true },
-  { type: "family", title: "Анталья - All Inclusive", category: "resort", location: "Анталья, Турк", duration: "8 Өдөр", rating: 4.8, price: 4200000, image: "/turkey.jpg", ageGroup: "Бүх нас", perks: ["Хүүхэд үнэгүй", "Усан парк"], featured: false },
-  // ... Add the rest of 'familyTrips' here ...
+/* ────────────────────── 1. TRIPS DATA (TRILINGUAL & MULTI-CURRENCY) ────────────────────── */
+const tripsData = [
+  // ─── EXISTING TRIPS ───
+  {
+    type: "standard", 
+    region: "europe",
+    title: { mn: "Швейцарийн Glacier Express", en: "Swiss Glacier Express", ko: "스위스 빙하 특급" },
+    category: "nature",
+    location: { mn: "Швейцарь (Альпийн нуруу)", en: "Switzerland (The Alps)", ko: "스위스 (알프스)" },
+    duration: { mn: "1 Өдөр", en: "1 Day", ko: "1일" },
+    rating: 5.0,
+    price: { mn: 950000, en: 280, ko: 380000 }, 
+    image: "/glacier.png", 
+    description: {
+      mn: "Дэлхийн хамгийн удаан 'түргэн галт тэрэг'-ээр 8 цагийн турш Альпийн уулсын зүрхээр аялцгаая!",
+      en: "Travel through the heart of the Alps for 8 hours on the world's slowest 'express train'!",
+      ko: "세계에서 가장 느린 '특급 열차'를 타고 알프스의 심장부를 8시간 동안 여행해보세요!"
+    },
+    tags: ["train", "nature", "alps"],
+    featured: false,
+    itinerary: [
+      { day: 1, title: { mn: "Цюрих хотод буух", en: "Arrival in Zurich", ko: "취리히 도착" }, desc: { mn: "Онгоцны буудлаас тосч авах.", en: "Airport pickup.", ko: "공항 픽업." } }
+    ]
+  },
+  {
+    type: "standard",
+    region: "europe",
+    title: { mn: "Европын Топ 6 Улс", en: "Europe Top 6 Countries", ko: "유럽 6개국 투어" },
+    category: "city",
+    location: { mn: "Герман - Франц - Итали", en: "Germany - France - Italy", ko: "독일 - 프랑스 - 이탈리아" },
+    duration: { mn: "7 Өдөр", en: "7 Days", ko: "7일" },
+    rating: 4.8,
+    reviews: 10,
+    price: { mn: 8900000, en: 2600, ko: 3500000 },
+    oldPrice: { mn: 9500000, en: 2800, ko: 3800000 },
+    image: "/europe.png", 
+    description: {
+      mn: "Франкфурт, Женев, Милан, Парис хотуудаар аялах гайхалтай боломж.",
+      en: "An amazing opportunity to travel through Frankfurt, Geneva, Milan, and Paris.",
+      ko: "프랑크푸르트, 제네바, 밀라노, 파리를 여행하는 놀라운 기회."
+    },
+    tags: ["christmas", "europe"],
+    saleMonth: 11, 
+    featured: true,
+    seatsLeft: 5,
+    itinerary: [
+      { day: 1, title: { mn: "Франкфурт", en: "Frankfurt", ko: "프랑크푸르트" }, desc: { mn: "...", en: "...", ko: "..." } }
+    ]
+  },
 
-  // Honeymoon Packages
-  { type: "honeymoon", title: "Мальдив - Усан Вилла", category: "island", location: "Мале, Мальдив", duration: "6 Өдөр", rating: 5.0, price: 8500000, image: "/maldives.jpg", romanceFactor: "10/10", perks: ["Хувийн усан сан", "Лаатай оройн зоог"], tags: ["Adults Only"] },
-  { type: "honeymoon", title: "Санторини - Нар Жаргах Мөч", category: "island", location: "Санторини, Грек", duration: "7 Өдөр", rating: 4.9, price: 6200000, image: "/santorini.jpg", romanceFactor: "9.8/10", perks: ["Дарсны амталгаа", "Фото зураг авалт"], tags: ["Best View"] },
-  // ... Add the rest of 'honeymoonTrips' here ...
+  // ─── NEW: STANDARD PACKAGES ───
+  {
+    type: "standard",
+    region: "mongolia",
+    title: { mn: "Хөвсгөл Далайн Аялал", en: "Khuvsgul Lake Tour", ko: "홉스굴 호수 투어" },
+    category: "nature",
+    location: { mn: "Хөвсгөл, Монгол", en: "Khuvsgul, Mongolia", ko: "몽골 홉스굴" },
+    duration: { mn: "4 Өдөр", en: "4 Days", ko: "4일" },
+    rating: 4.9,
+    reviews: 120,
+    price: { mn: 450000, en: 135, ko: 180000 },
+    oldPrice: { mn: 550000, en: 165, ko: 220000 },
+    image: "/lake.jpg",
+    tags: ["Best Seller", "Discount"],
+    featured: true,
+    description: {
+      mn: "Монголын хөх сувд Хөвсгөл далайгаар аялах мартагдашгүй аялал.",
+      en: "Unforgettable trip to Lake Khuvsgul, the Blue Pearl of Mongolia.",
+      ko: "몽골의 푸른 진주, 홉스굴 호수로 떠나는 잊지 못할 여행."
+    },
+    itinerary: [{ day: 1, title: { mn: "Мөрөн хот", en: "Murun City", ko: "무릉 시" }, desc: { mn: "...", en: "...", ko: "..." } }]
+  },
+  {
+    type: "standard",
+    region: "europe",
+    title: { mn: "Парис & Европын Тур", en: "Paris & Europe Tour", ko: "파리 & 유럽 투어" },
+    category: "city",
+    location: { mn: "Парис, Франц", en: "Paris, France", ko: "프랑스 파리" },
+    duration: { mn: "7 Өдөр", en: "7 Days", ko: "7일" },
+    rating: 5.0,
+    reviews: 85,
+    price: { mn: 4500000, en: 1350, ko: 1800000 },
+    image: "/paris.jpg",
+    tags: ["Luxury"],
+    featured: false,
+    description: {
+      mn: "Хайрын хот Парисаар аялж, Эйфелийн цамхагийг үзэх аялал.",
+      en: "Tour the city of love, Paris, and visit the Eiffel Tower.",
+      ko: "사랑의 도시 파리를 여행하고 에펠탑을 방문하세요."
+    },
+    itinerary: [{ day: 1, title: { mn: "Парис", en: "Paris", ko: "파리" }, desc: { mn: "...", en: "...", ko: "..." } }]
+  },
 
-  // Solo Packages
-  { type: "solo", title: "Тайланд - Backpacking Tour", category: "party", location: "Бангкок & Ко-Панган", duration: "10 Өдөр", rating: 4.8, price: 2800000, image: "/thailand-solo.jpg", vibe: "High Energy", tags: ["Hostel Life", "Full Moon Party"], socialScore: 95 },
-  { type: "solo", title: "Вьетнам - Мото Аялал", category: "adventure", location: "Ха-Жанг, Вьетнам", duration: "7 Өдөр", rating: 4.9, price: 3100000, image: "/vietnam.jpg", vibe: "Adrenaline", tags: ["Мотоцикл", "Уулс"], socialScore: 80 },
-  // ... Add the rest of 'soloTrips' here ...
+  // ─── NEW: FAMILY PACKAGES ───
+  {
+    type: "family",
+    region: "asia",
+    title: { mn: "Токио Диснейленд Аялал", en: "Tokyo Disneyland Trip", ko: "도쿄 디즈니랜드 여행" },
+    category: "theme_park",
+    location: { mn: "Токио, Япон", en: "Tokyo, Japan", ko: "일본 도쿄" },
+    duration: { mn: "5 Өдөр", en: "5 Days", ko: "5일" },
+    rating: 4.9,
+    price: { mn: 3800000, en: 1150, ko: 1500000 },
+    image: "/tokyo.jpg",
+    ageGroup: { mn: "3+ нас", en: "Ages 3+", ko: "3세 이상" },
+    perks: ["Disney Ticket", "Breakfast"],
+    featured: true,
+    description: {
+      mn: "Хүүхэд багачуудын мөрөөдлийн ертөнц Диснейлэнд.",
+      en: "Disneyland, the dream world for children.",
+      ko: "아이들의 꿈의 세상, 디즈니랜드."
+    },
+    itinerary: [{ day: 1, title: { mn: "Токио", en: "Tokyo", ko: "도쿄" }, desc: { mn: "...", en: "...", ko: "..." } }]
+  },
+  {
+    type: "family",
+    region: "europe",
+    title: { mn: "Анталья - All Inclusive", en: "Antalya - All Inclusive", ko: "안탈리아 - 올 인클루시브" },
+    category: "resort",
+    location: { mn: "Анталья, Турк", en: "Antalya, Turkey", ko: "터키 안탈리아" },
+    duration: { mn: "8 Өдөр", en: "8 Days", ko: "8일" },
+    rating: 4.8,
+    price: { mn: 4200000, en: 1250, ko: 1700000 },
+    image: "/turkey.jpg",
+    ageGroup: { mn: "Бүх нас", en: "All Ages", ko: "전연령" },
+    perks: ["Kids Free", "Aqua Park"],
+    featured: false,
+    description: {
+      mn: "Газар дундын тэнгисийн эрэг дээрх тансаг амралт.",
+      en: "Luxury vacation on the Mediterranean coast.",
+      ko: "지중해 해안에서의 럭셔리 휴가."
+    },
+    itinerary: [{ day: 1, title: { mn: "Анталья", en: "Antalya", ko: "안탈리아" }, desc: { mn: "...", en: "...", ko: "..." } }]
+  },
+
+  // ─── NEW: HONEYMOON PACKAGES ───
+  {
+    type: "honeymoon",
+    region: "asia",
+    title: { mn: "Мальдив - Усан Вилла", en: "Maldives - Water Villa", ko: "몰디브 - 워터 빌라" },
+    category: "island",
+    location: { mn: "Мале, Мальдив", en: "Male, Maldives", ko: "몰디브 말레" },
+    duration: { mn: "6 Өдөр", en: "6 Days", ko: "6일" },
+    rating: 5.0,
+    price: { mn: 8500000, en: 2500, ko: 3400000 },
+    image: "/maldives.jpg",
+    romanceFactor: "10/10",
+    perks: ["Private Pool", "Candlelight Dinner"],
+    tags: ["Adults Only"],
+    description: {
+      mn: "Энэтхэгийн далай дахь диваажин.",
+      en: "Paradise in the Indian Ocean.",
+      ko: "인도양의 낙원."
+    },
+    itinerary: [{ day: 1, title: { mn: "Мале", en: "Male", ko: "말레" }, desc: { mn: "...", en: "...", ko: "..." } }]
+  },
+  {
+    type: "honeymoon",
+    region: "europe",
+    title: { mn: "Санторини - Нар Жаргах Мөч", en: "Santorini - Sunset Moment", ko: "산토리니 - 일몰의 순간" },
+    category: "island",
+    location: { mn: "Санторини, Грек", en: "Santorini, Greece", ko: "그리스 산토리니" },
+    duration: { mn: "7 Өдөр", en: "7 Days", ko: "7일" },
+    rating: 4.9,
+    price: { mn: 6200000, en: 1850, ko: 2500000 },
+    image: "/santorini.jpg",
+    romanceFactor: "9.8/10",
+    perks: ["Wine Tasting", "Photoshoot"],
+    tags: ["Best View"],
+    description: {
+      mn: "Цагаан байшин, цэнхэр дээвэр, гайхалтай нар жаргалт.",
+      en: "White houses, blue roofs, and amazing sunsets.",
+      ko: "하얀 집, 파란 지붕, 그리고 놀라운 일몰."
+    },
+    itinerary: [{ day: 1, title: { mn: "Санторини", en: "Santorini", ko: "산토리니" }, desc: { mn: "...", en: "...", ko: "..." } }]
+  },
+
+  // ─── NEW: SOLO PACKAGES ───
+  {
+    type: "solo",
+    region: "asia",
+    title: { mn: "Тайланд - Backpacking Tour", en: "Thailand - Backpacking Tour", ko: "태국 - 배낭여행" },
+    category: "party",
+    location: { mn: "Бангкок & Ко-Панган", en: "Bangkok & Koh Phangan", ko: "방콕 & 코팡안" },
+    duration: { mn: "10 Өдөр", en: "10 Days", ko: "10일" },
+    rating: 4.8,
+    price: { mn: 2800000, en: 850, ko: 1150000 },
+    image: "/thailand-solo.jpg",
+    vibe: "High Energy",
+    tags: ["Hostel Life", "Full Moon Party"],
+    socialScore: 95,
+    description: {
+      mn: "Залуусын эрч хүч, үдэшлэг, шинэ танилууд.",
+      en: "Youth energy, parties, and new friends.",
+      ko: "젊음의 에너지, 파티, 그리고 새로운 만남."
+    },
+    itinerary: [{ day: 1, title: { mn: "Бангкок", en: "Bangkok", ko: "방콕" }, desc: { mn: "...", en: "...", ko: "..." } }]
+  },
+  {
+    type: "solo",
+    region: "asia",
+    title: { mn: "Вьетнам - Мото Аялал", en: "Vietnam - Moto Tour", ko: "베트남 - 모터사이클 투어" },
+    category: "adventure",
+    location: { mn: "Ха-Жанг, Вьетнам", en: "Ha Giang, Vietnam", ko: "베트남 하장" },
+    duration: { mn: "7 Өдөр", en: "7 Days", ko: "7일" },
+    rating: 4.9,
+    price: { mn: 3100000, en: 950, ko: 1250000 },
+    image: "/vietnam.jpg",
+    vibe: "Adrenaline",
+    tags: ["Moto", "Mountains"],
+    socialScore: 80,
+    description: {
+      mn: "Уулын замаар мотоциклтой аялах жинхэнэ адал явдал.",
+      en: "Real adventure motorcycling through mountain roads.",
+      ko: "산길을 달리는 진정한 모터사이클 모험."
+    },
+    itinerary: [{ day: 1, title: { mn: "Ханой", en: "Hanoi", ko: "하노이" }, desc: { mn: "...", en: "...", ko: "..." } }]
+  }
 ];
 
-export async function seedDatabase() {
-  const client = await clientPromise;
-  const db = client.db("travel_db");
-  const collection = db.collection("trips");
+/* ────────────────────── 2. BLOG DATA (TRILINGUAL) ────────────────────── */
+const blogData = [
+  {
+    title: { mn: "2025 онд заавал очих 10 газар", en: "10 Must-Visit Places in 2025", ko: "2025년 꼭 가봐야 할 10곳" },
+    excerpt: { mn: "Дэлхий даяарх аялал...", en: "Global tourism trends...", ko: "세계 여행 트렌드..." },
+    content: { mn: "<p>...</p>", en: "<p>...</p>", ko: "<p>...</p>" },
+    category: "guide",
+    author: "B. Anudari",
+    authorImg: "https://api.dicebear.com/7.x/avataaars/svg?seed=Anu",
+    date: "2025.11.20",
+    readTime: { mn: "5 мин", en: "5 min", ko: "5분" },
+    image: "/paris.jpg",
+    featured: true
+  },
+  {
+    title: { mn: "Чемоданаа хэрхэн зөв баглах вэ?", en: "How to Pack Correctly?", ko: "여행 가방 싸는 법" },
+    excerpt: { mn: "Ачаагаа хөнгөн байлгах...", en: "Keep luggage light...", ko: "짐을 가볍게 유지하는 방법..." },
+    content: { mn: "<p>...</p>", en: "<p>...</p>", ko: "<p>...</p>" },
+    category: "tips",
+    author: "G. Temuulen",
+    authorImg: "https://api.dicebear.com/7.x/avataaars/svg?seed=Temu",
+    date: "2025.11.18",
+    readTime: { mn: "3 мин", en: "3 min", ko: "3분" },
+    image: "/packing.jpg", 
+    featured: false
+  }
+];
 
-  // Clear existing data (optional, be careful!)
-  await collection.deleteMany({});
+/* ────────────────────── 3. EXECUTE SEEDING ────────────────────── */
+export async function GET() {
+  try {
+    const client = await clientPromise;
+    const db = client.db("travel_db");
+    
+    // Seed Trips
+    const tripsCollection = db.collection("trips");
+    await tripsCollection.deleteMany({}); 
+    const tripsResult = await tripsCollection.insertMany(tripsData); 
 
-  // Insert new data
-  const result = await collection.insertMany(rawData);
-  
-  return { success: true, count: result.insertedCount };
+    // Seed Blogs
+    const blogCollection = db.collection("posts");
+    await blogCollection.deleteMany({}); 
+    const blogResult = await blogCollection.insertMany(blogData); 
+
+    return NextResponse.json({ 
+      success: true, 
+      message: "Database RESET with FULL TRILINGUAL & MULTI-CURRENCY DATA!", 
+      tripsCount: tripsResult.insertedCount,
+      blogCount: blogResult.insertedCount
+    });
+  } catch (e: any) {
+    return NextResponse.json({ success: false, error: e.message }, { status: 500 });
+  }
 }

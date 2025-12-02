@@ -8,11 +8,11 @@ import {
   FaCalendarCheck, 
   FaPassport, 
   FaClipboardList, 
-  FaUserShield,
-  FaBalanceScale,
-  FaBolt,
-  FaLayerGroup,
-  FaArrowRight
+  FaUserShield, 
+  FaBalanceScale, 
+  FaBolt, 
+  FaLayerGroup, 
+  FaArrowRight 
 } from "react-icons/fa";
 // 👇 1. Import Hook
 import { useLanguage } from "../context/LanguageContext";
@@ -22,7 +22,7 @@ const AboutPage = () => {
   // 👇 2. Get Language
   const { language } = useLanguage();
 
-  // 👇 3. Define Translations
+  // 👇 3. Define Translations (Including Korean)
   const content = {
     mn: {
       heroTitlePrefix: "Тав тухтай, Аюулгүй,",
@@ -99,6 +99,44 @@ const AboutPage = () => {
       ctaTitle: "Contact Us",
       ctaDesc: "We are ready to make your dream trip a reality.",
       ctaBtnMsg: "Send Message"
+    },
+    ko: {
+      heroTitlePrefix: "편안하고, 안전하며,",
+      heroTitleSuffix: "정직한 여행",
+      heroDesc: "고객님의 희망, 시간, 예산에 딱 맞는 솔루션을 제공하는 전문 팀입니다.",
+      
+      introTitle: "회사 소개",
+      introText1: "저희는 고객님의 여행을 가장",
+      introHighlight: "편안하고, 안전하며, 정직하게",
+      introText2: "계획하는 것을 목표로 하는 전문 팀입니다. 해외 여행, 비자 서비스, 여행 컨설팅 분야의 경험을 바탕으로 고객님의 요구에 딱 맞는 맞춤형 솔루션을 제공합니다.",
+
+      servicesTitle: "제공 서비스",
+      servicesDesc: "전문적인 수준의 다양한 서비스를 제공합니다.",
+      serviceItems: [
+        { icon: FaPlane, title: "맞춤형 및 기획 여행", desc: "고객님의 선택에 맞춘 특별한 여행 경로를 기획하고 구성합니다." },
+        { icon: FaCalendarCheck, title: "인터뷰 예약 및 서류 준비", desc: "대사관 인터뷰 예약 및 필요한 서류를 전문적으로 준비해 드립니다." },
+        { icon: FaPassport, title: "종합 비자 서비스", desc: "관광, 비즈니스, 학생 등 모든 유형의 비자에 대한 상담 및 전폭적인 지원." },
+        { icon: FaClipboardList, title: "여행 일정 계획 서비스", desc: "필요한 모든 서류, 예약 확인 및 표준 여행 일정을 작성해 드립니다." }
+      ],
+
+      stats: [
+        { end: 98, suffix: "%", label: "비자 승인율" },
+        { end: 1200, suffix: "+", label: "성공적인 신청" },
+        { end: 24, suffix: "/7", label: "고객 지원" }
+      ],
+
+      valuesTitle: "왜 우리를 선택해야 할까요?",
+      valuesDesc: "우리의 장점.",
+      valueItems: [
+        { icon: FaUserShield, title: "전문 팀", text: "책임감 있고 경험이 풍부한 팀이 서비스를 제공합니다." },
+        { icon: FaBalanceScale, title: "정직한 서비스", text: "공정하고 투명한 서비스를 중요시합니다." },
+        { icon: FaBolt, title: "신속 & 정확", text: "지체 없이 빠르고 신뢰할 수 있는 조언을 제공합니다." },
+        { icon: FaLayerGroup, title: "통합 솔루션", text: "모든 여행 절차를 한곳에서 해결할 수 있습니다." }
+      ],
+
+      ctaTitle: "문의하기",
+      ctaDesc: "당신의 꿈꾸던 여행을 현실로 만들어 드릴 준비가 되어 있습니다.",
+      ctaBtnMsg: "메시지 보내기"
     }
   };
 
@@ -116,7 +154,7 @@ const AboutPage = () => {
   );
 };
 
-/* ────────────────────── Sub-Components (Now accept props) ────────────────────── */
+/* ────────────────────── Sub-Components ────────────────────── */
 
 // 1. Hero Section
 const HeroSection = ({ t }: any) => (

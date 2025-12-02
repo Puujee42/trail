@@ -37,14 +37,16 @@ const Hero = ({ trips }: { trips: Trip[] }) => {
   const [slideIndex, setSlideIndex] = useState(0);
   const videoRef = useRef<HTMLVideoElement>(null);
 
-  // Helper to handle both DB strings and UI translations
+  // Helper to handle DB strings and UI translations (Updated for Korean)
   const t = useCallback(
     (input: any) => {
       if (!input) return "";
-      if (typeof input === "object" && (input.mn || input.en)) {
-        return input[language as "mn" | "en"] || input.mn;
+      // Check if it's a translation object
+      if (typeof input === "object" && (input.mn || input.en || input.ko)) {
+        // Return current language, fallback to English, then Mongolian
+        return input[language as "mn" | "en" | "ko"] || input.en || input.mn || "";
       }
-      return input;
+      return input; // Return string as-is
     },
     [language]
   );
@@ -69,6 +71,13 @@ const Hero = ({ trips }: { trips: Trip[] }) => {
 
   const activeSlide = trips[slideIndex];
 
+  // Button Text Logic
+  const getButtonText = () => {
+    if (language === "mn") return "Аялал захиалах";
+    if (language === "ko") return "예약하기";
+    return "Book Now";
+  };
+
   return (
     <section className="relative h-screen min-h-[700px] w-full bg-slate-900 text-slate-800 flex items-center justify-center overflow-hidden">
       {/* ─── 1. Background Video ─── */}
@@ -86,10 +95,7 @@ const Hero = ({ trips }: { trips: Trip[] }) => {
       </div>
 
       {/* ─── 2. Blue Gradient Overlays ─── */}
-      {/* Primary fade: shifted from pure white to a cool blue tint to match navbar */}
       <div className="absolute inset-0 z-0 bg-gradient-to-r from-blue-100/95 via-sky-50/80 to-transparent" />
-      
-      {/* Bottom fade: Adds a rich blue foundation at the bottom */}
       <div className="absolute inset-0 z-0 bg-gradient-to-t from-blue-600/20 via-transparent to-transparent" />
 
       {/* ─── 3. Content ─── */}
@@ -110,7 +116,7 @@ const Hero = ({ trips }: { trips: Trip[] }) => {
                 variants={itemVariants}
                 className="mb-6 flex flex-wrap items-center gap-4"
               >
-                {/* Category Badge: Blue Gradient Text & Border */}
+                {/* Category Badge */}
                 <span className="relative px-4 py-2 rounded-full overflow-hidden bg-white/60 backdrop-blur-md border border-sky-200 group">
                     <span className="absolute inset-0 bg-gradient-to-r from-sky-100 to-blue-100 opacity-50" />
                     <span className="relative text-xs font-extrabold uppercase tracking-widest text-transparent bg-clip-text bg-gradient-to-r from-sky-600 to-teal-600 flex items-center gap-2">
@@ -144,6 +150,7 @@ const Hero = ({ trips }: { trips: Trip[] }) => {
                   : t({
                       mn: "Мөрөөдлийн аяллаа бидэнтэй хамт бүтээгээрэй.",
                       en: "Create your dream journey with us.",
+                      ko: "우리와 함께 꿈의 여행을 만들어보세요."
                     })}
               </motion.p>
 
@@ -171,7 +178,7 @@ const Hero = ({ trips }: { trips: Trip[] }) => {
               <motion.div variants={itemVariants}>
                 <ShinyButton
                   link={`/tours/${activeSlide._id}`}
-                  text={language === "mn" ? "Аялал захиалах" : "Book Now"}
+                  text={getButtonText()}
                 />
               </motion.div>
             </motion.div>
@@ -202,7 +209,6 @@ const ShinyButton: React.FC<{ link: string; text: string }> = ({
     <motion.button
       whileHover="hover"
       whileTap={{ scale: 0.98 }}
-      // Matches the Navbar's rich gradient
       className="relative group inline-flex items-center gap-3 px-8 py-4 rounded-full bg-gradient-to-r from-sky-500 via-blue-600 to-teal-500 text-white font-bold text-lg shadow-xl shadow-blue-500/30 overflow-hidden transition-all duration-300 transform hover:-translate-y-1"
     >
       <motion.div
@@ -266,7 +272,6 @@ const VerticalPagination: React.FC<{
           >
             {isActive && (
               <motion.div
-                // Vertical gradient for the progress bar
                 className="w-full h-full bg-gradient-to-b from-sky-400 to-blue-600 origin-top"
                 initial={{ height: "0%" }}
                 animate={{ height: "100%" }}
