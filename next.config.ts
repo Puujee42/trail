@@ -1,18 +1,17 @@
 import type { NextConfig } from "next";
 
-const nextConfig: NextConfig = {
+const nextConfig = {
+  // Add this 'images' configuration
   images: {
     remotePatterns: [
       {
         protocol: 'https',
-        hostname: 'images.unsplash.com',
-      },
-      {
-        protocol: 'https',
-        hostname: 'i.pravatar.cc',
+        hostname: 'res.cloudinary.com',
+        port: '',
+        pathname: '**', // Allow any path from this host
       },
     ],
   },
 };
 
-export default nextConfig;
+module.exports = nextConfig;

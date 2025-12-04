@@ -90,9 +90,7 @@ const BlogPostClient = ({ post }: { post: BlogPost }) => {
           <span className="bg-blue-50 text-blue-600 px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider">
             {post.category}
           </span>
-          <span className="flex items-center gap-2 text-slate-400 text-sm font-medium">
-            <FaClock /> {post.readTime[language]} {text.read}
-          </span>
+         
           <span className="flex items-center gap-2 text-slate-400 text-sm font-medium">
             <FaCalendarAlt /> {post.date}
           </span>

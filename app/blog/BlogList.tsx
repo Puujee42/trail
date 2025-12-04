@@ -140,9 +140,6 @@ export default function BlogList({ posts, featuredPost, initialCategory }: BlogL
                      {post.category}
                    </span>
                    <span className="text-slate-300">•</span>
-                   <span className="text-xs text-slate-400">
-                     {post.readTime[language]}
-                   </span>
                 </div>
                 
                 <h3 className="text-xl font-bold text-slate-800 mb-3 leading-snug group-hover:text-blue-600 transition-colors">
