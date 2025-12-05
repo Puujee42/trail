@@ -2,14 +2,16 @@
 
      const isPublicRoute = createRouteMatcher([
        "/",                  // Root is public
-       "/about",        // Covers /about and subpaths,
-       "/contact",      // Covers /contact and subpaths,
-       "/blog",         // Covers /blog and subpaths,
-       "/packages",     // Covers /packages and subpaths,
+       "/about(.*)",        // Covers /about and subpaths,
+       "/contact(.*)",      // Covers /contact and subpaths,
+       "/blog(.*)",         // Covers /blog and subpaths,
+       "/packages(.*)",     // Covers /packages and subpaths,
        "/tour(.*)", 
        "/sign-in",       // Covers /sign-in and subpaths
        "/sign-up(.*)",       // Covers /sign-up and subpaths
-       "/sso-callback(.*)",  // For OAuth callbacks
+       "/sso-callback(.*)",  // For OAuth callbacksx
+       "/packages/europe(.*)",
+       "/packages/mongolia(.*)",   // Public video file  
        // Add more public routes here if needed, e.g., "/about(.*)"
        // Note: Static files like /hero.mp4 are handled by the matcher below, so no need to list them here
      ]);
