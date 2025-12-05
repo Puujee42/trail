@@ -8,75 +8,32 @@ import {
   FaMapMarkerAlt, 
   FaCheckCircle, 
   FaChevronLeft, 
-  FaChevronRight 
+  FaChevronRight,
+  FaSpinner
 } from "react-icons/fa";
-// 👇 1. Import Hook
 import { useLanguage } from "../context/LanguageContext";
 
 /* ────────────────────── Main Component ────────────────────── */
 const TripReviews = () => {
-  // 👇 2. Get Language
   const { language } = useLanguage();
   
+  // 1. State for Dynamic Data
+  const [reviews, setReviews] = useState<any[]>([]);
+  const [loading, setLoading] = useState(true);
+  
+  // 2. Carousel Refs
   const [width, setWidth] = useState(0);
   const carousel = useRef<HTMLDivElement>(null);
 
-  useEffect(() => {
-    if(carousel.current) {
-        setWidth(carousel.current.scrollWidth - carousel.current.offsetWidth);
-    }
-  }, []);
-
-  // 👇 3. Define Bilingual Content
-  const content = {
+  // 3. Static UI Text (Kept hardcoded because this doesn't change)
+  const uiText = {
     mn: {
       badge: "Аялагчдын сэтгэгдэл",
       titlePrefix: "Бидний тухай",
       titleSuffix: "Тэд юу хэлэв?",
       desc: "Мянга мянган аялагчид Mongolia Trails Agency-г сонгон дэлхийгээр аялж, мартагдашгүй дурсамжийг бүтээсэн байна.",
       drag: "Чирж үзэх",
-      reviews: [
-        {
-          id: 1,
-          name: "Б. Бат-Эрдэнэ",
-          trip: "Хөвсгөл Аялал",
-          date: "2 хоногийн өмнө",
-          text: "Үнэхээр гайхалтай зохион байгуулалттай аялал байлаа. Хөтөч маань маш мэдлэгтэй, хоол нь амттай. Дараа жил дахин явна аа!",
-          location: "Хатгал, Монгол"
-        },
-        {
-          id: 2,
-          name: "С. Анужин",
-          trip: "Парис Тур",
-          date: "1 долоо хоногийн өмнө",
-          text: "Мөрөөдлийн аяллаа Mongolia Trails Agency-тэй хамт биелүүллээ. Эйфелийн цамхаг дээр оройн хоол идэх мөч хамгийн гоё нь байсан.",
-          location: "Парис, Франц"
-        },
-        {
-          id: 3,
-          name: "Г. Тэмүүлэн",
-          trip: "Бали Амралт",
-          date: "3 долоо хоногийн өмнө",
-          text: "Зочид буудал нь яг далайн эрэг дээрээ байсан нь таалагдсан. Нислэг бага зэрэг хойшилсныг эс тооцвол бүх зүйл төгс.",
-          location: "Убуд, Бали"
-        },
-        {
-            id: 4,
-            name: "Д. Хулан",
-            trip: "Япон Сакура",
-            date: "1 сарын өмнө",
-            text: "Япон улсын соёл, ёс заншилтай танилцсан мартагдашгүй аялал. Сакура цэцэглэх үеэр очсон нь нүд баясгасан.",
-            location: "Киото, Япон"
-        },
-        {
-            id: 5,
-            name: "М. Болд",
-            trip: "Дубай Тур",
-            date: "2 сарын өмнө",
-            text: "Сафари аялал болон дэлгүүр хэсэх цаг хангалттай байсан. Хөтөч маань бидэнд маш их тусалсан шүү.",
-            location: "Дубай, АНЭУ"
-        }
-      ]
+      empty: "Одоогоор сэтгэгдэл байхгүй байна."
     },
     en: {
       badge: "Traveler Reviews",
@@ -84,48 +41,7 @@ const TripReviews = () => {
       titleSuffix: "About Us?",
       desc: "Thousands of travelers choose Mongolia Trails Agency to explore the world and create unforgettable memories.",
       drag: "Drag to view",
-      reviews: [
-        {
-          id: 1,
-          name: "B. Bat-Erdene",
-          trip: "Khuvsgul Trip",
-          date: "2 days ago",
-          text: "It was a wonderfully organized trip. Our guide was very knowledgeable, and the food was delicious. Definitely going again next year!",
-          location: "Khatgal, Mongolia"
-        },
-        {
-          id: 2,
-          name: "S. Anujin",
-          trip: "Paris Tour",
-          date: "1 week ago",
-          text: "I fulfilled my dream trip with Mongolia Trails Agency. Dinner on the Eiffel Tower was the best moment.",
-          location: "Paris, France"
-        },
-        {
-          id: 3,
-          name: "G. Temuulen",
-          trip: "Bali Vacation",
-          date: "3 weeks ago",
-          text: "I loved that the hotel was right on the beach. Everything was perfect except for a slight flight delay.",
-          location: "Ubud, Bali"
-        },
-        {
-            id: 4,
-            name: "D. Khulan",
-            trip: "Japan Sakura",
-            date: "1 month ago",
-            text: "An unforgettable trip experiencing Japanese culture and customs. Visiting during cherry blossom season was delightful.",
-            location: "Kyoto, Japan"
-        },
-        {
-            id: 5,
-            name: "M. Bold",
-            trip: "Dubai Tour",
-            date: "2 months ago",
-            text: "Plenty of time for the safari tour and shopping. Our guide was extremely helpful.",
-            location: "Dubai, UAE"
-        }
-      ]
+      empty: "No reviews yet."
     },
     ko: {
       badge: "여행자 리뷰",
@@ -133,54 +49,40 @@ const TripReviews = () => {
       titleSuffix: "우리에게?",
       desc: "수천 명의 여행자들이 Mongolia Trails Agency를 선택하여 세상을 탐험하고 잊지 못할 추억을 만듭니다.",
       drag: "드래그하여 보기",
-      reviews: [
-        {
-          id: 1,
-          name: "B. 바트-에르데네",
-          trip: "후브스굴 여행",
-          date: "2일 전",
-          text: "정말 잘 조직된 여행이었습니다. 가이드가 매우 지식이 풍부했고 음식도 맛있었어요. 내년에 꼭 다시 갈 거예요!",
-          location: "카트갈, 몽골"
-        },
-        {
-          id: 2,
-          name: "S. 아누진",
-          trip: "파리 투어",
-          date: "1주일 전",
-          text: "Mongolia Trails Agency와 함께 꿈의 여행을 실현했습니다. 에펠탑에서의 저녁 식사가 가장 멋진 순간이었어요.",
-          location: "파리, 프랑스"
-        },
-        {
-          id: 3,
-          name: "G. 테무울렌",
-          trip: "발리 휴가",
-          date: "3주 전",
-          text: "호텔이 바로 해변에 있어서 좋았어요. 약간의 비행 지연을 제외하면 모든 것이 완벽했어요.",
-          location: "우붓, 발리"
-        },
-        {
-            id: 4,
-            name: "D. 훌란",
-            trip: "일본 사쿠라",
-            date: "1개월 전",
-            text: "일본의 문화와 관습을 경험한 잊지 못할 여행이었어요. 벚꽃 시즌에 방문한 것은 정말 즐거웠습니다.",
-            location: "교토, 일본"  
-        },
-        {
-            id: 5,
-            name: "M. 볼드",
-            trip: "두바이 투어",
-            date: "2개월 전",
-            text: "사파리 투어와 쇼핑을 위한 충분한 시간이 있었어요. 가이드가 매우 도움이 되었답니다.",
-            location: "두바이, UAE"
-        }
-      ]
+      empty: "아직 리뷰가 없습니다."
     }
   };
 
-  const t = content[language];
-  // Helper to get rating (mocked same for both langs for simplicity)
-  const getRating = (index: number) => [5, 5, 4, 5, 5][index]; 
+  const t = uiText[language as keyof typeof uiText];
+
+  // 4. FETCH DATA FROM API
+  useEffect(() => {
+    const fetchReviews = async () => {
+      setLoading(true);
+      try {
+        // Fetch only approved comments for the current language
+        const res = await fetch(`/api/comments?lang=${language}`, { cache: 'no-store' });
+        const data = await res.json();
+        
+        if (data.success) {
+          setReviews(data.comments);
+        }
+      } catch (error) {
+        console.error("Failed to load reviews:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchReviews();
+  }, [language]);
+
+  // 5. Recalculate Carousel Width when reviews change
+  useEffect(() => {
+    if(carousel.current) {
+        setWidth(carousel.current.scrollWidth - carousel.current.offsetWidth);
+    }
+  }, [reviews, loading]); // Important: Re-run when data loads
 
   return (
     <section className="py-24 bg-gradient-to-b from-white to-slate-50 relative overflow-hidden">
@@ -224,29 +126,42 @@ const TripReviews = () => {
           </motion.p>
         </div>
 
-        {/* ─── Draggable Slider ─── */}
-        <motion.div 
-            ref={carousel} 
-            className="cursor-grab active:cursor-grabbing overflow-hidden"
-            whileTap={{ cursor: "grabbing" }}
-        >
-            <motion.div 
-                drag="x" 
-                dragConstraints={{ right: 0, left: -width }} 
-                className="flex gap-6 pb-10 pl-4"
-            >
-                {t.reviews.map((review, i) => (
-                    <ReviewCard key={review.id} review={review} index={i} rating={getRating(i)} />
-                ))}
-            </motion.div>
-        </motion.div>
+        {/* ─── Content Area ─── */}
+        {loading ? (
+            <div className="flex justify-center items-center h-40">
+                <FaSpinner className="animate-spin text-sky-500 text-3xl" />
+            </div>
+        ) : reviews.length === 0 ? (
+            <div className="text-center text-slate-400 italic">
+                {t.empty}
+            </div>
+        ) : (
+            <>
+                {/* ─── Draggable Slider ─── */}
+                <motion.div 
+                    ref={carousel} 
+                    className="cursor-grab active:cursor-grabbing overflow-hidden"
+                    whileTap={{ cursor: "grabbing" }}
+                >
+                    <motion.div 
+                        drag="x" 
+                        dragConstraints={{ right: 0, left: -width }} 
+                        className="flex gap-6 pb-10 pl-4"
+                    >
+                        {reviews.map((review, i) => (
+                            <ReviewCard key={review._id || i} review={review} index={i} />
+                        ))}
+                    </motion.div>
+                </motion.div>
 
-        {/* ─── Visual Scroll Indicator ─── */}
-        <div className="flex justify-center items-center gap-2 mt-4 text-slate-300 text-sm font-medium">
-             <FaChevronLeft className="animate-pulse" />
-             <span>{t.drag}</span>
-             <FaChevronRight className="animate-pulse" />
-        </div>
+                {/* ─── Visual Scroll Indicator ─── */}
+                <div className="flex justify-center items-center gap-2 mt-4 text-slate-300 text-sm font-medium">
+                    <FaChevronLeft className="animate-pulse" />
+                    <span>{t.drag}</span>
+                    <FaChevronRight className="animate-pulse" />
+                </div>
+            </>
+        )}
 
       </div>
     </section>
@@ -254,7 +169,7 @@ const TripReviews = () => {
 };
 
 /* ────────────────────── Individual Review Card ────────────────────── */
-const ReviewCard = ({ review, index, rating }: { review: any, index: number, rating: number }) => {
+const ReviewCard = ({ review, index }: { review: any, index: number }) => {
   return (
     <motion.div 
         initial={{ opacity: 0, x: 50 }}
@@ -275,6 +190,7 @@ const ReviewCard = ({ review, index, rating }: { review: any, index: number, rat
             <div className="flex items-center gap-4 mb-6 relative z-10">
                 <div className="relative">
                     <div className="w-14 h-14 rounded-full bg-slate-200 border-2 border-white shadow-md overflow-hidden">
+                        {/* Generate Avatar based on Name */}
                         <img 
                             src={`https://api.dicebear.com/7.x/avataaars/svg?seed=${review.name}`} 
                             alt={review.name} 
@@ -288,7 +204,7 @@ const ReviewCard = ({ review, index, rating }: { review: any, index: number, rat
 
                 <div>
                     <h4 className="font-bold text-slate-800 text-lg leading-tight">{review.name}</h4>
-                    <span className="text-xs text-slate-400 font-semibold">{review.date}</span>
+                    <span className="text-xs text-slate-400 font-semibold">{review.dateStr || "Recently"}</span>
                 </div>
             </div>
 
@@ -298,12 +214,12 @@ const ReviewCard = ({ review, index, rating }: { review: any, index: number, rat
                     {[...Array(5)].map((_, i) => (
                         <FaStar 
                             key={i} 
-                            className={`text-sm ${i < rating ? "text-yellow-400" : "text-slate-200"}`} 
+                            className={`text-sm ${i < (review.rating || 5) ? "text-yellow-400" : "text-slate-200"}`} 
                         />
                     ))}
                 </div>
                 <span className="text-xs font-bold text-sky-600 bg-sky-50 px-3 py-1 rounded-full border border-sky-100">
-                    {review.trip}
+                    {review.trip || "General Trip"}
                 </span>
             </div>
 
@@ -316,7 +232,7 @@ const ReviewCard = ({ review, index, rating }: { review: any, index: number, rat
             <div className="flex items-center gap-2 pt-4 border-t border-slate-100 mt-auto">
                 <FaMapMarkerAlt className="text-slate-300 group-hover:text-sky-400 transition-colors" />
                 <span className="text-sm font-semibold text-slate-400 group-hover:text-slate-600 transition-colors">
-                    {review.location}
+                    {review.location || "Earth"}
                 </span>
             </div>
         </div>

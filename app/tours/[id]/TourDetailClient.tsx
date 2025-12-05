@@ -1,7 +1,10 @@
 "use client";
 
-import { motion } from "framer-motion";
+import { useState, useEffect } from "react"; // Added useEffect
+import { motion, AnimatePresence } from "framer-motion";
 import Link from "next/link";
+import { useRouter } from "next/navigation"; // 1. Import Router
+import { useUser } from "@clerk/nextjs"; // 2. Import Clerk Hook
 import { 
   FaMapMarkerAlt, 
   FaClock, 
@@ -10,7 +13,9 @@ import {
   FaPlane, 
   FaUtensils, 
   FaPassport,      
-  FaClipboardList  
+  FaClipboardList,
+  FaTimes, 
+  FaCheckCircle 
 } from "react-icons/fa";
 import { useLanguage } from "../../context/LanguageContext";
 
@@ -44,7 +49,6 @@ interface Trip {
   description?: LocalizedString;
   perks?: string[];
   itinerary?: ItineraryItem[];
-  // Price can be a number (old data) or object (new data)
   price: LocalizedPrice | number; 
   oldPrice?: LocalizedPrice | number;
   seatsLeft?: number;
@@ -52,9 +56,36 @@ interface Trip {
 
 const TourDetailClient = ({ trip }: { trip: Trip }) => {
   const { language } = useLanguage();
+  
+  // 3. Initialize Auth and Router
+  const { isLoaded, isSignedIn, user } = useUser();
+  const router = useRouter();
 
-  // 1. Helper to safely get numeric price
-  // Handles both old number format and new object format
+  // ─── STATE FOR MODAL & BOOKING ───
+  const [isModalOpen, setModalOpen] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [status, setStatus] = useState<'idle' | 'success' | 'error'>('idle');
+  
+  const [formData, setFormData] = useState({
+    name: "",
+    email: "",
+    phone: "",
+    date: "",
+    guests: 1
+  });
+
+  // 4. BONUS: Auto-fill form if user is logged in
+  useEffect(() => {
+    if (isSignedIn && user) {
+      setFormData(prev => ({
+        ...prev,
+        name: user.fullName || "",
+        email: user.primaryEmailAddress?.emailAddress || "",
+      }));
+    }
+  }, [isSignedIn, user]);
+
+  // Helper to safely get numeric price
   const getPriceValue = (priceObj: any) => {
     if (typeof priceObj === 'number') return priceObj;
     if (typeof priceObj === 'object' && priceObj !== null) {
@@ -67,24 +98,18 @@ const TourDetailClient = ({ trip }: { trip: Trip }) => {
   const priceValue = getPriceValue(trip.price);
   const oldPriceValue = trip.oldPrice ? getPriceValue(trip.oldPrice) : null;
 
-  // 2. Format Price with Currency Symbol
   const formatMoney = (amount: number) => {
     if (language === 'en') return `$${amount.toLocaleString()}`;
     if (language === 'ko') return `₩${amount.toLocaleString()}`;
-    return `${amount.toLocaleString()}₮`; // Default MN
+    return `${amount.toLocaleString()}₮`;
   };
 
-  // Translations
+  // ─── TRANSLATIONS ───
   const t = {
     mn: {
       back: "Буцах",
       about: "Аяллын тухай",
-      features: {
-        flight: "Нислэг",
-        food: "Хоол",
-        visa: "Визний цогц үйлчилгээ",
-        planning: "Аяллын төлөвлөгөө бичих үйлчилгээ"
-      },
+      features: { flight: "Нислэг", food: "Хоол", visa: "Виз", planning: "Төлөвлөгөө" },
       itineraryTitle: "Аяллын хөтөлбөр",
       itineraryEmpty: "Дэлгэрэнгүй хөтөлбөр удахгүй орно.",
       priceLabel: "Нийт үнэ (1 хүн)",
@@ -96,17 +121,23 @@ const TourDetailClient = ({ trip }: { trip: Trip }) => {
       bookBtn: "Захиалга өгөх",
       terms: "Захиалга өгснөөр та манай үйлчилгээний нөхцөлийг зөвшөөрч байна.",
       questionTitle: "Асуух зүйл байна уу?",
-      questionDesc: "Манай менежертэй холбогдож дэлгэрэнгүй мэдээлэл аваарай."
+      questionDesc: "Манай менежертэй холбогдож дэлгэрэнгүй мэдээлэл аваарай.",
+      modalTitle: "Аялал захиалах",
+      formName: "Таны нэр",
+      formEmail: "Имэйл хаяг",
+      formPhone: "Утасны дугаар",
+      formDate: "Явах өдөр",
+      formGuests: "Хүний тоо",
+      submitBtn: "Захиалах",
+      submitting: "Илгээж байна...",
+      successTitle: "Захиалга амжилттай!",
+      successMsg: "Таны аяллын цаг баталгаажлаа. Бид таны имэйл рүү мэдээлэл илгээлээ.",
+      errorMsg: "Алдаа гарлаа. Дахин оролдоно уу."
     },
     en: {
       back: "Back",
       about: "About the Trip",
-      features: {
-        flight: "Flight",
-        food: "Meals",
-        visa: "Visa Services",
-        planning: "Itinerary Planning"
-      },
+      features: { flight: "Flight", food: "Meals", visa: "Visa", planning: "Planning" },
       itineraryTitle: "Itinerary",
       itineraryEmpty: "Detailed itinerary coming soon.",
       priceLabel: "Total Price (per person)",
@@ -118,17 +149,23 @@ const TourDetailClient = ({ trip }: { trip: Trip }) => {
       bookBtn: "Book Now",
       terms: "By booking, you agree to our terms of service.",
       questionTitle: "Have Questions?",
-      questionDesc: "Contact our manager for more information."
+      questionDesc: "Contact our manager for more information.",
+      modalTitle: "Book This Trip",
+      formName: "Full Name",
+      formEmail: "Email Address",
+      formPhone: "Phone Number",
+      formDate: "Preferred Date",
+      formGuests: "Number of Guests",
+      submitBtn: "Confirm Booking",
+      submitting: "Sending...",
+      successTitle: "Booking Confirmed!",
+      successMsg: "Your appointment is set. We have sent confirmation to your email.",
+      errorMsg: "Something went wrong. Please try again."
     },
     ko: {
       back: "뒤로가기",
       about: "여행 정보",
-      features: {
-        flight: "항공편",
-        food: "식사",
-        visa: "비자 서비스",
-        planning: "여행 일정 계획"
-      },
+      features: { flight: "항공편", food: "식사", visa: "비자", planning: "계획" },
       itineraryTitle: "여행 일정",
       itineraryEmpty: "자세한 일정은 곧 제공됩니다.",
       priceLabel: "총 가격 (1인당)",
@@ -140,12 +177,85 @@ const TourDetailClient = ({ trip }: { trip: Trip }) => {
       bookBtn: "지금 예약",
       terms: "예약함으로써 귀하는 당사의 서비스 약관에 동의하게 됩니다.",
       questionTitle: "질문이 있으신가요?",
-      questionDesc: "자세한 정보를 원하시면 매니저에게 문의하세요."
+      questionDesc: "자세한 정보를 원하시면 매니저에게 문의하세요.",
+      modalTitle: "여행 예약하기",
+      formName: "성함",
+      formEmail: "이메일 주소",
+      formPhone: "전화번호",
+      formDate: "희망 날짜",
+      formGuests: "인원수",
+      submitBtn: "예약 확정",
+      submitting: "전송 중...",
+      successTitle: "예약 완료!",
+      successMsg: "예약이 확정되었습니다. 이메일로 확인 메세지를 보냈습니다.",
+      errorMsg: "오류가 발생했습니다. 다시 시도해 주세요."
     }
   };
 
   const text = t[language];
   const itinerary = trip.itinerary || [];
+
+  // 5. NEW: Check auth before opening modal
+  const handleBookClick = () => {
+    if (!isLoaded) return; // Wait for Clerk to load
+
+    if (!isSignedIn) {
+      // Redirect to sign in, then return to this page
+      const currentUrl = window.location.href;
+      router.push(`/sign-in?redirect_url=${encodeURIComponent(currentUrl)}`);
+      return;
+    }
+
+    // If signed in, open the modal
+    setModalOpen(true);
+  };
+
+  // ─── HANDLE SUBMIT ───
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setLoading(true);
+    setStatus('idle');
+
+    try {
+      const response = await fetch('/api/bookings', { 
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          tripId: trip._id,
+          date: formData.date,
+          travelers: formData.guests,
+          guestName: formData.name,
+          guestEmail: formData.email,
+          guestPhone: formData.phone,
+          language: language
+        }),
+      });
+
+      if (response.ok) {
+        setStatus('success');
+        setTimeout(() => {
+          setModalOpen(false);
+          setStatus('idle');
+          // Don't clear name/email if user is logged in, just reset other fields
+          setFormData(prev => ({ 
+             ...prev, 
+             phone: "", 
+             date: "", 
+             guests: 1 
+          }));
+        }, 4000);
+      } else {
+        const errorData = await response.json();
+        console.error("Booking failed:", errorData);
+        setStatus('error');
+      }
+    } catch (error) {
+      console.error("Network error:", error);
+      setStatus('error');
+    } finally {
+      setLoading(false);
+    }
+  };
 
   return (
     <div className="bg-slate-50 min-h-screen pb-20">
@@ -153,14 +263,9 @@ const TourDetailClient = ({ trip }: { trip: Trip }) => {
       {/* ────────────────── HERO HEADER ────────────────── */}
       <div className="relative h-[60vh] min-h-[500px] w-full overflow-hidden">
         <div className="absolute inset-0">
-           <img 
-             src={trip.image} 
-             alt={trip.title[language]} 
-             className="w-full h-full object-cover"
-           />
+           <img src={trip.image} alt={trip.title[language]} className="w-full h-full object-cover"/>
            <div className="absolute inset-0 bg-gradient-to-t from-slate-900 via-slate-900/40 to-transparent" />
         </div>
-
         <div className="absolute top-24 left-4 md:left-10 z-20">
           <Link href="/">
              <button className="flex items-center gap-2 bg-white/20 backdrop-blur-md text-white px-4 py-2 rounded-full hover:bg-white hover:text-slate-900 transition-all font-bold text-sm border border-white/30">
@@ -168,21 +273,8 @@ const TourDetailClient = ({ trip }: { trip: Trip }) => {
              </button>
           </Link>
         </div>
-
         <div className="absolute bottom-0 left-0 w-full p-6 md:p-12 z-10 container mx-auto">
-           <motion.div 
-             initial={{ opacity: 0, y: 20 }}
-             animate={{ opacity: 1, y: 0 }}
-             className="max-w-4xl"
-           >
-              <div className="flex flex-wrap gap-3 mb-4">
-                 <span className="bg-sky-500 text-white px-3 py-1 rounded-lg text-xs font-bold uppercase tracking-wider shadow-lg">
-                    {trip.category}
-                 </span>
-                 <span className="bg-yellow-400 text-slate-900 px-3 py-1 rounded-lg text-xs font-bold uppercase tracking-wider shadow-lg flex items-center gap-1">
-                    <FaStar /> {trip.rating}
-                 </span>
-              </div>
+           <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="max-w-4xl">
               <h1 className="text-4xl md:text-6xl font-black text-white mb-4 leading-tight shadow-sm">
                 {trip.title[language]}
               </h1>
@@ -197,44 +289,22 @@ const TourDetailClient = ({ trip }: { trip: Trip }) => {
       {/* ────────────────── MAIN CONTENT ────────────────── */}
       <div className="container mx-auto px-4 -mt-10 relative z-20 grid grid-cols-1 lg:grid-cols-3 gap-10">
         
-        {/* LEFT COLUMN */}
+        {/* LEFT COLUMN (Details & Itinerary) */}
         <div className="lg:col-span-2 space-y-8">
-          
-          <motion.div 
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            className="bg-white rounded-3xl p-8 shadow-xl shadow-slate-200/50 border border-slate-100"
-          >
+            <div className="bg-white rounded-3xl p-8 shadow-xl shadow-slate-200/50 border border-slate-100">
              <h2 className="text-2xl font-bold text-slate-800 mb-4">{text.about}</h2>
-             <p className="text-slate-600 leading-relaxed text-lg">
-               {trip.description?.[language]}
-             </p>
-
-             {/* DYNAMIC PERKS */}
-             {trip.perks && (
-               <div className="flex flex-wrap gap-2 mt-4">
-                 {trip.perks.map((perk, i) => (
-                   <span key={i} className="bg-sky-50 text-sky-700 px-3 py-1 rounded-full text-xs font-bold">
-                     {perk}
-                   </span>
-                 ))}
-               </div>
-             )}
-
-             {/* ICONS GRID */}
+             <p className="text-slate-600 leading-relaxed text-lg">{trip.description?.[language]}</p>
              <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mt-8 pt-8 border-t border-slate-100">
                 <FeatureIcon icon={FaPlane} label={text.features.flight} />
                 <FeatureIcon icon={FaUtensils} label={text.features.food} />
                 <FeatureIcon icon={FaPassport} label={text.features.visa} />
                 <FeatureIcon icon={FaClipboardList} label={text.features.planning} />
              </div>
-
-          </motion.div>
-
-          {/* DYNAMIC ITINERARY */}
-          <div className="bg-white rounded-3xl p-8 shadow-xl shadow-slate-200/50 border border-slate-100">
+          </div>
+          
+           {/* ITINERARY SECTION */}
+           <div className="bg-white rounded-3xl p-8 shadow-xl shadow-slate-200/50 border border-slate-100">
              <h2 className="text-2xl font-bold text-slate-800 mb-6">{text.itineraryTitle}</h2>
-             
              {itinerary.length > 0 ? (
                <div className="space-y-0">
                   {itinerary.map((day, i) => (
@@ -256,28 +326,18 @@ const TourDetailClient = ({ trip }: { trip: Trip }) => {
                <p className="text-slate-500 italic">{text.itineraryEmpty}</p>
              )}
           </div>
-
         </div>
 
-        {/* RIGHT COLUMN */}
+        {/* RIGHT COLUMN (Price & Booking) */}
         <div className="lg:col-span-1">
            <div className="sticky top-24">
               <motion.div 
-                 initial={{ opacity: 0, x: 20 }}
-                 animate={{ opacity: 1, x: 0 }}
-                 transition={{ delay: 0.2 }}
                  className="bg-white rounded-3xl p-6 shadow-2xl shadow-sky-100 border border-slate-100"
               >
                  <div className="mb-6">
                     <p className="text-slate-500 text-sm font-bold uppercase mb-1">{text.priceLabel}</p>
                     <div className="flex items-end gap-3">
-                       
-                       {/* FIXED: Display formatted price correctly */}
-                       <span className="text-4xl font-black text-slate-900">
-                          {formatMoney(priceValue)}
-                       </span>
-
-                       {/* FIXED: Display old price correctly if exists */}
+                       <span className="text-4xl font-black text-slate-900">{formatMoney(priceValue)}</span>
                        {oldPriceValue && (
                          <span className="text-lg text-slate-400 line-through mb-1 decoration-red-400">
                             {formatMoney(oldPriceValue)}
@@ -286,48 +346,124 @@ const TourDetailClient = ({ trip }: { trip: Trip }) => {
                     </div>
                  </div>
 
-                 <div className="space-y-3 mb-8">
-                    <div className="flex justify-between text-sm text-slate-600 pb-2 border-b border-slate-50">
-                       <span>{text.typeLabel}</span>
-                       <span className="font-bold text-slate-800 capitalize">{trip.category}</span>
-                    </div>
-                    <div className="flex justify-between text-sm text-slate-600 pb-2 border-b border-slate-50">
-                       <span>{text.durationLabel}</span>
-                       <span className="font-bold text-slate-800">{trip.duration[language]}</span>
-                    </div>
-                    
-                    <div className="flex justify-between text-sm text-slate-600 pb-2 border-b border-slate-50">
-                       <span>{text.seatsLabel}</span>
-                       <span className={`font-bold ${
-                         (trip.seatsLeft || 0) < 5 ? "text-red-500" : "text-green-500"
-                       }`}>
-                          {trip.seatsLeft ? `${trip.seatsLeft} ${text.seatsLeft}` : text.open}
-                       </span>
-                    </div>
-                 </div>
-
-                 <Link href={`/book/${trip._id}`}>
-                    <button className="w-full py-4 rounded-xl bg-slate-900 text-white font-bold text-lg shadow-lg hover:bg-sky-600 transition-all active:scale-95 mb-3">
-                       {text.bookBtn}
-                    </button>
-                 </Link>
+                 {/* 6. UPDATED BUTTON: Uses handleBookClick */}
+                 <button 
+                    onClick={handleBookClick}
+                    className="w-full py-4 rounded-xl bg-slate-900 text-white font-bold text-lg shadow-lg hover:bg-sky-600 transition-all active:scale-95 mb-3"
+                 >
+                    {text.bookBtn}
+                 </button>
                  
-                 <p className="text-xs text-center text-slate-400">
-                    {text.terms}
-                 </p>
+                 <p className="text-xs text-center text-slate-400">{text.terms}</p>
               </motion.div>
-              
-              <div className="mt-6 bg-sky-50 rounded-2xl p-6 border border-sky-100 text-center">
-                 <h4 className="font-bold text-sky-900 mb-2">{text.questionTitle}</h4>
-                 <p className="text-sm text-sky-700 mb-4">{text.questionDesc}</p>
-                 <a href="tel:+97699118888" className="text-sky-600 font-bold hover:underline">
-                    +976 9911-8888
-                 </a>
-              </div>
            </div>
         </div>
-
       </div>
+
+      {/* ────────────────── BOOKING MODAL ────────────────── */}
+      <AnimatePresence>
+        {isModalOpen && (
+          <>
+            <motion.div 
+              initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
+              onClick={() => setModalOpen(false)}
+              className="fixed inset-0 bg-black/60 backdrop-blur-sm z-[999]"
+            />
+            <motion.div 
+              initial={{ opacity: 0, scale: 0.9, y: 20 }} 
+              animate={{ opacity: 1, scale: 1, y: 0 }} 
+              exit={{ opacity: 0, scale: 0.9, y: 20 }}
+              className="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[90%] max-w-md bg-white rounded-2xl shadow-2xl z-[1000] overflow-hidden"
+            >
+              
+              {/* Modal Header */}
+              <div className="bg-slate-900 text-white p-5 flex justify-between items-center">
+                <h3 className="font-bold text-lg flex items-center gap-2">
+                   <FaPlane className="text-sky-400"/> {text.modalTitle}
+                </h3>
+                <button onClick={() => setModalOpen(false)} className="hover:text-sky-400 transition"><FaTimes size={20}/></button>
+              </div>
+
+              {/* Modal Body */}
+              <div className="p-6">
+                
+                {status === 'success' ? (
+                  // SUCCESS STATE
+                  <div className="text-center py-8">
+                    <motion.div 
+                      initial={{ scale: 0 }} animate={{ scale: 1 }} 
+                      className="w-20 h-20 bg-green-100 text-green-500 rounded-full flex items-center justify-center mx-auto mb-4"
+                    >
+                      <FaCheckCircle size={40} />
+                    </motion.div>
+                    <h4 className="text-2xl font-bold text-slate-800 mb-2">{text.successTitle}</h4>
+                    <p className="text-slate-500">{text.successMsg}</p>
+                  </div>
+                ) : (
+                  // FORM STATE
+                  <form onSubmit={handleSubmit} className="space-y-4">
+                    <div>
+                      <label className="block text-xs font-bold text-slate-500 uppercase mb-1">{text.formName}</label>
+                      <input 
+                        required type="text" 
+                        className="w-full px-4 py-3 rounded-xl border border-slate-200 focus:border-sky-500 focus:ring-2 focus:ring-sky-200 outline-none transition"
+                        value={formData.name} onChange={e => setFormData({...formData, name: e.target.value})}
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-xs font-bold text-slate-500 uppercase mb-1">{text.formEmail}</label>
+                      <input 
+                        required type="email" 
+                        className="w-full px-4 py-3 rounded-xl border border-slate-200 focus:border-sky-500 focus:ring-2 focus:ring-sky-200 outline-none transition"
+                        value={formData.email} onChange={e => setFormData({...formData, email: e.target.value})}
+                      />
+                    </div>
+                    <div className="grid grid-cols-2 gap-4">
+                      <div>
+                        <label className="block text-xs font-bold text-slate-500 uppercase mb-1">{text.formPhone}</label>
+                        <input 
+                          required type="tel" 
+                          className="w-full px-4 py-3 rounded-xl border border-slate-200 focus:border-sky-500 focus:ring-2 focus:ring-sky-200 outline-none transition"
+                          value={formData.phone} onChange={e => setFormData({...formData, phone: e.target.value})}
+                        />
+                      </div>
+                      <div>
+                        <label className="block text-xs font-bold text-slate-500 uppercase mb-1">{text.formGuests}</label>
+                        <input 
+                          required type="number" min="1"
+                          className="w-full px-4 py-3 rounded-xl border border-slate-200 focus:border-sky-500 focus:ring-2 focus:ring-sky-200 outline-none transition"
+                          value={formData.guests} onChange={e => setFormData({...formData, guests: Number(e.target.value)})}
+                        />
+                      </div>
+                    </div>
+                    <div>
+                      <label className="block text-xs font-bold text-slate-500 uppercase mb-1">{text.formDate}</label>
+                      <input 
+                         required
+                         type="date" 
+                         className="w-full px-4 py-3 rounded-xl border border-slate-200 focus:border-sky-500 focus:ring-2 focus:ring-sky-200 outline-none transition"
+                         value={formData.date} onChange={e => setFormData({...formData, date: e.target.value})}
+                      />
+                    </div>
+
+                    {status === 'error' && (
+                      <p className="text-red-500 text-sm text-center bg-red-50 p-2 rounded-lg">{text.errorMsg}</p>
+                    )}
+
+                    <button 
+                      disabled={loading}
+                      className="w-full py-3.5 bg-sky-600 text-white font-bold rounded-xl shadow-lg hover:bg-sky-500 transition active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed mt-4"
+                    >
+                      {loading ? text.submitting : text.submitBtn}
+                    </button>
+                  </form>
+                )}
+              </div>
+            </motion.div>
+          </>
+        )}
+      </AnimatePresence>
+
     </div>
   );
 };

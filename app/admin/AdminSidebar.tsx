@@ -3,7 +3,7 @@
 import React from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { FaTachometerAlt, FaPlaneDeparture, FaBlog, FaSignOutAlt, FaGlobe } from "react-icons/fa";
+import { FaTachometerAlt, FaPlaneDeparture, FaBlog, FaSignOutAlt, FaGlobe, FaFacebookMessenger } from "react-icons/fa";
 import { SignOutButton } from "@clerk/nextjs";
 
 interface SidebarProps {
@@ -24,6 +24,7 @@ export default function AdminSidebar({ user }: SidebarProps) {
         <NavItem href="/admin" icon={FaTachometerAlt} label="Dashboard" />
         <NavItem href="/admin/trips" icon={FaPlaneDeparture} label="Manage Trips" />
         <NavItem href="/admin/blogs" icon={FaBlog} label="Manage Blogs" />
+        <NavItem href="/admin/comments" icon={FaFacebookMessenger} label="Comments" />
         <NavItem href="/admin/settings" icon={FaGlobe} label="Settings" />
       </nav>
 

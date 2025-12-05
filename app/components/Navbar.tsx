@@ -55,7 +55,7 @@ const NAV_LINKS_DATA: Record<Language, NavLinkItem[]> = {
     { id: "home", label: "Нүүр", href: "/" },
     {
       id: "packages",
-      label: "Багцууд",
+      label: "Аялалууд",
       href: "/packages",
       subMenu: [
         { id: "europe", label: "Европ", href: "/packages/europe" },
@@ -70,7 +70,7 @@ const NAV_LINKS_DATA: Record<Language, NavLinkItem[]> = {
     { id: "home", label: "Home", href: "/" },
     {
       id: "packages",
-      label: "Packages",
+      label: "Trips",
       href: "/packages",
       subMenu: [
         { id: "europe", label: "Europe", href: "/packages/europe" },
@@ -405,9 +405,7 @@ const Navbar: React.FC = () => {
 
           <motion.div variants={navItemVariants} className="flex items-center gap-4 z-10">
             <motion.div className="hidden md:block">
-              <Link href="/book-now" className="relative inline-flex items-center gap-2 px-6 py-2.5 rounded-full bg-gradient-to-r from-sky-400 to-teal-500 text-white font-bold text-sm shadow-md hover:shadow-xl group overflow-hidden">
-                <FaMapMarkedAlt className="relative z-10" /> <span className="relative z-10 uppercase text-xs">{t.book}</span>
-              </Link>
+             
             </motion.div>
             <motion.button onClick={() => setMobileOpen(true)} className="xl:hidden p-2.5 rounded-full bg-sky-50 text-sky-600">
               <AnimatedHamburgerIcon isOpen={mobileOpen} />

@@ -377,27 +377,106 @@ const blogData = [
   }
 ];
 
-/* ────────────────────── 3. EXECUTE SEEDING ────────────────────── */
+/* ────────────────────── 3. COMMENTS DATA (TRILINGUAL) ────────────────────── */
+const commentsData = [
+  // Mongolian Reviews
+  {
+    name: "Б. Бат-Эрдэнэ",
+    trip: "Хөвсгөл Аялал",
+    text: "Үнэхээр гайхалтай зохион байгуулалттай аялал байлаа. Хөтөч маань маш мэдлэгтэй, хоол нь амттай. Дараа жил дахин явна аа!",
+    location: "Хатгал, Монгол",
+    rating: 5,
+    language: "mn",
+    status: "approved",
+    dateStr: "2025-11-20",
+    createdAt: new Date()
+  },
+  {
+    name: "С. Анужин",
+    trip: "Парис Тур",
+    text: "Мөрөөдлийн аяллаа Mongolia Trails Agency-тэй хамт биелүүллээ. Эйфелийн цамхаг дээр оройн хоол идэх мөч хамгийн гоё нь байсан.",
+    location: "Парис, Франц",
+    rating: 5,
+    language: "mn",
+    status: "approved",
+    dateStr: "2025-11-15",
+    createdAt: new Date()
+  },
+  // English Reviews
+  {
+    name: "B. Bat-Erdene",
+    trip: "Khuvsgul Trip",
+    text: "It was a wonderfully organized trip. Our guide was very knowledgeable, and the food was delicious. Definitely going again next year!",
+    location: "Khatgal, Mongolia",
+    rating: 5,
+    language: "en",
+    status: "approved",
+    dateStr: "2025-11-20",
+    createdAt: new Date()
+  },
+  {
+    name: "S. Anujin",
+    trip: "Paris Tour",
+    text: "I fulfilled my dream trip with Mongolia Trails Agency. Dinner on the Eiffel Tower was the best moment.",
+    location: "Paris, France",
+    rating: 5,
+    language: "en",
+    status: "approved",
+    dateStr: "2025-11-15",
+    createdAt: new Date()
+  },
+  // Korean Reviews
+  {
+    name: "B. 바트-에르데네",
+    trip: "후브스굴 여행",
+    text: "정말 잘 조직된 여행이었습니다. 가이드가 매우 지식이 풍부했고 음식도 맛있었어요. 내년에 꼭 다시 갈 거예요!",
+    location: "카트갈, 몽골",
+    rating: 5,
+    language: "ko",
+    status: "approved",
+    dateStr: "2025-11-20",
+    createdAt: new Date()
+  },
+  {
+    name: "S. 아누진",
+    trip: "파리 투어",
+    text: "Mongolia Trails Agency와 함께 꿈의 여행을 실현했습니다. 에펠탑에서의 저녁 식사가 가장 멋진 순간이었어요.",
+    location: "파리, 프랑스",
+    rating: 5,
+    language: "ko",
+    status: "approved",
+    dateStr: "2025-11-15",
+    createdAt: new Date()
+  }
+];
+
+/* ────────────────────── 4. EXECUTE SEEDING ────────────────────── */
 export async function GET() {
   try {
     const client = await clientPromise;
     const db = client.db("travel_db");
     
-    // Seed Trips
+    // 1. Seed Trips
     const tripsCollection = db.collection("trips");
     await tripsCollection.deleteMany({}); 
     const tripsResult = await tripsCollection.insertMany(tripsData); 
 
-    // Seed Blogs
+    // 2. Seed Blogs
     const blogCollection = db.collection("posts");
     await blogCollection.deleteMany({}); 
     const blogResult = await blogCollection.insertMany(blogData); 
+
+    // 3. Seed Comments (Reviews)
+    const commentsCollection = db.collection("comments");
+    await commentsCollection.deleteMany({});
+    const commentsResult = await commentsCollection.insertMany(commentsData);
 
     return NextResponse.json({ 
       success: true, 
       message: "Database RESET and updated with TRILINGUAL (MN/EN/KO) DATA!", 
       tripsCount: tripsResult.insertedCount,
-      blogCount: blogResult.insertedCount
+      blogCount: blogResult.insertedCount,
+      commentsCount: commentsResult.insertedCount
     });
   } catch (e: any) {
     return NextResponse.json({ success: false, error: e.message }, { status: 500 });
