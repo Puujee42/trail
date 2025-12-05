@@ -22,7 +22,7 @@ import {
   FaPassport,
   FaCheck,
   FaTachometerAlt,
-  FaMapMarkedAlt, // Added Dashboard Icon
+  FaMapMarkedAlt,
 } from "react-icons/fa";
 import { SignedOut, SignedIn, UserButton } from "@clerk/nextjs";
 import { useLanguage } from "../context/LanguageContext"; 
@@ -106,7 +106,7 @@ const UI_TEXT: Record<Language, any> = {
     book: "Аялал захиалах",
     menu: "Цэс",
     myAccount: "Миний бүртгэл",
-    dashboard: "Хяналтын самбар", // Dashboard
+    dashboard: "Хяналтын самбар",
   },
   en: {
     slogan: "Travel the world with Mongolia Trails Agency",
@@ -318,7 +318,7 @@ const Navbar: React.FC = () => {
 
           <ul className="flex items-center gap-4 md:gap-5">
             
-            {/* 🌍 Horizontal Language Selector (Replaced Dropdown) */}
+            {/* 🌍 Horizontal Language Selector */}
             <li>
               <LanguageSelector />
             </li>
@@ -336,6 +336,8 @@ const Navbar: React.FC = () => {
               ))}
             </motion.li>
              <li className="text-white/30 hidden md:block">|</li>
+            
+            {/* DESKTOP AUTH - Hidden on Mobile */}
             <SignedOut>
               <li className="hidden md:flex items-center gap-5">
                 <Link href="/sign-in" className="group flex items-center gap-1.5 px-3 py-1.5 rounded-full hover:bg-white/10 font-medium">
@@ -347,7 +349,6 @@ const Navbar: React.FC = () => {
               </li>
             </SignedOut>
             <SignedIn>
-                {/* 🌟 ADDED DASHBOARD LINK HERE */}
                 <li className="hidden md:block">
                   <Link 
                     href="/dashboard" 
@@ -454,6 +455,11 @@ const DesktopNavLink: React.FC<any> = ({ link, setHoveredLink, navRef }) => {
   );
 };
 
+/* 
+  FIXED MOBILE MENU COMPONENT
+  - Added Sign Up Button
+  - Added UserButton for Logout
+*/
 const MobileMenu: React.FC<any> = ({ isOpen, closeMenu, links, t, language }) => {
   const { setLanguage } = useLanguage();
   
@@ -486,16 +492,30 @@ const MobileMenu: React.FC<any> = ({ isOpen, closeMenu, links, t, language }) =>
              </div>
           </div>
 
-          <div className="p-6 space-y-2">
+          <div className="p-6 space-y-4">
+             {/* 🛑 FIX: Explicitly Added Mobile Auth Buttons */}
              <SignedOut>
-                <Link href="/sign-in" onClick={closeMenu} className="block py-3 px-6 text-sm text-slate-600 hover:text-sky-600 hover:bg-sky-50">{t.login}</Link>
+                <div className="grid grid-cols-2 gap-3 pb-4 border-b border-slate-100">
+                    <Link href="/sign-in" onClick={closeMenu} className="flex items-center justify-center gap-2 py-3 px-4 text-sm font-semibold text-slate-700 bg-slate-100 rounded-xl hover:bg-slate-200">
+                        <FaSignInAlt /> {t.login}
+                    </Link>
+                    <Link href="/sign-up" onClick={closeMenu} className="flex items-center justify-center gap-2 py-3 px-4 text-sm font-semibold text-white bg-sky-500 rounded-xl hover:bg-sky-600 shadow-md">
+                        <FaUser /> {t.register}
+                    </Link>
+                </div>
              </SignedOut>
              
-             {/* 🌟 ADDED DASHBOARD LINK TO MOBILE MENU */}
+             {/* 🛑 FIX: Added User Profile and SignOut for Mobile */}
              <SignedIn>
-                <Link href="/dashboard" onClick={closeMenu} className="flex items-center gap-2 py-3 px-6 text-sm text-blue-600 font-bold bg-blue-50 rounded-lg mb-2">
-                   <FaTachometerAlt /> {t.dashboard}
-                </Link>
+                <div className="flex items-center gap-3 p-4 bg-slate-50 rounded-xl border border-slate-100 mb-4">
+                   <UserButton afterSignOutUrl="/" />
+                   <div className="flex flex-col">
+                      <span className="text-xs text-slate-400 font-medium uppercase">{t.myAccount}</span>
+                      <Link href="/dashboard" onClick={closeMenu} className="text-sm font-bold text-sky-600 flex items-center gap-1">
+                         <FaTachometerAlt /> {t.dashboard}
+                      </Link>
+                   </div>
+                </div>
              </SignedIn>
 
              {links.map((link: any) => <MobileNavLink key={link.id} link={link} closeMenu={closeMenu} />)}
