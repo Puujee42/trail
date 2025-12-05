@@ -1,7 +1,7 @@
-import { getFeaturedTrips } from "@/lib/mongo/trips";
+import { getRecentTrips } from "@/lib/mongo/trips";
 import Hero from "./Hero";
 
 export default async function HeroWrapper() {
-  const trips = await getFeaturedTrips();
+  const trips = await getRecentTrips();
   return <Hero trips={trips} />;
 }

@@ -55,7 +55,7 @@ const NAV_LINKS_DATA: Record<Language, NavLinkItem[]> = {
     { id: "home", label: "Нүүр", href: "/" },
     {
       id: "packages",
-      label: "Аялалууд",
+      label: "Аялал",
       href: "/packages",
       subMenu: [
         { id: "europe", label: "Европ", href: "/packages/europe" },
@@ -70,7 +70,7 @@ const NAV_LINKS_DATA: Record<Language, NavLinkItem[]> = {
     { id: "home", label: "Home", href: "/" },
     {
       id: "packages",
-      label: "Trips",
+      label: "Trip",
       href: "/packages",
       subMenu: [
         { id: "europe", label: "Europe", href: "/packages/europe" },
@@ -85,7 +85,7 @@ const NAV_LINKS_DATA: Record<Language, NavLinkItem[]> = {
     { id: "home", label: "홈", href: "/" },
     {
       id: "packages",
-      label: "패키지",
+      label: "여행",
       href: "/packages",
       subMenu: [
         { id: "europe", label: "유럽", href: "/packages/europe" },

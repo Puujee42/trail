@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useRef, useCallback } from "react";
+import { useState, useEffect, useRef, useCallback, useMemo } from "react"; // Added useMemo
 import Link from "next/link";
 import { motion, AnimatePresence, Variants } from "framer-motion";
 import {
@@ -10,7 +10,6 @@ import {
   FaArrowRight,
   FaPlane,
 } from "react-icons/fa";
-// Make sure to import your Context and Types correctly
 import { useLanguage } from "../context/LanguageContext";
 import { Trip } from "@/lib/mongo/trips";
 
@@ -37,31 +36,38 @@ const Hero = ({ trips }: { trips: Trip[] }) => {
   const [slideIndex, setSlideIndex] = useState(0);
   const videoRef = useRef<HTMLVideoElement>(null);
 
-  // Helper to handle DB strings and UI translations (Updated for Korean)
+  // 1. FILTER: Only take the last 3 trips added
+  // Assuming trips are coming from DB unsorted or we just want to ensure we get the latest.
+  // We use useMemo to avoid re-sorting on every render.
+  const heroTrips = useMemo(() => {
+    if (!trips) return [];
+    // Clone array to avoid mutating props, reverse/sort if needed, then take top 3
+    // Assuming your API already sends them sorted or you want the absolute last ones in the array:
+    return [...trips].slice(-3).reverse(); 
+    // OR if you want specific sorting by date (if you have createdAt):
+    // return [...trips].sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()).slice(0, 3);
+  }, [trips]);
+
   const t = useCallback(
     (input: any) => {
       if (!input) return "";
-      // Check if it's a translation object
       if (typeof input === "object" && (input.mn || input.en || input.ko)) {
-        // Return current language, fallback to English, then Mongolian
         return input[language as "mn" | "en" | "ko"] || input.en || input.mn || "";
       }
-      return input; // Return string as-is
+      return input;
     },
     [language]
   );
 
-  // Handle Autoplay
   useEffect(() => {
-    if (!trips || trips.length === 0) return;
+    if (!heroTrips || heroTrips.length === 0) return;
     const timer = setInterval(() => {
-      setSlideIndex((prev) => (prev + 1) % trips.length);
+      setSlideIndex((prev) => (prev + 1) % heroTrips.length);
     }, AUTOPLAY_DURATION);
     return () => clearInterval(timer);
-  }, [trips.length]);
+  }, [heroTrips.length]);
 
-  // Safety check if DB returns no data
-  if (!trips || trips.length === 0) {
+  if (!heroTrips || heroTrips.length === 0) {
     return (
       <div className="h-screen bg-slate-900 flex items-center justify-center text-white">
         Loading tours...
@@ -69,9 +75,8 @@ const Hero = ({ trips }: { trips: Trip[] }) => {
     );
   }
 
-  const activeSlide = trips[slideIndex];
+  const activeSlide = heroTrips[slideIndex];
 
-  // Button Text Logic
   const getButtonText = () => {
     if (language === "mn") return "Аялал захиалах";
     if (language === "ko") return "예약하기";
@@ -116,7 +121,6 @@ const Hero = ({ trips }: { trips: Trip[] }) => {
                 variants={itemVariants}
                 className="mb-6 flex flex-wrap items-center gap-4"
               >
-                {/* Category Badge */}
                 <span className="relative px-4 py-2 rounded-full overflow-hidden bg-white/60 backdrop-blur-md border border-sky-200 group">
                     <span className="absolute inset-0 bg-gradient-to-r from-sky-100 to-blue-100 opacity-50" />
                     <span className="relative text-xs font-extrabold uppercase tracking-widest text-transparent bg-clip-text bg-gradient-to-r from-sky-600 to-teal-600 flex items-center gap-2">
@@ -124,11 +128,9 @@ const Hero = ({ trips }: { trips: Trip[] }) => {
                       {t(activeSlide.category)}
                     </span>
                 </span>
-
-                {/* Rating Badge */}
                 <span className="flex items-center gap-1.5 text-slate-700 font-bold text-sm bg-white/60 border border-white/50 px-3 py-1.5 rounded-full backdrop-blur-md shadow-sm">
                   <FaStar className="text-yellow-400 text-base" /> 
-                  <span>{activeSlide.rating}</span>
+                  <span>{activeSlide.rating || 5.0}</span>
                 </span>
               </motion.div>
 
@@ -143,31 +145,27 @@ const Hero = ({ trips }: { trips: Trip[] }) => {
               {/* Description */}
               <motion.p
                 variants={itemVariants}
-                className="text-lg md:text-xl text-slate-600 mb-8 max-w-lg leading-relaxed font-medium"
+                className="text-lg md:text-xl text-slate-600 mb-8 max-w-lg leading-relaxed font-medium line-clamp-3"
               >
                 {activeSlide.description
                   ? t(activeSlide.description)
-                  : t({
-                      mn: "Мөрөөдлийн аяллаа бидэнтэй хамт бүтээгээрэй.",
-                      en: "Create your dream journey with us.",
-                      ko: "우리와 함께 꿈의 여행을 만들어보세요."
-                    })}
+                  : t({ mn: "Мөрөөдлийн аяллаа бидэнтэй хамт бүтээгээрэй.", en: "Create your dream journey with us." })}
               </motion.p>
 
-              {/* Meta Data (Duration & Location) */}
+              {/* Meta Data */}
               <motion.div
                 variants={itemVariants}
                 className="flex flex-wrap items-center gap-6 text-slate-700 mb-10 text-sm font-bold tracking-wide"
               >
-                <div className="flex items-center gap-3 bg-gradient-to-br from-white/80 to-blue-50/50 px-5 py-3.5 rounded-2xl shadow-lg shadow-blue-900/5 border border-white/60 backdrop-blur-xl hover:border-sky-300 transition-colors group cursor-default">
-                  <div className="p-2 bg-sky-100 text-sky-600 rounded-full group-hover:bg-sky-500 group-hover:text-white transition-colors">
+                <div className="flex items-center gap-3 bg-gradient-to-br from-white/80 to-blue-50/50 px-5 py-3.5 rounded-2xl shadow-lg shadow-blue-900/5 border border-white/60 backdrop-blur-xl">
+                  <div className="p-2 bg-sky-100 text-sky-600 rounded-full">
                      <FaClock className="text-sm" />
                   </div>
                   {t(activeSlide.duration)}
                 </div>
                 
-                <div className="flex items-center gap-3 bg-gradient-to-br from-white/80 to-blue-50/50 px-5 py-3.5 rounded-2xl shadow-lg shadow-blue-900/5 border border-white/60 backdrop-blur-xl hover:border-teal-300 transition-colors group cursor-default">
-                  <div className="p-2 bg-teal-100 text-teal-600 rounded-full group-hover:bg-teal-500 group-hover:text-white transition-colors">
+                <div className="flex items-center gap-3 bg-gradient-to-br from-white/80 to-blue-50/50 px-5 py-3.5 rounded-2xl shadow-lg shadow-blue-900/5 border border-white/60 backdrop-blur-xl">
+                  <div className="p-2 bg-teal-100 text-teal-600 rounded-full">
                     <FaMapMarkerAlt className="text-sm" />
                   </div>
                   {t(activeSlide.location)}
@@ -185,10 +183,10 @@ const Hero = ({ trips }: { trips: Trip[] }) => {
           </AnimatePresence>
         </div>
 
-        {/* Right Column: Pagination */}
+        {/* Right Column: Pagination (Using heroTrips instead of all trips) */}
         <div className="hidden lg:flex col-span-5 h-full flex-col justify-center items-end pr-10">
           <VerticalPagination
-            items={trips}
+            items={heroTrips} 
             currentIndex={slideIndex}
             onSelect={setSlideIndex}
             t={t}
@@ -215,9 +213,7 @@ const ShinyButton: React.FC<{ link: string; text: string }> = ({
         className="absolute inset-0 bg-white/20 translate-x-[-100%]"
         variants={{ hover: { translateX: "100%", transition: { duration: 0.6 } } }}
       />
-      
       <span className="relative z-10 drop-shadow-md">{text}</span>
-      
       <div className="relative z-10 w-8 h-8 rounded-full bg-white/20 flex items-center justify-center group-hover:bg-white group-hover:text-blue-600 transition-colors">
         <FaArrowRight className="text-sm -rotate-45 group-hover:-rotate-0 transition-transform duration-300" />
       </div>
@@ -262,7 +258,6 @@ const VerticalPagination: React.FC<{
               {t(item.location)}
             </p>
           </div>
-          
           <div
             className={`w-1.5 h-14 rounded-full overflow-hidden transition-all duration-300 border ${
               isActive
@@ -276,6 +271,7 @@ const VerticalPagination: React.FC<{
                 initial={{ height: "0%" }}
                 animate={{ height: "100%" }}
                 transition={{ duration: AUTOPLAY_DURATION / 1000, ease: "linear" }}
+                key={currentIndex} // Reset animation on slide change
               />
             )}
           </div>
