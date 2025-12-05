@@ -5,9 +5,9 @@ import { useEditor, EditorContent } from '@tiptap/react';
 import StarterKit from '@tiptap/starter-kit';
 import Image from '@tiptap/extension-image';
 import { FaBold, FaItalic, FaStrikethrough, FaHeading, FaListUl, FaImage, FaSpinner } from 'react-icons/fa';
-import { htmlToText } from 'html-to-text'; // ✅ 1. Import the converter
+import { htmlToText } from 'html-to-text';
 
-// --- Toolbar Component (Unchanged) ---
+// --- Toolbar Component ---
 const MenuBar = ({ editor }: { editor: any }) => {
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [isUploading, setIsUploading] = useState(false);
@@ -62,7 +62,6 @@ const MenuBar = ({ editor }: { editor: any }) => {
 };
 
 // --- Main Editor Component ---
-// ✅ 2. Update the onChange prop to return both HTML and read time
 interface EditorProps {
   content: string;
   onChange: (data: { html: string; readTime: number }) => void;
@@ -75,13 +74,11 @@ const RichTextEditor = ({ content, onChange, placeholder }: EditorProps) => {
     immediatelyRender: false,
     content: content,
     onUpdate: ({ editor }) => {
-      // ✅ 3. Calculate Read Time on every update
       const html = editor.getHTML();
       const text = htmlToText(html, { wordwrap: 130 });
       const wordCount = text.split(/\s+/).filter(Boolean).length;
-      const readTime = Math.ceil(wordCount / 200); // 200 words per minute
+      const readTime = Math.ceil(wordCount / 200);
 
-      // ✅ 4. Send both back to the parent component
       onChange({ html, readTime });
     },
     editorProps: {
@@ -91,9 +88,12 @@ const RichTextEditor = ({ content, onChange, placeholder }: EditorProps) => {
     },
   });
 
+  // FIX: Updated useEffect
   useEffect(() => {
+    // Only update content if it's actually different to avoid loops
     if (editor && content && editor.getHTML() !== content) {
-      editor.commands.setContent(content, false);
+      // Removed the 'false' argument to satisfy TypeScript
+      editor.commands.setContent(content); 
     }
   }, [content, editor]);
 
