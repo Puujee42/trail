@@ -13,7 +13,7 @@
        "/packages/europe(.*)",
        "/packages/mongolia(.*)",   // Public video file  
         "/api/comments(.*)", // Public comments API
-        "/about(.*)"
+        "/api/trips(.*)",    // Public trips API
        // Add more public routes here if needed, e.g., "/about(.*)"
        // Note: Static files like /hero.mp4 are handled by the matcher below, so no need to list them here
      ]);
