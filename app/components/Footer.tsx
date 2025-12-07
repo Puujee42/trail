@@ -38,7 +38,6 @@ const Footer = () => {
         { label: "Швейцарь", href: "/packages/europe" },
       ],
       contactTitle: "Холбоо барих",
-      // 👇 Updated MN Address
       address: "Улаанбаатар хот, Баруун 4 зам, Эрхи Төв, 5 давхар, 502 тоот", 
       phone: "+976 7766-1626", 
       email: "Eurotrails1@gmail.com", 
@@ -65,7 +64,6 @@ const Footer = () => {
         { label: "Switzerland", href: "/packages/europe" },
       ],
       contactTitle: "Contact Us",
-      // 👇 Updated EN Address
       address: "Room 502, 5th Floor, Erkhi Center, West 4 Road, Ulaanbaatar", 
       phone: "+976 7766-1626",
       email: "Eurotrails1@gmail.com",
@@ -92,7 +90,6 @@ const Footer = () => {
         { label: "스위스", href: "/packages/europe" },
       ],
       contactTitle: "문의하기",
-      // 👇 Updated KO Address
       address: "울란바토르 서부 4거리, 에르키 센터 5층 502호", 
       phone: "+976 7766-1626",
       email: "Eurotrails1@gmail.com",
@@ -161,12 +158,26 @@ const Footer = () => {
             <p className="text-slate-400 text-sm leading-relaxed">
               {t.brandDesc}
             </p>
+            
+            {/* 👇 UPDATED SOCIAL ICONS WITH LINKS */}
             <div className="flex gap-4">
-               <SocialIcon icon={FaFacebookF} />
-               <SocialIcon icon={FaInstagram} />
-               <SocialIcon icon={FaTwitter} />
-               <SocialIcon icon={FaYoutube} />
+               {[
+                  { 
+                    Icon: FaFacebookF, 
+                    href: "https://www.facebook.com/profile.php?id=61580867289571" 
+                  },
+                  { 
+                    Icon: FaInstagram, 
+                    href: "https://www.instagram.com/euro.trails/" 
+                  },
+                  // Placeholder for others if needed
+                  { Icon: FaTwitter, href: "#" }, 
+                  { Icon: FaYoutube, href: "#" }
+               ].map(({ Icon, href }, idx) => (
+                 <SocialIcon key={idx} icon={Icon} href={href} />
+               ))}
             </div>
+
           </div>
 
           {/* Column 2: Quick Links */}
@@ -198,7 +209,7 @@ const Footer = () => {
             </ul>
           </div>
 
-          {/* Column 4: Contact (UPDATED) */}
+          {/* Column 4: Contact */}
           <div>
             <h4 className="text-white font-bold text-lg mb-6">{t.contactTitle}</h4>
             <ul className="space-y-4">
@@ -244,10 +255,12 @@ const Footer = () => {
   );
 };
 
-/* ─── Social Icon Helper ─── */
-const SocialIcon = ({ icon: Icon }: { icon: any }) => (
+/* ─── Social Icon Helper (UPDATED WITH HREF) ─── */
+const SocialIcon = ({ icon: Icon, href }: { icon: any, href: string }) => (
   <motion.a 
-    href="#"
+    href={href}
+    target="_blank"
+    rel="noopener noreferrer"
     whileHover={{ y: -5 }}
     className="w-10 h-10 rounded-full bg-slate-800 flex items-center justify-center text-slate-400 hover:bg-sky-500 hover:text-white transition-colors shadow-lg border border-slate-700 hover:border-sky-400"
   >
