@@ -326,15 +326,26 @@ const Navbar: React.FC = () => {
             <li className="text-white/30 hidden md:block">|</li>
 
             {/* Socials & Auth */}
-            <motion.li className="flex items-center gap-3 text-white/80 hidden sm:flex">
-              {[FaFacebookF, FaTwitter, FaInstagram].map((Icon, idx) => (
-                <motion.a
-                  key={idx} href="#" whileHover={{ scale: 1.2 }} className="hover:text-white"
-                >
-                  <Icon />
-                </motion.a>
-              ))}
-            </motion.li>
+           <motion.li className="flex items-center gap-3 text-white/80 hidden sm:flex">
+            {[
+              { 
+                Icon: FaFacebookF, 
+                href: "https://www.facebook.com/profile.php?id=61580867289571" 
+              },
+              { 
+                Icon: FaInstagram, 
+                href: "https://www.instagram.com/euro.trails/" // 👈 Paste IG link here
+              },
+            ].map(({ Icon, href }, idx) => (
+              <Link
+                key={idx}
+                href={href}
+                className="hover:text-white"
+              >
+                <Icon />
+              </Link>
+            ))}
+          </motion.li>
              <li className="text-white/30 hidden md:block">|</li>
             
             {/* DESKTOP AUTH - Hidden on Mobile */}
