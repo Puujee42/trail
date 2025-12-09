@@ -456,27 +456,10 @@ export async function GET() {
     const client = await clientPromise;
     const db = client.db("travel_db");
     
-    // 1. Seed Trips
-    const tripsCollection = db.collection("trips");
-    await tripsCollection.deleteMany({}); 
-    const tripsResult = await tripsCollection.insertMany(tripsData); 
-
-    // 2. Seed Blogs
-    const blogCollection = db.collection("posts");
-    await blogCollection.deleteMany({}); 
-    const blogResult = await blogCollection.insertMany(blogData); 
-
-    // 3. Seed Comments (Reviews)
-    const commentsCollection = db.collection("comments");
-    await commentsCollection.deleteMany({});
-    const commentsResult = await commentsCollection.insertMany(commentsData);
 
     return NextResponse.json({ 
       success: true, 
-      message: "Database RESET and updated with TRILINGUAL (MN/EN/KO) DATA!", 
-      tripsCount: tripsResult.insertedCount,
-      blogCount: blogResult.insertedCount,
-      commentsCount: commentsResult.insertedCount
+     
     });
   } catch (e: any) {
     return NextResponse.json({ success: false, error: e.message }, { status: 500 });

@@ -8,7 +8,14 @@ export interface LocalizedString {
   en: string;
   ko: string;
 }
-
+export interface TripDate {
+  id: string;           // Unique ID for this specific group (e.g., "group_01")
+  startDate: string;    // ISO Date "2025-10-10"
+  endDate: string;      // ISO Date "2025-10-17"
+  maxSeats: number;     // Capacity for this specific date
+  bookedSeats: number;  // How many people booked (calculated from bookings)
+  priceModifier?: number; // Optional: extra cost for peak season
+}
 export interface ItineraryItem {
   day: number;
   title: LocalizedString; // Changed from string
@@ -43,6 +50,7 @@ export interface Trip {
   saleMonth?: number;
   seatsLeft?: number;
   itinerary?: ItineraryItem[];
+  dates: TripDate[];
 }
 function mapTrip(doc: any): Trip {
   return {
