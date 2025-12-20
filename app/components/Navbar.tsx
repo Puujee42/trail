@@ -471,67 +471,122 @@ const DesktopNavLink: React.FC<any> = ({ link, setHoveredLink, navRef }) => {
   - Added Sign Up Button
   - Added UserButton for Logout
 */
+/* ────────────────────── Updated Mobile Menu (Bottom Sheet) ────────────────────── */
 const MobileMenu: React.FC<any> = ({ isOpen, closeMenu, links, t, language }) => {
   const { setLanguage } = useLanguage();
   
   return (
     <AnimatePresence>
       {isOpen && (
-        <motion.div initial={{ x: "100%" }} animate={{ x: 0 }} exit={{ x: "100%" }} className="fixed top-0 right-0 h-full w-[85%] max-w-sm bg-white shadow-2xl z-[1000] overflow-y-auto">
-          <div className="p-6 bg-gradient-to-br from-sky-500 to-blue-600 text-white flex justify-between items-center">
-             <span className="text-xl font-bold flex gap-2"><FaPassport className="text-yellow-300"/> {t.menu}</span>
-             <button onClick={closeMenu}><FaTimes size={18} /></button>
-          </div>
-          
-          {/* Mobile Language Switcher (Side-by-Side) */}
-          <div className="px-6 pt-4">
-             <div className="flex gap-2">
+        <>
+          {/* Backdrop Blur/Overlay */}
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            onClick={closeMenu}
+            className="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-[999]"
+          />
+
+          {/* Bottom Sheet Drawer */}
+          <motion.div
+            initial={{ y: "100%" }}
+            animate={{ y: 0 }}
+            exit={{ y: "100%" }}
+            transition={{ type: "spring", damping: 25, stiffness: 200 }}
+            className="fixed bottom-0 inset-x-0 z-[1000] bg-white rounded-t-[2.5rem] shadow-2xl overflow-hidden max-h-[90vh] flex flex-col"
+          >
+            {/* Aesthetic "Drag Handle" */}
+            <div className="w-full flex justify-center py-4">
+              <div className="w-12 h-1.5 bg-slate-200 rounded-full" />
+            </div>
+
+            <div className="px-6 pb-10 overflow-y-auto">
+              {/* Header inside Menu */}
+              <div className="flex justify-between items-center mb-6">
+                 <div>
+                    <h3 className="text-xl font-bold text-slate-800">{t.menu}</h3>
+                    <p className="text-xs text-slate-400 font-medium uppercase tracking-wider">Mongolia Trails Agency</p>
+                 </div>
+                 <button 
+                  onClick={closeMenu}
+                  className="p-2 bg-slate-100 rounded-full text-slate-500"
+                >
+                  <FaTimes size={18} />
+                </button>
+              </div>
+
+              {/* Auth Section for Mobile */}
+              <div className="mb-6">
+                <SignedOut>
+                  <div className="grid grid-cols-2 gap-3">
+                    <Link 
+                      href="/sign-in" 
+                      onClick={closeMenu} 
+                      className="flex items-center justify-center gap-2 py-3.5 px-4 text-sm font-bold text-slate-700 bg-slate-100 rounded-2xl"
+                    >
+                      <FaSignInAlt /> {t.login}
+                    </Link>
+                    <Link 
+                      href="/sign-up" 
+                      onClick={closeMenu} 
+                      className="flex items-center justify-center gap-2 py-3.5 px-4 text-sm font-bold text-white bg-gradient-to-r from-sky-500 to-blue-600 rounded-2xl shadow-md shadow-sky-200"
+                    >
+                      <FaUser size={12} /> {t.register}
+                    </Link>
+                  </div>
+                </SignedOut>
+                
+                <SignedIn>
+                  <div className="flex items-center justify-between p-4 bg-sky-50 rounded-2xl border border-sky-100">
+                    <div className="flex items-center gap-3">
+                      <UserButton afterSignOutUrl="/" />
+                      <div className="flex flex-col">
+                        <span className="text-xs text-sky-600 font-bold uppercase tracking-tighter">{t.myAccount}</span>
+                        <Link href="/dashboard" onClick={closeMenu} className="text-sm font-bold text-slate-700">
+                          {t.dashboard}
+                        </Link>
+                      </div>
+                    </div>
+                    <FaChevronDown className="text-sky-300 -rotate-90" />
+                  </div>
+                </SignedIn>
+              </div>
+
+              {/* Language Selector (Modern Grid) */}
+              <div className="grid grid-cols-3 gap-2 mb-8">
                 {LANGUAGES.map((lang) => (
                   <button 
                     key={lang.code}
                     onClick={() => setLanguage(lang.code)}
-                    className={`flex-1 flex flex-col items-center justify-center gap-1 py-3 rounded-xl border transition-all ${
+                    className={`flex flex-col items-center gap-1.5 py-3 rounded-2xl border transition-all ${
                       language === lang.code 
-                        ? "bg-blue-50 border-blue-200 text-blue-700 font-bold shadow-sm" 
-                        : "bg-slate-50 border-slate-100 text-slate-500 hover:bg-slate-100"
+                        ? "bg-white border-sky-500 ring-4 ring-sky-50 text-sky-600 font-bold" 
+                        : "bg-slate-50 border-slate-100 text-slate-400"
                     }`}
                   >
-                     <FlagIcon lang={lang.code} className="w-6 h-6 shadow-sm" />
-                     <span className="text-[10px] uppercase tracking-wider">{lang.code}</span>
+                    <FlagIcon lang={lang.code} className="w-6 h-6" />
+                    <span className="text-[10px] font-bold uppercase tracking-widest">{lang.label}</span>
                   </button>
                 ))}
-             </div>
-          </div>
+              </div>
 
-          <div className="p-6 space-y-4">
-             {/* 🛑 FIX: Explicitly Added Mobile Auth Buttons */}
-             <SignedOut>
-                <div className="grid grid-cols-2 gap-3 pb-4 border-b border-slate-100">
-                    <Link href="/sign-in" onClick={closeMenu} className="flex items-center justify-center gap-2 py-3 px-4 text-sm font-semibold text-slate-700 bg-slate-100 rounded-xl hover:bg-slate-200">
-                        <FaSignInAlt /> {t.login}
-                    </Link>
-                    <Link href="/sign-up" onClick={closeMenu} className="flex items-center justify-center gap-2 py-3 px-4 text-sm font-semibold text-white bg-sky-500 rounded-xl hover:bg-sky-600 shadow-md">
-                        <FaUser /> {t.register}
-                    </Link>
-                </div>
-             </SignedOut>
-             
-             {/* 🛑 FIX: Added User Profile and SignOut for Mobile */}
-             <SignedIn>
-                <div className="flex items-center gap-3 p-4 bg-slate-50 rounded-xl border border-slate-100 mb-4">
-                   <UserButton afterSignOutUrl="/" />
-                   <div className="flex flex-col">
-                      <span className="text-xs text-slate-400 font-medium uppercase">{t.myAccount}</span>
-                      <Link href="/dashboard" onClick={closeMenu} className="text-sm font-bold text-sky-600 flex items-center gap-1">
-                         <FaTachometerAlt /> {t.dashboard}
-                      </Link>
-                   </div>
-                </div>
-             </SignedIn>
+              {/* Main Navigation Links */}
+              <nav className="space-y-1 mb-6">
+                {links.map((link: any) => (
+                  <MobileNavLink key={link.id} link={link} closeMenu={closeMenu} />
+                ))}
+              </nav>
 
-             {links.map((link: any) => <MobileNavLink key={link.id} link={link} closeMenu={closeMenu} />)}
-          </div>
-        </motion.div>
+              {/* Bottom Socials */}
+              <div className="flex justify-center gap-6 py-4 border-t border-slate-50">
+                <Link href="https://facebook.com" className="text-slate-300 hover:text-blue-600 transition-colors"><FaFacebookF size={20}/></Link>
+                <Link href="https://instagram.com" className="text-slate-300 hover:text-pink-600 transition-colors"><FaInstagram size={20}/></Link>
+                <Link href="https://twitter.com" className="text-slate-300 hover:text-sky-400 transition-colors"><FaTwitter size={20}/></Link>
+              </div>
+            </div>
+          </motion.div>
+        </>
       )}
     </AnimatePresence>
   );
@@ -539,23 +594,53 @@ const MobileMenu: React.FC<any> = ({ isOpen, closeMenu, links, t, language }) =>
 
 const MobileNavLink: React.FC<any> = ({ link, closeMenu }) => {
    const [open, setOpen] = useState(false);
+   const hasSubMenu = link.subMenu && link.subMenu.length > 0;
+
    return (
-     <div>
-       <div onClick={() => link.subMenu ? setOpen(!open) : closeMenu()} className="flex justify-between items-center py-3 px-3 rounded-lg hover:bg-slate-50 cursor-pointer">
-         <Link href={!link.subMenu ? link.href : "#"} className="text-base font-semibold text-slate-700">{link.label}</Link>
-         {link.subMenu && <FaChevronDown size={12} className="text-slate-400" />}
+     <div className="border-b border-slate-50 last:border-0">
+       <div 
+         onClick={() => hasSubMenu ? setOpen(!open) : null} 
+         className="flex justify-between items-center py-4 px-2"
+       >
+         <Link 
+            href={!hasSubMenu ? link.href : "#"} 
+            onClick={!hasSubMenu ? closeMenu : undefined}
+            className={`text-lg font-bold ${open && hasSubMenu ? 'text-sky-600' : 'text-slate-700'}`}
+         >
+            {link.label}
+         </Link>
+         {hasSubMenu && (
+            <motion.div animate={{ rotate: open ? 180 : 0 }}>
+               <FaChevronDown size={14} className="text-slate-300" />
+            </motion.div>
+         )}
        </div>
-       {open && link.subMenu && (
-         <div className="bg-slate-50/50 rounded-b-lg mb-2">
-           {link.subMenu.map((it: any) => (
-             <Link key={it.id} href={it.href} onClick={closeMenu} className="block py-3 px-6 text-sm text-slate-600 hover:text-sky-600 hover:bg-sky-50">{it.label}</Link>
-           ))}
-         </div>
-       )}
+
+       <AnimatePresence>
+         {open && hasSubMenu && (
+           <motion.div 
+             initial={{ height: 0, opacity: 0 }}
+             animate={{ height: "auto", opacity: 1 }}
+             exit={{ height: 0, opacity: 0 }}
+             className="overflow-hidden bg-slate-50 rounded-2xl mb-2"
+           >
+             {link.subMenu.map((it: any) => (
+               <Link 
+                  key={it.id} 
+                  href={it.href} 
+                  onClick={closeMenu} 
+                  className="flex items-center gap-3 py-3.5 px-5 text-sm font-semibold text-slate-600 active:bg-sky-100"
+               >
+                 <div className="w-1.5 h-1.5 rounded-full bg-sky-400" />
+                 {it.label}
+               </Link>
+             ))}
+           </motion.div>
+         )}
+       </AnimatePresence>
      </div>
    );
 };
-
 const AnimatedHamburgerIcon: React.FC<{ isOpen: boolean }> = ({ isOpen }) => (
   <svg width="24" height="24" viewBox="0 0 24 24" className="stroke-current">
     <motion.path strokeWidth="2.5" strokeLinecap="round" animate={isOpen ? { d: "M 6 18 L 18 6" } : { d: "M 4 6 L 20 6" }} />
