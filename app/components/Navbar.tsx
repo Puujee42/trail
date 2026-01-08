@@ -28,7 +28,7 @@ import { SignedOut, SignedIn, UserButton } from "@clerk/nextjs";
 import { useLanguage } from "../context/LanguageContext"; 
 
 /* ────────────────────── Types ────────────────────── */
-type Language = "mn" | "en" ;
+type Language = "mn" | "en" | "ko";
 
 interface NavLinkItem {
   id: string;
@@ -45,7 +45,8 @@ interface HoveredLink {
 /* ────────────────────── Constants ────────────────────── */
 const LANGUAGES: { code: Language; label: string }[] = [
   { code: "mn", label: "MN" },
-  { code: "en", label: "EN" }
+  { code: "en", label: "EN" },
+  { code: "ko", label: "KO" }
 ];
 
 /* ────────────────────── Bilingual Data ────────────────────── */
@@ -80,7 +81,21 @@ const NAV_LINKS_DATA: Record<Language, NavLinkItem[]> = {
     { id: "about", label: "About Us", href: "/about" },
     { id: "contact", label: "Contact", href: "/contact" },
   ],
-  
+  ko: [
+    { id: "home", label: "홈", href: "/" },
+    {
+      id: "packages",
+      label: "여행",
+      href: "/packages",
+      subMenu: [
+        { id: "europe", label: "유럽", href: "/packages/europe" },
+        { id: "mongolia", label: "몽골", href: "/packages/mongolia" },
+      ],
+    },
+    { id: "blog", label: "블로그", href: "/blog" },
+    { id: "about", label: "회사 소개", href: "/about" },
+    { id: "contact", label: "연락처", href: "/contact" },
+  ],
 };
 
 const UI_TEXT: Record<Language, any> = {
@@ -102,7 +117,15 @@ const UI_TEXT: Record<Language, any> = {
     myAccount: "My Account",
     dashboard: "Dashboard",
   },
- 
+  ko: {
+    slogan: "Mongolia Trails Agency와 함께 세계를 여행하세요",
+    login: "로그인",
+    register: "회원가입",
+    book: "지금 예약",
+    menu: "메뉴",
+    myAccount: "내 계정",
+    dashboard: "대시보드",
+  },
 };
 
 /* ────────────────────── Components ────────────────────── */
@@ -129,6 +152,25 @@ const FlagIcon = ({ lang, className = "w-5 h-5" }: { lang: Language, className?:
         <path fill="#C8102E" d="M424 281l216 159v40L369 281h55zm-184 20l6 35L54 480H0l240-179zM640 0v3L391 191l2-44L590 0h50zM0 0l239 176h-60L0 42V0z"/>
         <path fill="#FFF" d="M241 0v480h160V0H241zM0 160v160h640V160H0z"/>
         <path fill="#C8102E" d="M0 193v96h640v-96H0zM273 0v480h96V0h-96z"/>
+      </svg>
+    );
+  }
+  if (lang === "ko") {
+    return (
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="-72 -48 144 96" className={`${className} rounded-full object-cover shadow-sm border border-white/20`}>
+         <path fill="#fff" d="M-72-48v96H72v-96z"/>
+         <g stroke="#000" strokeWidth="4">
+           <path transform="rotate(33.69006752598)" d="M-50-12v24m6 0v-24m6 0v24m76 0V1m0-2v-11m6 0v11m0 2v11m6 0V1m0-2v-11"/>
+           <path transform="rotate(146.30993247402)" d="M-50-12v24m6 0v-24m6 0v24m76 0V1m0-2v-11m6 0v11m0 2v11m6 0V1m0-2v-11"/>
+           <path transform="rotate(213.69006752598)" d="M-50-12v24m6 0v-24m6 0v24m76 0V1m0-2v-11m6 0v11m0 2v11m6 0V1m0-2v-11"/>
+           <path transform="rotate(326.30993247402)" d="M-50-12v24m6 0v-24m6 0v24m76 0V1m0-2v-11m6 0v11m0 2v11m6 0V1m0-2v-11"/>
+         </g>
+         <circle r="24" fill="#c60c30"/>
+         <path fill="#003478" d="M0 0a24 24 0 0 1 24 0a24 24 0 0 1-48 0z" transform="rotate(33.69) translate(0 12) scale(1 0.5)"/> 
+         {/* The above path for taeguk is a hack. Let's use a proper semi-circle approach if the above circle covers background. */}
+         <path fill="#003478" d="M-24,0 A24,24 0 0,0 24,0 A12,12 0 0,1 0,0 A12,12 0 0,0 -24,0 z" transform="rotate(33.69)"/>
+         <path fill="#c60c30" d="M-24,0 A12,12 0 0,1 0,0 A12,12 0 0,0 24,0 A24,24 0 0,1 -24,0 z" transform="rotate(33.69)"/>
+         {/* Re-drawing Taeguk over the red circle to be sure. */}
       </svg>
     );
   }

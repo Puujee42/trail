@@ -149,7 +149,7 @@ const Hero = ({ trips }: { trips: Trip[] }) => {
               >
                 {activeSlide.description
                   ? t(activeSlide.description)
-                  : t({ mn: "Мөрөөдлийн аяллаа бидэнтэй хамт бүтээгээрэй.", en: "Create your dream journey with us." })}
+                  : t({ mn: "Мөрөөдлийн аяллаа бидэнтэй хамт бүтээгээрэй.", en: "Create your dream journey with us.", ko: "우리와 함께 꿈의 여행을 만드세요." })}
               </motion.p>
 
               {/* Meta Data */}

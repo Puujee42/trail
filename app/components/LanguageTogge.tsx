@@ -1,34 +1,42 @@
-// contexts/LanguageContext.tsx
 "use client";
 
-import { createContext, useContext, useState, ReactNode } from "react";
+import { useLanguage } from "../context/LanguageContext";
+import { motion } from "framer-motion";
 
-type Language = "mn" | "en"| "ko";
+const LANGUAGES = [
+  { code: "mn", label: "MN" },
+  { code: "en", label: "EN" },
+  { code: "ko", label: "KO" }
+] as const;
 
-interface LanguageContextType {
-  language: Language;
-  setLanguage: (lang: Language) => void;
-  t: <T>(translations: { mn: T; en: T, ko: T}) => T;
-}
-
-const LanguageContext = createContext<LanguageContextType | undefined>(undefined);
-
-export const LanguageProvider = ({ children }: { children: ReactNode }) => {
-  const [language, setLanguage] = useState<Language>("mn");
-
-  const t = <T,>(translations: { mn: T; en: T,ko:T }): T => {
-    return translations[language];
-  };
+export const LanguageToggle = () => {
+  const { language, setLanguage } = useLanguage();
 
   return (
-    <LanguageContext.Provider value={{ language, setLanguage, t }}>
-      {children}
-    </LanguageContext.Provider>
+    <div className="flex items-center gap-1 bg-white/10 backdrop-blur-sm rounded-full p-1 border border-white/20">
+      {LANGUAGES.map((lang) => {
+        const isActive = language === lang.code;
+        return (
+          <button
+            key={lang.code}
+            onClick={() => setLanguage(lang.code)}
+            className={`relative px-3 py-1 rounded-full text-xs font-bold transition-all ${
+              isActive ? "text-slate-900" : "text-slate-500 hover:text-slate-700"
+            }`}
+          >
+            {isActive && (
+              <motion.div
+                layoutId="activeLanguage"
+                className="absolute inset-0 bg-white rounded-full shadow-sm"
+                transition={{ type: "spring", stiffness: 300, damping: 20 }}
+              />
+            )}
+            <span className="relative z-10">{lang.label}</span>
+          </button>
+        );
+      })}
+    </div>
   );
 };
 
-export const useLanguage = () => {
-  const context = useContext(LanguageContext);
-  if (!context) throw new Error("useLanguage must be used within LanguageProvider");
-  return context;
-};
+export default LanguageToggle;
