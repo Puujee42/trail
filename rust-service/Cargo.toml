@@ -11,5 +11,5 @@ serde_json = "1.0"
 tokio = { version = "1", features = ["full"] }
 dotenv = "0.15"
 futures = "0.3"
-bson = { version = "2", features = ["serde_helpers"] }
+bson = "2"
 actix-cors = "0.6"
