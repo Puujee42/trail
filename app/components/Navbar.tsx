@@ -100,7 +100,7 @@ const NAV_LINKS_DATA: Record<Language, NavLinkItem[]> = {
 
 const UI_TEXT: Record<Language, any> = {
   mn: {
-    slogan: "Mongolia Trails Agency-тэй хамт дэлхийгээр аялаарай",
+    slogan: "Mongol Trail-тэй хамт дэлхийгээр аялаарай",
     login: "Нэвтрэх",
     register: "Бүртгүүлэх",
     book: "Аялал захиалах",
@@ -109,7 +109,7 @@ const UI_TEXT: Record<Language, any> = {
     dashboard: "Хяналтын самбар",
   },
   en: {
-    slogan: "Travel the world with Mongolia Trails Agency",
+    slogan: "Travel the world with Mongol Trail",
     login: "Login",
     register: "Register",
     book: "Book Now",
@@ -118,7 +118,7 @@ const UI_TEXT: Record<Language, any> = {
     dashboard: "Dashboard",
   },
   ko: {
-    slogan: "Mongolia Trails Agency와 함께 세계를 여행하세요",
+    slogan: "Mongol Trail와 함께 세계를 여행하세요",
     login: "로그인",
     register: "회원가입",
     book: "지금 예약",
@@ -321,7 +321,7 @@ const Navbar: React.FC = () => {
               <FaPlane className="text-yellow-300" />
             </motion.span>
             <span className="hidden sm:inline">{t.slogan}</span>
-            <span className="sm:hidden">Mongolia Trails Agency</span>
+            <span className="sm:hidden">Mongol Trail</span>
           </motion.p>
 
           <ul className="flex items-center gap-4 md:gap-5">
@@ -412,7 +412,7 @@ const Navbar: React.FC = () => {
                 <FaPlane size={20} className="group-hover:-rotate-12 transition-transform duration-300" />
               </motion.div>
               <span className="text-xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-sky-600 to-teal-600 tracking-tight">
-                Mongolia Trails Agency
+                Mongol Trail
               </span>
             </Link>
           </motion.div>
@@ -514,7 +514,7 @@ const MobileMenu: React.FC<any> = ({ isOpen, closeMenu, links, t, language }) =>
               <div className="flex justify-between items-center mb-6">
                  <div>
                     <h3 className="text-xl font-bold text-slate-800">{t.menu}</h3>
-                    <p className="text-xs text-slate-400 font-medium uppercase tracking-wider">Mongolia Trails Agency</p>
+                    <p className="text-xs text-slate-400 font-medium uppercase tracking-wider">Mongol Trail</p>
                  </div>
                  <button 
                   onClick={closeMenu}

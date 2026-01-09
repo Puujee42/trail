@@ -41,7 +41,7 @@ const Footer = () => {
       address: "Улаанбаатар хот, Баруун 4 зам, Эрхи Төв, 5 давхар, 502 тоот", 
       phone: "+976 7766-1626", 
       email: "Eurotrails1@gmail.com", 
-      copyright: "© 2025 Mongolia Trails Agency. Бүх эрх хуулиар хамгаалагдсан.",
+      copyright: "© 2025 Mongol Trail. Бүх эрх хуулиар хамгаалагдсан.",
       policy: "Нууцлалын бодлого",
       terms: "Үйлчилгээний нөхцөл"
     },
@@ -67,7 +67,7 @@ const Footer = () => {
       address: "Room 502, 5th Floor, Erkhi Center, West 4 Road, Ulaanbaatar", 
       phone: "+976 7766-1626",
       email: "Eurotrails1@gmail.com",
-      copyright: "© 2025 Mongolia Trails Agency. All rights reserved.",
+      copyright: "© 2025 Mongol Trail. All rights reserved.",
       policy: "Privacy Policy",
       terms: "Terms of Service"
     },
@@ -93,7 +93,7 @@ const Footer = () => {
       address: "울란바토르 서부 4거리, 에르키 센터 5층 502호", 
       phone: "+976 7766-1626",
       email: "Eurotrails1@gmail.com",
-      copyright: "© 2025 Mongolia Trails Agency. 모든 권리 보유.",
+      copyright: "© 2025 Mongol Trail. 모든 권리 보유.",
       policy: "개인 정보 보호 정책",
       terms: "서비스 이용 약관"
     }
@@ -152,7 +152,7 @@ const Footer = () => {
                 <FaPlane size={20} />
               </div>
               <span className="text-2xl font-black text-white tracking-tight">
-                Mongolia Trails Agency
+                Mongol Trail
               </span>
             </Link>
             <p className="text-slate-400 text-sm leading-relaxed">

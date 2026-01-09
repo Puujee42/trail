@@ -9,8 +9,40 @@ const inter = Inter({ subsets: ['latin'] });
 
 // We can keep your project-specific metadata
 export const metadata = {
-  title: 'Европ болон Дэлхийн аялал | Найдвартай аяллын платформ - Euro Trails',
-  description: 'Европ болон дэлхийн аяллын найдвартай платформ. Оновчтой маршрут, тав тухтай байр, 24/7 дэмжлэг. Төлөвлөлтийг бид хийе, та зөвхөн аяллаа мэдэр!.',
+  metadataBase: new URL('https://www.mongoltrail.com'),
+  title: {
+    default: 'Mongol Trail | Your Gateway to Adventure',
+    template: '%s | Mongol Trail',
+  },
+  description: 'Experience the ultimate adventure with Mongol Trail. We offer premier tours across Mongolia, Europe, and the world. Book your next hiking, cultural, or overland trip today.',
+  keywords: ['Mongol Trail', 'Mongolia Travel', 'Adventure Tours', 'Hiking Mongolia', 'Euro Trails', 'World Travel', 'Overland Trip'],
+  authors: [{ name: 'Mongol Trail Team' }],
+  creator: 'Mongol Trail',
+  openGraph: {
+    type: 'website',
+    locale: 'mn_MN',
+    url: 'https://www.mongoltrail.com',
+    title: 'Mongol Trail | Your Gateway to Adventure',
+    description: 'Experience the ultimate adventure with Mongol Trail. Premier tours across Mongolia and the world.',
+    siteName: 'Mongol Trail',
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'Mongol Trail | Your Gateway to Adventure',
+    description: 'Experience the ultimate adventure with Mongol Trail.',
+    creator: '@mongoltrail',
+  },
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      'max-video-preview': -1,
+      'max-image-preview': 'large',
+      'max-snippet': -1,
+    },
+  },
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
