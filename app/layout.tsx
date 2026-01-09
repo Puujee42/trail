@@ -26,6 +26,14 @@ export const metadata = {
     description: 'Experience the ultimate adventure with Mongol Trail. Premier tours across Mongolia and the world.',
     siteName: 'Mongol Trail',
   },
+  alternates: {
+    canonical: 'https://www.mongoltrail.com',
+    languages: {
+      'mn-MN': 'https://www.mongoltrail.com',
+      'en-US': 'https://www.mongoltrail.com',
+      'ko-KR': 'https://www.mongoltrail.com',
+    },
+  },
   twitter: {
     card: 'summary_large_image',
     title: 'Mongol Trail | Your Gateway to Adventure',
@@ -46,12 +54,47 @@ export const metadata = {
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
+  const jsonLd = {
+    '@context': 'https://schema.org',
+    '@type': 'TravelAgency',
+    name: 'Mongol Trail',
+    image: 'https://www.mongoltrail.com/try.png',
+    url: 'https://www.mongoltrail.com',
+    telephone: '+976 7766-1626',
+    address: {
+      '@type': 'PostalAddress',
+      streetAddress: 'Room 502, 5th Floor, Erkhi Center, West 4 Road',
+      addressLocality: 'Ulaanbaatar',
+      postalCode: '11000',
+      addressCountry: 'MN',
+    },
+    geo: {
+      '@type': 'GeoCoordinates',
+      latitude: 47.9188, // Approx coordinates for Ulaanbaatar West 4 Road
+      longitude: 106.9176,
+    },
+    openingHoursSpecification: {
+      '@type': 'OpeningHoursSpecification',
+      dayOfWeek: ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'],
+      opens: '09:00',
+      closes: '18:00',
+    },
+    sameAs: [
+      'https://www.facebook.com/profile.php?id=61580867289571',
+      'https://www.instagram.com/euro.trails/',
+    ],
+  };
+
   return (
     // Clerk: Step 1 - Wrap the entire HTML content with ClerkProvider
     <ClerkProvider signInUrl="/sign-in"
       signUpUrl="/sign-up">
       <html lang="mn">
         <body className={inter.className}>
+          <script
+            type="application/ld+json"
+            dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+          />
           {/* Your LanguageProvider can wrap the content inside the body */}
           <LanguageProvider>
             <Navbar />

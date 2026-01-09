@@ -1,5 +1,11 @@
 import { getPosts, getFeaturedPost } from "@/lib/mongo/blog";
 import BlogList from "./BlogList";
+import { Metadata } from 'next';
+
+export const metadata: Metadata = {
+  title: 'Travel Blog | Stories & Guides from Mongol Trail',
+  description: 'Read the latest travel stories, destination guides, and travel tips from the Mongol Trail team. Get inspired for your next adventure.',
+};
 
 // Prevent caching so you see new blog posts immediately
 export const dynamic = "force-dynamic";

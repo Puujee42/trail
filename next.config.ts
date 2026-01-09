@@ -1,6 +1,6 @@
 import type { NextConfig } from "next";
 
-const nextConfig = {
+const nextConfig: NextConfig = {
   // Add this 'images' configuration
   images: {
     remotePatterns: [
@@ -12,6 +12,15 @@ const nextConfig = {
       },
     ],
   },
+  async redirects() {
+    return [
+      {
+        source: '/tours',
+        destination: '/packages',
+        permanent: true,
+      },
+    ];
+  },
 };
 
-module.exports = nextConfig;
+export default nextConfig;
