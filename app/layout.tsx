@@ -11,11 +11,25 @@ const inter = Inter({ subsets: ['latin'] });
 export const metadata = {
   metadataBase: new URL('https://www.mongoltrail.com'),
   title: {
-    default: 'Mongol Trail | Your Gateway to Adventure',
+    default: 'Official Mongol Trail | Your Gateway to Adventure',
     template: '%s | Mongol Trail',
   },
   description: 'Experience the ultimate adventure with Mongol Trail. We offer premier tours across Mongolia, Europe, and the world. Book your next hiking, cultural, or overland trip today.',
-  keywords: ['Mongol Trail', 'Mongolia Travel', 'Adventure Tours', 'Hiking Mongolia', 'Euro Trails', 'World Travel', 'Overland Trip'],
+  keywords: [
+    'Mongol Trail',
+    'Mongolia hiking tours',
+    'Best trekking routes in Mongolia',
+    'Mongolia trail guide',
+    'Guided hiking Mongolia',
+    'Horseback riding trails Mongolia',
+    'Mongolia adventure travel agency',
+    'Mongolia Travel',
+    'Adventure Tours',
+    'Hiking Mongolia',
+    'Euro Trails',
+    'World Travel',
+    'Overland Trip'
+  ],
   authors: [{ name: 'Mongol Trail Team' }],
   creator: 'Mongol Trail',
   openGraph: {
@@ -61,6 +75,19 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     image: 'https://www.mongoltrail.com/try.png',
     url: 'https://www.mongoltrail.com',
     telephone: '+976 7766-1626',
+    priceRange: '$$',
+    currenciesAccepted: 'USD, EUR, MNT, KRW',
+    paymentAccepted: 'Cash, Credit Card, Bank Transfer',
+    areaServed: [
+      {
+        '@type': 'Country',
+        name: 'Mongolia'
+      },
+      {
+        '@type': 'Continent',
+        name: 'Europe'
+      }
+    ],
     address: {
       '@type': 'PostalAddress',
       streetAddress: 'Room 502, 5th Floor, Erkhi Center, West 4 Road',
@@ -70,7 +97,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     },
     geo: {
       '@type': 'GeoCoordinates',
-      latitude: 47.9188, // Approx coordinates for Ulaanbaatar West 4 Road
+      latitude: 47.9188,
       longitude: 106.9176,
     },
     openingHoursSpecification: {
