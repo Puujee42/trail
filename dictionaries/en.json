@@ -1,0 +1,60 @@
+{
+    "nav": {
+        "home": "Home",
+        "course": "Trip",
+        "packages": "Packages",
+        "europe": "Europe",
+        "mongolia": "Mongolia",
+        "blog": "Blog",
+        "about": "About Us",
+        "contact": "Contact",
+        "slogan": "Travel the world with Mongol Trail",
+        "login": "Login",
+        "register": "Register",
+        "book": "Book Now",
+        "menu": "Menu",
+        "myAccount": "My Account",
+        "dashboard": "Dashboard"
+    },
+    "featured": {
+        "bestOffer": "Best Offers",
+        "titleMain": "Make your dream",
+        "titleAccent": "trip",
+        "titleEnd": "a reality.",
+        "desc": "Travel is an investment. Not in material things — but in yourself, your soul, your perspective, and the quality of your life.",
+        "viewAll": "View All Trips"
+    },
+    "footer": {
+        "newsletterTitle": "Subscribe to Newsletter?",
+        "newsletterDesc": "Get the latest updates on sales and promotions instantly.",
+        "emailPlaceholder": "Email address...",
+        "brandDesc": "We offer you the most pleasant, safe, and unforgettable journeys to every corner of the world.",
+        "menuTitle": "Menu",
+        "trendingTitle": "Trending",
+        "contactTitle": "Contact Us",
+        "address": "Room 502, 5th Floor, Erkhi Center, West 4 Road, Ulaanbaatar",
+        "copyright": "© 2025 Mongol Trail. All rights reserved.",
+        "policy": "Privacy Policy",
+        "terms": "Terms of Service",
+        "europe": "Europe",
+        "switzerland": "Switzerland"
+    },
+    "whyChooseUs": {
+        "badge": "Our Advantages",
+        "titlePrefix": "Why Choose",
+        "titleSuffix": "?",
+        "desc": "We don't just sell trips. We promise you lifelong memories, safety, and premium service.",
+        "card1Title": "Limitless Global Travel",
+        "card1Desc": "We partner with official agencies in 50+ countries and 21 Mongolian provinces to take you anywhere.",
+        "card2Title": "24/7 Support",
+        "card2Desc": "We are with you throughout the journey. Contact us anytime, anywhere if issues arise.",
+        "card2Btn": "Chat Now",
+        "card3Title": "Best Price",
+        "card3Desc": "Most realistic market prices.",
+        "card3Badge": "-20% OFF",
+        "card4Title": "100% Insurance",
+        "card4Desc": "Your safety is our priority. All travelers are fully insured.",
+        "card5Title": "Join Us?",
+        "card5Desc": "Get the latest travel updates instantly."
+    }
+}

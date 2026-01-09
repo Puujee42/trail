@@ -6,7 +6,7 @@ import { motion } from "framer-motion";
 import Link from "next/link";
 import { FaGoogle, FaFacebookF, FaPlane, FaArrowRight } from "react-icons/fa";
 // 👇 1. Import Hook
-import { useLanguage } from "../context/LanguageContext";
+import { useLanguage } from "../../context/LanguageContext";
 
 const SignInPage = () => {
   // 👇 2. Get Language

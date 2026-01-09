@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 import { motion } from "framer-motion";
 import Link from "next/link";
 import { FaGoogle, FaFacebookF, FaPlane, FaArrowRight } from "react-icons/fa";
-import { useLanguage } from "../context/LanguageContext";
+import { useLanguage } from "../../context/LanguageContext";
 
 const SignUpPage = () => {
   const { language } = useLanguage();

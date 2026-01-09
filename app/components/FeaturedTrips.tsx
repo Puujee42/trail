@@ -16,8 +16,9 @@ import { Trip } from "@/lib/mongo/trips";
 import { useLanguage } from "../context/LanguageContext";
 
 /* ────────────────────── Main Component ────────────────────── */
-const FeaturedTrips = ({ trips }: { trips: Trip[] }) => {
-  const { language } = useLanguage();
+const FeaturedTrips = ({ trips, lang, dictionary }: { trips: Trip[], lang: string, dictionary: any }) => {
+  // const { language } = useLanguage(); // Removing context dependency for static text
+  const language = lang as "mn" | "en" | "ko"; // Use prop
   const targetRef = useRef<HTMLDivElement>(null);
   const { scrollYProgress } = useScroll({ target: targetRef });
 
@@ -26,35 +27,7 @@ const FeaturedTrips = ({ trips }: { trips: Trip[] }) => {
 
   if (!trips || trips.length === 0) return null;
 
-  // Static Translations
-  const t = {
-    mn: {
-      bestOffer: "Шилдэг Санал",
-      titleMain: "Таны мөрөөдлийн",
-      titleAccent: "аяллыг",
-      titleEnd: "бодит болгоно.",
-      desc: "Аялал бол хөрөнгө оруулалт. Гэхдээ материаллаг зүйлд биш — өөртөө, сэтгэлдээ, харах өнцөгтөө, амьдралынхаа чанарт хийдэг хөрөнгө оруулалт.",
-      viewAll: "Бүх аяллыг үзэх"
-    },
-    en: {
-      bestOffer: "Best Offers",
-      titleMain: "Make your dream",
-      titleAccent: "trip",
-      titleEnd: "a reality.",
-      desc: "Travel is an investment. Not in material things — but in yourself, your soul, your perspective, and the quality of your life.",
-      viewAll: "View All Trips"
-    },
-    ko: {
-      bestOffer: "최고의 상품",
-      titleMain: "당신의 꿈의",
-      titleAccent: "여행을",
-      titleEnd: "현실로 만드세요.",
-      desc: "여행은 투자입니다. 물질적인 것에 대한 투자가 아니라 자신, 영혼, 관점, 그리고 삶의 질에 대한 투자입니다.",
-      viewAll: "모든 여행 보기"
-    }
-  };
-
-  const text = t[language as "mn" | "en" | "ko"] || t.mn;
+  const text = dictionary;
 
   return (
     <section ref={targetRef} className="py-24 bg-slate-50 relative overflow-hidden">

@@ -1,9 +1,9 @@
 // app/layout.tsx
 import { Inter } from 'next/font/google';
-import './globals.css';
-import { LanguageProvider } from './context/LanguageContext';
-import Navbar from './components/Navbar';
-import Footer from './components/Footer';
+import '../globals.css';
+import { LanguageProvider } from '../context/LanguageContext';
+import Navbar from '../components/Navbar';
+import Footer from '../components/Footer';
 import { ClerkProvider } from '@clerk/nextjs';
 const inter = Inter({ subsets: ['latin'] });
 
@@ -67,7 +67,23 @@ export const metadata = {
   },
 };
 
-export default function RootLayout({ children }: { children: React.ReactNode }) {
+import { i18n } from '@/i18n-config';
+
+import { getDictionary } from '@/get-dictionary';
+
+export async function generateStaticParams() {
+  return i18n.locales.map((locale) => ({ lang: locale }));
+}
+
+export default async function RootLayout(props: {
+  children: React.ReactNode;
+  params: Promise<{ lang: string }>;
+}) {
+  const params = await props.params;
+
+  const { children } = props;
+  const dict = await getDictionary(params.lang as any); // Fetch dictionary
+
   const jsonLd = {
     '@context': 'https://schema.org',
     '@type': 'TravelAgency',
@@ -114,21 +130,21 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
 
   return (
     // Clerk: Step 1 - Wrap the entire HTML content with ClerkProvider
-    <ClerkProvider signInUrl="/sign-in"
-      signUpUrl="/sign-up">
-      <html lang="mn">
+    <ClerkProvider signInUrl={`/${params.lang}/sign-in`}
+      signUpUrl={`/${params.lang}/sign-up`}>
+      <html lang={params.lang}>
         <body className={inter.className}>
           <script
             type="application/ld+json"
             dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
           />
-          {/* Your LanguageProvider can wrap the content inside the body */}
-          <LanguageProvider>
-            <Navbar />
-            <main className="pt-20"> {/* pt-20 likely offsets your fixed Navbar */}
+          {/* We initialize the provider with the server-detected language */}
+          <LanguageProvider initialLang={params.lang as any}>
+            <Navbar dictionary={dict.nav} />
+            <main className="pt-20">
               {children}
             </main>
-            <Footer />
+            <Footer dictionary={dict.footer} navDictionary={dict.nav} />
           </LanguageProvider>
         </body>
       </html>

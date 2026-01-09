@@ -2,118 +2,46 @@
 
 import { motion } from "framer-motion";
 import Link from "next/link";
-import { 
-  FaFacebookF, 
-  FaInstagram, 
-  FaTwitter, 
-  FaYoutube, 
-  FaPaperPlane, 
-  FaPhoneAlt, 
-  FaEnvelope, 
+import {
+  FaFacebookF,
+  FaInstagram,
+  FaTwitter,
+  FaYoutube,
+  FaPaperPlane,
+  FaPhoneAlt,
+  FaEnvelope,
   FaMapMarkerAlt,
   FaPlane
 } from "react-icons/fa";
-import { useLanguage } from "../context/LanguageContext"; 
+import { useLanguage } from "../context/LanguageContext";
 
-const Footer = () => {
+const Footer: React.FC<{ dictionary: any, navDictionary: any }> = ({ dictionary, navDictionary }) => {
   const { language } = useLanguage();
 
-  const content = {
-    mn: {
-      newsletterTitle: "Аяллын мэдээ авах уу?",
-      newsletterDesc: "Шинэ хямдрал, урамшууллын мэдээллийг цаг алдалгүй аваарай.",
-      emailPlaceholder: "И-мэйл хаяг...",
-      brandDesc: "Бид танд дэлхийн өнцөг булан бүрт хүрэх хамгийн таатай, аюулгүй, мартагдашгүй аяллыг санал болгож байна.",
-      menuTitle: "Цэс",
-      menuItems: [
-        { label: "Нүүр", href: "/" },
-        { label: "Чиглэлүүд", href: "/packages" },
-        { label: "Багцууд", href: "/packages" },
-        { label: "Блог", href: "/blog" },
-        { label: "Бидний тухай", href: "/about" },
-      ],
-      trendingTitle: "Эрэлттэй",
-      trendingItems: [
-        { label: "Европ", href: "/packages/europe" },
-        { label: "Швейцарь", href: "/packages/europe" },
-      ],
-      contactTitle: "Холбоо барих",
-      address: "Улаанбаатар хот, Баруун 4 зам, Эрхи Төв, 5 давхар, 502 тоот", 
-      phone: "+976 7766-1626", 
-      email: "Eurotrails1@gmail.com", 
-      copyright: "© 2025 Mongol Trail. Бүх эрх хуулиар хамгаалагдсан.",
-      policy: "Нууцлалын бодлого",
-      terms: "Үйлчилгээний нөхцөл"
-    },
-    en: {
-      newsletterTitle: "Subscribe to Newsletter?",
-      newsletterDesc: "Get the latest updates on sales and promotions instantly.",
-      emailPlaceholder: "Email address...",
-      brandDesc: "We offer you the most pleasant, safe, and unforgettable journeys to every corner of the world.",
-      menuTitle: "Menu",
-      menuItems: [
-        { label: "Home", href: "/" },
-        { label: "Destinations", href: "/packages" },
-        { label: "Packages", href: "/packages" },
-        { label: "Blog", href: "/blog" },
-        { label: "About Us", href: "/about" },
-      ],
-      trendingTitle: "Trending",
-      trendingItems: [
-        { label: "Europe", href: "/packages/europe" },
-        { label: "Switzerland", href: "/packages/europe" },
-      ],
-      contactTitle: "Contact Us",
-      address: "Room 502, 5th Floor, Erkhi Center, West 4 Road, Ulaanbaatar", 
-      phone: "+976 7766-1626",
-      email: "Eurotrails1@gmail.com",
-      copyright: "© 2025 Mongol Trail. All rights reserved.",
-      policy: "Privacy Policy",
-      terms: "Terms of Service"
-    },
-    ko: {
-      newsletterTitle: "뉴스레터 구독?",
-      newsletterDesc: "최신 업데이트를 즉시 받아보세요.",
-      emailPlaceholder: "이메일 주소...",
-      brandDesc: "우리는 세계의 모든 코너에 가장 쾌적하고 안전하며 잊지 못할 여행을 제공합니다.",
-      menuTitle: "메뉴",
-      menuItems: [
-        { label: "홈", href: "/" },
-        { label: "목적지", href: "/packages" },
-        { label: "패키지", href: "/packages" },
-        { label: "블로그", href: "/blog" },
-        { label: "회사 소개", href: "/about" },
-      ],
-      trendingTitle: "인기 여행지",
-      trendingItems: [
-        { label: "유럽", href: "/packages/europe" },
-        { label: "스위스", href: "/packages/europe" },
-      ],
-      contactTitle: "문의하기",
-      address: "울란바토르 서부 4거리, 에르키 센터 5층 502호", 
-      phone: "+976 7766-1626",
-      email: "Eurotrails1@gmail.com",
-      copyright: "© 2025 Mongol Trail. 모든 권리 보유.",
-      policy: "개인 정보 보호 정책",
-      terms: "서비스 이용 약관"
-    }
-  };
+  const t = dictionary;
+  const navT = navDictionary;
 
-  const t = content[language];
+  const navLinks = [
+    { label: navT.home, href: "/" },
+    { label: navT.packages, href: "/packages" },
+    { label: navT.blog, href: "/blog" },
+    { label: navT.about, href: "/about" },
+    { label: navT.contact, href: "/contact" },
+  ];
 
   return (
     <footer className="relative bg-slate-900 pt-32 pb-10 overflow-hidden">
-      
+
       {/* ─── 1. CURVED TOP WAVE ─── */}
       <div className="absolute top-0 left-0 w-full overflow-hidden leading-[0]">
         <svg data-name="Layer 1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 120" preserveAspectRatio="none" className="relative block w-[calc(100%+1.3px)] h-[100px] fill-slate-50">
-            <path d="M321.39,56.44c58-10.79,114.16-30.13,172-41.86,82.39-16.72,168.19-17.73,250.45-.39C823.78,31,906.67,72,985.66,92.83c70.05,18.48,146.53,26.09,214.34,3V0H0V27.35A600.21,600.21,0,0,0,321.39,56.44Z"></path>
+          <path d="M321.39,56.44c58-10.79,114.16-30.13,172-41.86,82.39-16.72,168.19-17.73,250.45-.39C823.78,31,906.67,72,985.66,92.83c70.05,18.48,146.53,26.09,214.34,3V0H0V27.35A600.21,600.21,0,0,0,321.39,56.44Z"></path>
         </svg>
       </div>
 
       {/* ─── 2. FLOATING NEWSLETTER ─── */}
       <div className="container mx-auto px-4 relative z-20 -mt-24 mb-20">
-        <motion.div 
+        <motion.div
           initial={{ y: 20, opacity: 0 }}
           whileInView={{ y: 0, opacity: 1 }}
           viewport={{ once: true }}
@@ -129,14 +57,14 @@ const Footer = () => {
           </div>
 
           <div className="flex w-full md:w-auto relative z-10 bg-white/10 p-1.5 rounded-full border border-white/20 backdrop-blur-sm">
-             <input 
-               type="email" 
-               placeholder={t.emailPlaceholder} 
-               className="bg-transparent border-none text-white placeholder:text-blue-200 focus:ring-0 px-6 py-3 w-full md:w-80 outline-none"
-             />
-             <button className="bg-white text-blue-600 w-12 h-12 rounded-full flex items-center justify-center hover:scale-110 transition-transform shadow-lg">
-                <FaPaperPlane />
-             </button>
+            <input
+              type="email"
+              placeholder={t.emailPlaceholder}
+              className="bg-transparent border-none text-white placeholder:text-blue-200 focus:ring-0 px-6 py-3 w-full md:w-80 outline-none"
+            />
+            <button className="bg-white text-blue-600 w-12 h-12 rounded-full flex items-center justify-center hover:scale-110 transition-transform shadow-lg">
+              <FaPaperPlane />
+            </button>
           </div>
         </motion.div>
       </div>
@@ -144,7 +72,7 @@ const Footer = () => {
       {/* ─── 3. MAIN FOOTER CONTENT ─── */}
       <div className="container mx-auto px-4 relative z-10">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 mb-16">
-          
+
           {/* Column 1: Brand */}
           <div className="space-y-6">
             <Link href="/" className="flex items-center gap-2 group">
@@ -158,24 +86,24 @@ const Footer = () => {
             <p className="text-slate-400 text-sm leading-relaxed">
               {t.brandDesc}
             </p>
-            
+
             {/* 👇 UPDATED SOCIAL ICONS WITH LINKS */}
             <div className="flex gap-4">
-               {[
-                  { 
-                    Icon: FaFacebookF, 
-                    href: "https://www.facebook.com/profile.php?id=61580867289571" 
-                  },
-                  { 
-                    Icon: FaInstagram, 
-                    href: "https://www.instagram.com/euro.trails/" 
-                  },
-                  // Placeholder for others if needed
-                  { Icon: FaTwitter, href: "#" }, 
-                  { Icon: FaYoutube, href: "#" }
-               ].map(({ Icon, href }, idx) => (
-                 <SocialIcon key={idx} icon={Icon} href={href} />
-               ))}
+              {[
+                {
+                  Icon: FaFacebookF,
+                  href: "https://www.facebook.com/profile.php?id=61580867289571"
+                },
+                {
+                  Icon: FaInstagram,
+                  href: "https://www.instagram.com/euro.trails/"
+                },
+                // Placeholder for others if needed
+                { Icon: FaTwitter, href: "#" },
+                { Icon: FaYoutube, href: "#" }
+              ].map(({ Icon, href }, idx) => (
+                <SocialIcon key={idx} icon={Icon} href={href} />
+              ))}
             </div>
 
           </div>
@@ -184,7 +112,7 @@ const Footer = () => {
           <div>
             <h4 className="text-white font-bold text-lg mb-6">{t.menuTitle}</h4>
             <ul className="space-y-4">
-              {t.menuItems.map((item) => (
+              {navLinks.map((item) => (
                 <li key={item.label}>
                   <Link href={item.href} className="text-slate-400 hover:text-sky-400 transition-colors text-sm font-medium flex items-center gap-2 group">
                     <span className="w-0 group-hover:w-2 h-0.5 bg-sky-400 transition-all duration-300" />
@@ -199,13 +127,18 @@ const Footer = () => {
           <div>
             <h4 className="text-white font-bold text-lg mb-6">{t.trendingTitle}</h4>
             <ul className="space-y-4">
-              {t.trendingItems.map((item) => (
-                <li key={item.label}>
-                  <Link href={item.href} className="text-slate-400 hover:text-sky-400 transition-colors text-sm font-medium">
-                    {item.label}
-                  </Link>
-                </li>
-              ))}
+              {/* Hardcoding trending items logic or using simple dictionary lookup if available */}
+              {/* mn.json: "europe": "Европ", "switzerland": "Швейцарь" */}
+              <li>
+                <Link href="/packages/europe" className="text-slate-400 hover:text-sky-400 transition-colors text-sm font-medium">
+                  {t.europe}
+                </Link>
+              </li>
+              <li>
+                <Link href="/packages/europe" className="text-slate-400 hover:text-sky-400 transition-colors text-sm font-medium">
+                  {t.switzerland}
+                </Link>
+              </li>
             </ul>
           </div>
 
@@ -219,11 +152,11 @@ const Footer = () => {
               </li>
               <li className="flex items-center gap-3 text-slate-400 text-sm">
                 <FaPhoneAlt className="text-sky-500 flex-shrink-0" />
-                <span>{t.phone}</span>
+                <span>+976 7766-1626</span>
               </li>
               <li className="flex items-center gap-3 text-slate-400 text-sm">
                 <FaEnvelope className="text-sky-500 flex-shrink-0" />
-                <span>{t.email}</span>
+                <span>Eurotrails1@gmail.com</span>
               </li>
             </ul>
           </div>
@@ -242,7 +175,7 @@ const Footer = () => {
 
       {/* ─── 5. BACKGROUND DECORATION ─── */}
       <div className="absolute inset-0 opacity-5 pointer-events-none bg-[url('https://upload.wikimedia.org/wikipedia/commons/8/80/World_map_-_low_resolution.svg')] bg-center bg-no-repeat bg-cover mix-blend-overlay" />
-      
+
       <motion.div
         animate={{ x: ["-10vw", "110vw"] }}
         transition={{ duration: 30, repeat: Infinity, ease: "linear" }}
@@ -257,7 +190,7 @@ const Footer = () => {
 
 /* ─── Social Icon Helper (UPDATED WITH HREF) ─── */
 const SocialIcon = ({ icon: Icon, href }: { icon: any, href: string }) => (
-  <motion.a 
+  <motion.a
     href={href}
     target="_blank"
     rel="noopener noreferrer"
