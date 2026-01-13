@@ -4,16 +4,22 @@ import { ObjectId } from "mongodb";
 const DB_NAME = "travel_db";
 const COLLECTION = "posts";
 
+interface LocalizedString {
+  mn: string;
+  en: string;
+  ko: string;
+}
+
 export interface BlogPost {
   _id?: string;
-  title: string;
-  excerpt: string;
-  content?: string; // Added for the actual full page content
+  title: LocalizedString;
+  excerpt: LocalizedString;
+  content: LocalizedString | string;
   category: string; // "guide", "tips", "food", "stories"
   author: string;
   authorImg: string;
   date: string;     // Or Date object if you want to sort dynamically
-  readTime: string;
+  readTime: LocalizedString;
   image: string;
   featured: boolean;
   location?: string;
@@ -35,9 +41,9 @@ function mapPost(doc: any): BlogPost {
 export async function getPosts(category?: string) {
   const client = await clientPromise;
   const collection = client.db(DB_NAME).collection(COLLECTION);
-  
+
   const query = (category && category !== 'all') ? { category } : {};
-  
+
   const posts = await collection
     .find(query)
     .sort({ date: -1 }) // Newest first (works if date is ISO string "2025.11.20")
@@ -50,7 +56,7 @@ export async function getPosts(category?: string) {
 export async function getFeaturedPost() {
   const client = await clientPromise;
   const collection = client.db(DB_NAME).collection(COLLECTION);
-  
+
   const post = await collection.findOne({ featured: true });
   return post ? mapPost(post) : null;
 }
@@ -59,7 +65,7 @@ export async function getFeaturedPost() {
 export async function getPostById(id: string) {
   const client = await clientPromise;
   const collection = client.db(DB_NAME).collection(COLLECTION);
-  
+
   try {
     const post = await collection.findOne({ _id: new ObjectId(id) });
     return post ? mapPost(post) : null;

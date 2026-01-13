@@ -13,14 +13,17 @@ export async function generateMetadata(props: { params: Promise<{ lang: Locale }
   const params = await props.params;
   const dict = await getDictionary(params.lang);
 
+  const baseUrl = 'https://www.mongoltrail.com';
   return {
     title: dict.nav.home + ' | Mongol Trail',
     description: dict.featured.desc,
     alternates: {
+      canonical: `${baseUrl}/${params.lang}`,
       languages: {
-        'mn': 'https://www.mongoltrail.com/mn',
-        'en': 'https://www.mongoltrail.com/en',
-        'ko': 'https://www.mongoltrail.com/ko',
+        'mn': `${baseUrl}/mn`,
+        'en': `${baseUrl}/en`,
+        'ko': `${baseUrl}/ko`,
+        'x-default': `${baseUrl}/mn`,
       }
     }
   };

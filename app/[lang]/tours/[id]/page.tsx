@@ -1,30 +1,43 @@
 import { getTripById } from "@/lib/mongo/trips";
 import { notFound } from "next/navigation";
-import TourDetailClient from "./TourDetailClient"; 
+import TourDetailClient from "./TourDetailClient";
 import { Metadata } from 'next';
+import { Locale } from "@/i18n-config";
 
 interface PageProps {
   params: Promise<{
     id: string;
+    lang: Locale;
   }>;
 }
 
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
-  const { id } = await params;
+  const { id, lang } = await params;
   const trip = await getTripById(id);
 
   if (!trip) return {};
 
-  const title = `${trip.title.en} | Mongol Trail`;
-  const description = trip.description?.en || `Join our ${trip.title.en} tour. Explore ${trip.location.en} for ${trip.duration.en}. Book your adventure with Mongol Trail.`;
+  const title = `${trip.title[lang] || trip.title.en} | Mongol Trail`;
+  const description = trip.description?.[lang] || trip.description?.en || `Join our ${trip.title[lang] || trip.title.en} tour. Explore ${trip.location[lang] || trip.location.en} for ${trip.duration[lang] || trip.duration.en}. Book your adventure with Mongol Trail.`;
+
+  const baseUrl = 'https://www.mongoltrail.com';
 
   return {
     title,
     description,
+    alternates: {
+      canonical: `${baseUrl}/${lang}/tours/${id}`,
+      languages: {
+        'mn': `${baseUrl}/mn/tours/${id}`,
+        'en': `${baseUrl}/en/tours/${id}`,
+        'ko': `${baseUrl}/ko/tours/${id}`,
+      }
+    },
     openGraph: {
       title,
       description,
       images: [trip.image],
+      url: `${baseUrl}/${lang}/tours/${id}`,
     },
     twitter: {
       card: 'summary_large_image',
@@ -36,30 +49,32 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
 }
 
 export default async function TourPage({ params }: PageProps) {
-  const { id } = await params;
+  const { id, lang } = await params;
   const trip = await getTripById(id);
 
   if (!trip) {
     return notFound();
   }
 
+  const baseUrl = 'https://www.mongoltrail.com';
+
   // JSON-LD for Tour/Product SEO
   const productJsonLd = {
     '@context': 'https://schema.org',
     '@type': 'Product',
-    name: trip.title.en,
+    name: trip.title[lang] || trip.title.en,
     image: trip.image,
-    description: trip.description?.en || trip.title.en,
+    description: trip.description?.[lang] || trip.description?.en || trip.title[lang] || trip.title.en,
     brand: {
       '@type': 'Brand',
       name: 'Mongol Trail',
     },
     offers: {
       '@type': 'Offer',
-      price: typeof trip.price === 'number' ? trip.price : (trip.price?.en || 0),
+      price: typeof trip.price === 'number' ? trip.price : (trip.price?.[lang] || trip.price?.en || 0),
       priceCurrency: 'USD',
       availability: 'https://schema.org/InStock',
-      url: `https://www.mongoltrail.com/tours/${id}`,
+      url: `${baseUrl}/${lang}/tours/${id}`,
     },
     aggregateRating: {
       '@type': 'AggregateRating',
@@ -76,19 +91,19 @@ export default async function TourPage({ params }: PageProps) {
         '@type': 'ListItem',
         position: 1,
         name: 'Home',
-        item: 'https://www.mongoltrail.com',
+        item: `${baseUrl}/${lang}`,
       },
       {
         '@type': 'ListItem',
         position: 2,
         name: 'Packages',
-        item: 'https://www.mongoltrail.com/packages',
+        item: `${baseUrl}/${lang}/packages`,
       },
       {
         '@type': 'ListItem',
         position: 3,
-        name: trip.title.en,
-        item: `https://www.mongoltrail.com/tours/${id}`,
+        name: trip.title[lang] || trip.title.en,
+        item: `${baseUrl}/${lang}/tours/${id}`,
       },
     ],
   };

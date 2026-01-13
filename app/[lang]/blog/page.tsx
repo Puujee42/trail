@@ -15,6 +15,7 @@ export async function generateMetadata(props: { params: Promise<{ lang: Locale }
         'mn': 'https://www.mongoltrail.com/mn/blog',
         'en': 'https://www.mongoltrail.com/en/blog',
         'ko': 'https://www.mongoltrail.com/ko/blog',
+        'x-default': 'https://www.mongoltrail.com/mn/blog',
       }
     }
   };
