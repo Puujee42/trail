@@ -124,8 +124,8 @@ const Navbar: React.FC<{ dictionary: any }> = ({ dictionary }) => {
             </div>
             <div className="flex items-center gap-4">
                <div className="flex gap-3">
-                  <a href="#" className="hover:text-sky-400 transition"><FaFacebookF/></a>
-                  <a href="#" className="hover:text-pink-400 transition"><FaInstagram/></a>
+                  <a href="https://facebook.com" aria-label="Follow us on Facebook" target="_blank" rel="noopener noreferrer" className="hover:text-sky-400 transition"><FaFacebookF/></a>
+                  <a href="https://instagram.com" aria-label="Follow us on Instagram" target="_blank" rel="noopener noreferrer" className="hover:text-pink-400 transition"><FaInstagram/></a>
                </div>
                <div className="h-3 w-px bg-white/20"/>
                <LanguageDropdown language={language} setLanguage={setLanguage} />
@@ -221,6 +221,7 @@ const Navbar: React.FC<{ dictionary: any }> = ({ dictionary }) => {
             {/* Mobile Hamburger */}
             <button
               onClick={() => setMobileOpen(true)}
+              aria-label="Open menu"
               className="lg:hidden w-10 h-10 flex items-center justify-center rounded-full bg-slate-100 text-slate-900 hover:bg-slate-200 transition-colors"
             >
               <AnimatedHamburgerIcon isOpen={mobileOpen} />
@@ -273,6 +274,8 @@ const DesktopNavLink: React.FC<any> = ({ link, setHoveredLink, navRef }) => {
       <Link
         ref={linkRef}
         href={link.href}
+        aria-haspopup={link.subMenu ? "true" : undefined}
+        aria-expanded={link.subMenu ? open : undefined}
         className={`flex items-center gap-1.5 px-4 py-2 text-[15px] font-bold transition-colors ${open ? "text-sky-600" : "text-slate-600 hover:text-slate-900"}`}
       >
         {link.label}
@@ -320,7 +323,7 @@ const LanguageDropdown = ({ language, setLanguage }: any) => {
     const [open, setOpen] = useState(false);
     return (
         <div className="relative z-50" onMouseEnter={() => setOpen(true)} onMouseLeave={() => setOpen(false)}>
-            <button className="flex items-center gap-1 uppercase hover:text-white transition">
+            <button aria-label="Select language" className="flex items-center gap-1 uppercase hover:text-white transition">
                 <FaGlobe className="text-sky-400"/>
                 {language}
             </button>

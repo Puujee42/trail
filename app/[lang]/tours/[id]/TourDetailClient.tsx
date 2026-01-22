@@ -13,11 +13,10 @@ import {
   FaPlane, 
   FaUtensils, 
   FaPassport,      
-  FaClipboardList,
-  FaTimes, 
+  FaUsers, 
   FaCheckCircle 
 } from "react-icons/fa";
-import { useLanguage } from "../../context/LanguageContext";
+import { useLanguage } from "@/app/context/LanguageContext";
 
 /* ────────────────────── Types ────────────────────── */
 interface LocalizedString {

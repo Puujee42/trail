@@ -97,7 +97,6 @@ export async function generateMetadata({ params }: { params: Promise<{ lang: str
 }
 
 import { i18n } from '@/i18n-config';
-
 import { getDictionary } from '@/get-dictionary';
 
 export async function generateStaticParams() {
@@ -109,9 +108,8 @@ export default async function RootLayout(props: {
   params: Promise<{ lang: string }>;
 }) {
   const params = await props.params;
-
   const { children } = props;
-  const dict = await getDictionary(params.lang as any); // Fetch dictionary
+  const dict = await getDictionary(params.lang as any);
 
   const jsonLd = {
     '@context': 'https://schema.org',
@@ -123,16 +121,6 @@ export default async function RootLayout(props: {
     priceRange: '$$',
     currenciesAccepted: 'USD, EUR, MNT, KRW',
     paymentAccepted: 'Cash, Credit Card, Bank Transfer',
-    areaServed: [
-      {
-        '@type': 'Country',
-        name: 'Mongolia'
-      },
-      {
-        '@type': 'Continent',
-        name: 'Europe'
-      }
-    ],
     address: {
       '@type': 'PostalAddress',
       streetAddress: 'Room 502, 5th Floor, Erkhi Center, West 4 Road',
@@ -140,37 +128,25 @@ export default async function RootLayout(props: {
       postalCode: '11000',
       addressCountry: 'MN',
     },
-    geo: {
-      '@type': 'GeoCoordinates',
-      latitude: 47.9188,
-      longitude: 106.9176,
-    },
-    openingHoursSpecification: {
-      '@type': 'OpeningHoursSpecification',
-      dayOfWeek: ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'],
-      opens: '09:00',
-      closes: '18:00',
-    },
-    sameAs: [
-      'https://www.facebook.com/profile.php?id=61580867289571',
-      'https://www.instagram.com/euro.trails/',
-    ],
   };
 
   return (
-    // Clerk: Step 1 - Wrap the entire HTML content with ClerkProvider
     <ClerkProvider signInUrl={`/${params.lang}/sign-in`}
       signUpUrl={`/${params.lang}/sign-up`}>
       <html lang={params.lang}>
+        <head>
+          <link rel="preconnect" href="https://api.dicebear.com" />
+          <link rel="preconnect" href="https://touching-gobbler-96.clerk.accounts.dev" />
+          <link rel="preconnect" href="https://www.transparenttextures.com" />
+        </head>
         <body className={inter.className}>
           <script
             type="application/ld+json"
             dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
           />
-          {/* We initialize the provider with the server-detected language */}
           <LanguageProvider initialLang={params.lang as any}>
             <Navbar dictionary={dict.nav} />
-            <main className="pt-20">
+            <main className="min-h-screen pt-20">
               {children}
             </main>
             <Footer dictionary={dict.footer} navDictionary={dict.nav} />

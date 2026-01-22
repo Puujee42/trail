@@ -58,12 +58,12 @@ export default async function Home(props: { params: Promise<{ lang: Locale }> })
         }}
       />
       {/* Load Hero independently */}
-      <Suspense fallback={<div className="h-screen bg-slate-900" />}>
+      <Suspense fallback={<div className="h-screen w-full bg-slate-900 animate-pulse" />}>
         <HeroWrapper />
       </Suspense>
 
       {/* Load Featured Trips independently */}
-      <Suspense fallback={<div className="h-96 flex items-center justify-center">Loading Trips...</div>}>
+      <Suspense fallback={<div className="min-h-[800px] w-full flex items-center justify-center bg-slate-50 animate-pulse">Loading Trips...</div>}>
         <FeaturedTripsWrapper lang={params.lang} dictionary={dict.featured} />
       </Suspense>
 

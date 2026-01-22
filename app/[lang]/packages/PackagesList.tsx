@@ -1,16 +1,11 @@
 "use client";
 
-import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { 
-  FaSearch, FaMapMarkerAlt, FaClock, FaStar, FaArrowRight, FaHeart, FaFire
-} from "react-icons/fa";
 import Link from "next/link";
 import { Trip } from "@/lib/mongo/trips"; 
-import { useLanguage } from "../context/LanguageContext"; 
+import { useLanguage } from "@/app/context/LanguageContext"; 
 
-/* ────────────────────── Static Constants ────────────────────── */
-const categories = [
+/* ────────────────────── Static Constants ────────────────────── */const categories = [
   { id: "all", label: { mn: "Бүгд", en: "All", ko: "전체" } },
   { id: "nature", label: { mn: "Байгаль", en: "Nature", ko: "자연" } },
   { id: "city", label: { mn: "Хотын аялал", en: "City Tours", ko: "도시 투어" } },

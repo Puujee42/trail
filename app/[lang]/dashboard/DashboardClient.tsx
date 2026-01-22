@@ -3,13 +3,11 @@
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import Link from "next/link";
-import { 
-  FaSuitcaseRolling, FaCalendarAlt, FaCheckCircle, FaClock, FaTimesCircle, FaUser, FaSignOutAlt 
+  FaEnvelope,
 } from "react-icons/fa";
-import { useClerk } from "@clerk/nextjs";
-import { useLanguage } from "../context/LanguageContext";
+import { useClerk } = "@clerk/nextjs";
+import { useLanguage } from "@/app/context/LanguageContext";
 import { Booking } from "@/lib/mongo/bookings";
-
 interface DashboardProps {
   bookings: Booking[];
   userName: string;

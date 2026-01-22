@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import Image from "next/image";
-import { useLanguage } from "../context/LanguageContext"; // Check path based on your folder structure
+import { useLanguage } from "@/app/context/LanguageContext"; // Check path based on your folder structure
 
 /* ────────────────────── Types ────────────────────── */
 interface LocalizedString {

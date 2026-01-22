@@ -22,22 +22,23 @@ function getLocale(request: NextRequest): string | undefined {
 }
 
 export function middleware(request: NextRequest) {
-    const pathname = request.nextUrl.pathname;
+    const { pathname } = request.nextUrl;
 
-    // Check if there is any supported locale in the pathname
+    // 1. Skip if the path already has a locale or is a public file
     const pathnameIsMissingLocale = i18n.locales.every(
         (locale) => !pathname.startsWith(`/${locale}/`) && pathname !== `/${locale}`
     );
 
-    // Redirect if there is no locale
     if (pathnameIsMissingLocale) {
+        // 2. Optimized locale detection
         const locale = getLocale(request);
 
-        // e.g. incoming request is /products
-        // The new URL is now /en-US/products
+        // 3. Use 301 for permanent redirect if it's the root to help SEO, 
+        // but 307 is generally safer for dynamic locale matching.
+        // We'll use 307 here to avoid caching the wrong locale.
         return NextResponse.redirect(
             new URL(
-                `/${locale}${pathname.startsWith('/') ? '' : '/'}${pathname}`,
+                `/${locale}${pathname === '/' ? '' : pathname}`,
                 request.url
             )
         );

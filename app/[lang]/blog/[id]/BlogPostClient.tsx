@@ -3,11 +3,10 @@
 import { motion } from "framer-motion";
 import Link from "next/link";
 import Image from "next/image";
-import { 
-  FaArrowLeft, FaCalendarAlt, FaClock, FaFacebookF, FaTwitter
+import {
+  FaArrowLeft, FaCalendarAlt, FaClock, FaFacebookF, FaTwitter, FaInstagram, FaLink, FaChevronRight
 } from "react-icons/fa";
-import { useLanguage } from "../../context/LanguageContext";
-
+import { useLanguage } from "@/app/context/LanguageContext";
 /* ────────────────────── Types ────────────────────── */
 interface LocalizedString {
   mn: string;

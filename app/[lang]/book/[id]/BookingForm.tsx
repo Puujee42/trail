@@ -6,10 +6,11 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useUser } from "@clerk/nextjs";
 import { 
-  FaCalendarAlt, FaUserFriends, FaCheckCircle, FaArrowLeft, FaShieldAlt, FaPlane 
+  FaCalendarAlt,
+  FaArrowRight,
 } from "react-icons/fa";
 import { Trip } from "@/lib/mongo/trips";
-import { useLanguage } from "../../context/LanguageContext";
+import { useLanguage } from "@/app/context/LanguageContext";
 
 export default function BookingForm({ trip }: { trip: Trip }) {
   const { language } = useLanguage();
