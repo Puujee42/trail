@@ -148,7 +148,7 @@ const TripReviews = () => {
                         dragConstraints={{ right: 0, left: -width }} 
                         className="flex gap-6 pb-10 pl-4"
                     >
-                        {reviews.map((review, i) => (
+                        {reviews && Array.isArray(reviews) && reviews.map((review, i) => (
                             <ReviewCard key={review._id || i} review={review} index={i} />
                         ))}
                     </motion.div>

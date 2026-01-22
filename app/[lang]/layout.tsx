@@ -1,4 +1,4 @@
-// app/layout.tsx
+// app/[lang]/layout.tsx
 import { Inter } from 'next/font/google';
 import { Metadata } from 'next';
 import '../globals.css';
@@ -6,9 +6,11 @@ import { LanguageProvider } from '../context/LanguageContext';
 import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
 import { ClerkProvider } from '@clerk/nextjs';
+import { i18n } from '@/i18n-config';
+import { getDictionary } from '@/get-dictionary';
+
 const inter = Inter({ subsets: ['latin'] });
 
-// We can keep your project-specific metadata
 export async function generateMetadata({ params }: { params: Promise<{ lang: string }> }): Promise<Metadata> {
   const { lang } = await params;
   const baseUrl = 'https://www.mongoltrail.com';
@@ -34,14 +36,8 @@ export async function generateMetadata({ params }: { params: Promise<{ lang: str
       address: true,
       telephone: true,
     },
-    metadataBase: new URL(baseUrl),
     verification: {
-      google: 'YOUR_GOOGLE_VERIFICATION_CODE', // Replace with your actual code from Google Search Console
-      // yandex: 'yandex',
-      // yahoo: 'yahoo',
-      // other: {
-      //   me: ['my-email', 'my-link'],
-      // },
+      google: 'YOUR_GOOGLE_VERIFICATION_CODE', 
     },
     openGraph: {
       type: 'website',
@@ -95,9 +91,6 @@ export async function generateMetadata({ params }: { params: Promise<{ lang: str
     },
   };
 }
-
-import { i18n } from '@/i18n-config';
-import { getDictionary } from '@/get-dictionary';
 
 export async function generateStaticParams() {
   return i18n.locales.map((locale) => ({ lang: locale }));

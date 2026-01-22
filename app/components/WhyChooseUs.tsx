@@ -139,7 +139,7 @@ const WhyChooseUs: React.FC<{ dictionary: any }> = ({ dictionary }) => {
                 <p className="text-blue-100 text-sm">{t.card4Desc}</p>
               </div>
               <div className="hidden md:flex flex-col gap-2">
-                {t.card4Tags.map((item, i) => (
+                {t.card4Tags.map((item : string, i: number) => (
                   <div key={i} className="flex items-center gap-2 text-xs font-bold bg-white/20 px-3 py-1.5 rounded-full backdrop-blur-sm">
                     <FaCheckCircle className="text-green-300" /> {item}
                   </div>

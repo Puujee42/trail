@@ -3,9 +3,16 @@
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import Link from "next/link";
-  FaEnvelope,
+import {
+  FaSignOutAlt,
+  FaSuitcaseRolling,
+  FaCheckCircle,
+  FaClock,
+  FaTimesCircle,
+  FaCalendarAlt,
+  FaUser,
 } from "react-icons/fa";
-import { useClerk } = "@clerk/nextjs";
+import { useClerk } from "@clerk/nextjs";
 import { useLanguage } from "@/app/context/LanguageContext";
 import { Booking } from "@/lib/mongo/bookings";
 interface DashboardProps {

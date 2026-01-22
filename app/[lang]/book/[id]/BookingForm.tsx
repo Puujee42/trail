@@ -8,6 +8,11 @@ import { useUser } from "@clerk/nextjs";
 import { 
   FaCalendarAlt,
   FaArrowRight,
+  FaCheckCircle,
+  FaUserFriends,
+  FaShieldAlt,
+  FaArrowLeft,
+  FaPlane,
 } from "react-icons/fa";
 import { Trip } from "@/lib/mongo/trips";
 import { useLanguage } from "@/app/context/LanguageContext";

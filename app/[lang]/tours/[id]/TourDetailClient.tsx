@@ -14,7 +14,9 @@ import {
   FaUtensils, 
   FaPassport,      
   FaUsers, 
-  FaCheckCircle 
+  FaCheckCircle, 
+  FaClipboardList,
+  FaTimes
 } from "react-icons/fa";
 import { useLanguage } from "@/app/context/LanguageContext";
 

@@ -4,8 +4,11 @@ import { motion, AnimatePresence } from "framer-motion";
 import Link from "next/link";
 import { Trip } from "@/lib/mongo/trips"; 
 import { useLanguage } from "@/app/context/LanguageContext"; 
+import { useState } from "react";
+import { FaArrowRight, FaClock, FaFire, FaMapMarkerAlt, FaSearch, FaStar } from "react-icons/fa";
 
-/* ────────────────────── Static Constants ────────────────────── */const categories = [
+/* ────────────────────── Static Constants ────────────────────── */
+const categories = [
   { id: "all", label: { mn: "Бүгд", en: "All", ko: "전체" } },
   { id: "nature", label: { mn: "Байгаль", en: "Nature", ko: "자연" } },
   { id: "city", label: { mn: "Хотын аялал", en: "City Tours", ko: "도시 투어" } },
