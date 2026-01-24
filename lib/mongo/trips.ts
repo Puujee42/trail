@@ -45,6 +45,7 @@ export interface Trip {
   priceAdult?: LocalizedPrice; // New: Adult Price
   priceChild?: LocalizedPrice; // New: Child Price
   salePrice?: LocalizedPrice;  // New: Discounted Price (overrides priceAdult)
+  discountPercentage?: number; // New: Explicit discount %
   tags?: string[];
   featured?: boolean;
   oldPrice?: number;
@@ -56,7 +57,8 @@ export interface Trip {
   saleMonth?: number;
   seatsLeft?: number;
   itinerary?: ItineraryItem[];
-  availableDates?: { date: string; status: string }[]; // New flexible dates
+  availableDates?: { date: string; status: string; isFull?: boolean }[]; // New flexible dates
+  allowCustomDate?: boolean; // Enable/Disable "Plan your own dates"
   dates: TripDate[];
 }
 function mapTrip(doc: any): Trip {
