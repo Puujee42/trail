@@ -17,7 +17,8 @@ import {
   FaCheckCircle, 
   FaClipboardList,
   FaTimes,
-  FaCheck
+  FaCheck,
+  FaCog
 } from "react-icons/fa";
 import { useLanguage } from "@/app/context/LanguageContext";
 
@@ -299,12 +300,21 @@ const TourDetailClient = ({ trip }: { trip: Trip }) => {
            <img src={trip.image} alt={trip.title[language]} className="w-full h-full object-cover"/>
            <div className="absolute inset-0 bg-gradient-to-t from-slate-900 via-slate-900/40 to-transparent" />
         </div>
-        <div className="absolute top-24 left-4 md:left-10 z-20">
+        <div className="absolute top-24 left-4 md:left-10 z-20 flex gap-3">
           <Link href="/">
              <button className="flex items-center gap-2 bg-white/20 backdrop-blur-md text-white px-4 py-2 rounded-full hover:bg-white hover:text-slate-900 transition-all font-bold text-sm border border-white/30">
                 <FaArrowLeft /> {text.back}
              </button>
           </Link>
+          
+          {/* Admin Edit Button */}
+          {user?.publicMetadata?.role === 'admin' && (
+            <Link href="/admin/trips">
+               <button className="flex items-center gap-2 bg-red-500/80 backdrop-blur-md text-white px-4 py-2 rounded-full hover:bg-red-600 transition-all font-bold text-sm border border-red-400/30">
+                  <FaCog /> Admin Dashboard
+               </button>
+            </Link>
+          )}
         </div>
         <div className="absolute bottom-0 left-0 w-full p-6 md:p-12 z-10 container mx-auto">
            <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="max-w-4xl">
