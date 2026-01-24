@@ -11,8 +11,10 @@ export interface Booking {
   tripId: string;
   tripTitle: { mn: string; en: string; ko: string }; // Snapshot of title
   tripImage: string;
+  tripDuration?: { mn: string; en: string; ko: string }; // Snapshot of duration
+  tripLocation?: { mn: string; en: string; ko: string }; // Snapshot of location
   date: string;
-  filter: string;
+  filter?: string;
   travelers: number;
   totalPrice: number; // Stored as a single number (usually base currency)
   status: "confirmed" | "pending" | "completed" | "cancelled";
@@ -37,6 +39,8 @@ export async function getUserBookings(userId: string) {
         tripId: "mock_trip_1",
         tripTitle: { mn: "Швейцарийн Glacier Express", en: "Swiss Glacier Express", ko: "스위스 빙하 특급" },
         tripImage: "/glacier.png",
+        tripDuration: { mn: "7 өдөр", en: "7 Days", ko: "7일" },
+        tripLocation: { mn: "Швейцарь", en: "Switzerland", ko: "스위스" },
         date: "2025-06-15",
         travelers: 2,
         totalPrice: 1900000,
@@ -49,6 +53,8 @@ export async function getUserBookings(userId: string) {
         tripId: "mock_trip_2",
         tripTitle: { mn: "Токио Диснейленд", en: "Tokyo Disneyland", ko: "도쿄 디즈니랜드" },
         tripImage: "/tokyo.jpg",
+        tripDuration: { mn: "5 өдөр", en: "5 Days", ko: "5일" },
+        tripLocation: { mn: "Япон", en: "Japan", ko: "일본" },
         date: "2024-12-10",
         travelers: 4,
         totalPrice: 15200000,

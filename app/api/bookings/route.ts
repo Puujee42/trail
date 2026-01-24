@@ -41,6 +41,8 @@ export async function POST(req: Request) {
       tripId,
       tripTitle: trip.title, 
       tripImage: trip.image,
+      tripDuration: trip.duration,   // New: Store duration snapshot
+      tripLocation: trip.location,   // New: Store location snapshot
       date,
       travelers: Number(travelers),
       totalPrice,
