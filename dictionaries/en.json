@@ -54,8 +54,16 @@
         "card3Badge": "-20% OFF",
         "card4Title": "100% Insurance",
         "card4Desc": "Your safety is our priority. All travelers are fully insured.",
-        "card4Tags": ["Global Coverage", "Medical Support", "Travel Protection"],
+        "card4Tags": [
+            "Global Coverage",
+            "Medical Support",
+            "Travel Protection"
+        ],
         "card5Title": "Join Us?",
         "card5Desc": "Get the latest travel updates instantly."
+    },
+    "rewards": {
+        "title": "Rewards Program",
+        "description": "Earn points and get exclusive travel benefits."
     }
 }

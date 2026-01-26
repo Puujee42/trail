@@ -25,7 +25,9 @@ function getLocale(request: NextRequest): string | undefined {
 export default clerkMiddleware(async (auth, request) => {
     const { pathname } = request.nextUrl;
 
-    // 1. Skip if the path already has a locale or is a public file
+    // 1. Skip if it's an API route, has a locale, or is a public file
+    if (pathname.startsWith('/api')) return;
+
     const pathnameIsMissingLocale = i18n.locales.every(
         (locale) => !pathname.startsWith(`/${locale}/`) && pathname !== `/${locale}`
     );

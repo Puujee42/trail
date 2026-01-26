@@ -5,16 +5,16 @@ import { motion, AnimatePresence } from "framer-motion";
 import Link from "next/link";
 import { useRouter } from "next/navigation"; // 1. Import Router
 import { useUser } from "@clerk/nextjs"; // 2. Import Clerk Hook
-import { 
-  FaMapMarkerAlt, 
-  FaClock, 
-  FaStar, 
-  FaArrowLeft, 
-  FaPlane, 
-  FaUtensils, 
-  FaPassport,      
-  FaUsers, 
-  FaCheckCircle, 
+import {
+  FaMapMarkerAlt,
+  FaClock,
+  FaStar,
+  FaArrowLeft,
+  FaPlane,
+  FaUtensils,
+  FaPassport,
+  FaUsers,
+  FaCheckCircle,
   FaClipboardList,
   FaTimes,
   FaCheck,
@@ -55,7 +55,7 @@ interface Trip {
   includedServices?: LocalizedString[]; // New
   excludedServices?: LocalizedString[]; // New
   itinerary?: ItineraryItem[];
-  price: LocalizedPrice | number; 
+  price: LocalizedPrice | number;
   priceAdult?: LocalizedPrice; // New: Adult Price
   priceChild?: LocalizedPrice; // New: Child Price
   salePrice?: LocalizedPrice;  // New: Discounted Price
@@ -65,7 +65,7 @@ interface Trip {
 
 const TourDetailClient = ({ trip }: { trip: Trip }) => {
   const { language } = useLanguage();
-  
+
   // 3. Initialize Auth and Router
   const { isLoaded, isSignedIn, user } = useUser();
   const router = useRouter();
@@ -74,7 +74,7 @@ const TourDetailClient = ({ trip }: { trip: Trip }) => {
   const [isModalOpen, setModalOpen] = useState(false);
   const [loading, setLoading] = useState(false);
   const [status, setStatus] = useState<'idle' | 'success' | 'error'>('idle');
-  
+
   const [formData, setFormData] = useState({
     name: "",
     email: "",
@@ -112,8 +112,8 @@ const TourDetailClient = ({ trip }: { trip: Trip }) => {
   // Determine if there is a discount
   const hasDiscount = salePrice > 0 && salePrice < adultPriceBase;
   const finalAdultPrice = hasDiscount ? salePrice : adultPriceBase;
-  const discountPercentage = hasDiscount 
-    ? Math.round(((adultPriceBase - salePrice) / adultPriceBase) * 100) 
+  const discountPercentage = hasDiscount
+    ? Math.round(((adultPriceBase - salePrice) / adultPriceBase) * 100)
     : 0;
 
   const formatMoney = (amount: number) => {
@@ -250,7 +250,7 @@ const TourDetailClient = ({ trip }: { trip: Trip }) => {
     setStatus('idle');
 
     try {
-      const response = await fetch('/api/bookings', { 
+      const response = await fetch('/api/bookings', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -271,11 +271,11 @@ const TourDetailClient = ({ trip }: { trip: Trip }) => {
           setModalOpen(false);
           setStatus('idle');
           // Don't clear name/email if user is logged in, just reset other fields
-          setFormData(prev => ({ 
-             ...prev, 
-             phone: "", 
-             date: "", 
-             guests: 1 
+          setFormData(prev => ({
+            ...prev,
+            phone: "",
+            date: "",
+            guests: 1
           }));
         }, 4000);
       } else {
@@ -293,194 +293,195 @@ const TourDetailClient = ({ trip }: { trip: Trip }) => {
 
   return (
     <div className="bg-slate-50 min-h-screen pb-20">
-      
+
       {/* ────────────────── HERO HEADER ────────────────── */}
       <div className="relative h-[60vh] min-h-[500px] w-full overflow-hidden">
         <div className="absolute inset-0">
-           <img src={trip.image} alt={trip.title[language]} className="w-full h-full object-cover"/>
-           <div className="absolute inset-0 bg-gradient-to-t from-slate-900 via-slate-900/40 to-transparent" />
+          {trip.image && <img src={trip.image} alt={trip.title[language]} className="w-full h-full object-cover" />}
+          <div className="absolute inset-0 bg-slate-200 animate-pulse -z-10" /> {/* Fallback/Loading background */}
+          <div className="absolute inset-0 bg-gradient-to-t from-slate-900 via-slate-900/40 to-transparent" />
         </div>
         <div className="absolute top-24 left-4 md:left-10 z-20 flex gap-3">
           <Link href="/">
-             <button className="flex items-center gap-2 bg-white/20 backdrop-blur-md text-white px-4 py-2 rounded-full hover:bg-white hover:text-slate-900 transition-all font-bold text-sm border border-white/30">
-                <FaArrowLeft /> {text.back}
-             </button>
+            <button className="flex items-center gap-2 bg-white/20 backdrop-blur-md text-white px-4 py-2 rounded-full hover:bg-white hover:text-slate-900 transition-all font-bold text-sm border border-white/30">
+              <FaArrowLeft /> {text.back}
+            </button>
           </Link>
-          
+
           {/* Admin Edit Button */}
           {user?.publicMetadata?.role === 'admin' && (
             <Link href="/admin/trips">
-               <button className="flex items-center gap-2 bg-red-500/80 backdrop-blur-md text-white px-4 py-2 rounded-full hover:bg-red-600 transition-all font-bold text-sm border border-red-400/30">
-                  <FaCog /> Admin Dashboard
-               </button>
+              <button className="flex items-center gap-2 bg-red-500/80 backdrop-blur-md text-white px-4 py-2 rounded-full hover:bg-red-600 transition-all font-bold text-sm border border-red-400/30">
+                <FaCog /> Admin Dashboard
+              </button>
             </Link>
           )}
         </div>
         <div className="absolute bottom-0 left-0 w-full p-6 md:p-12 z-10 container mx-auto">
-           <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="max-w-4xl">
-              <h1 className="text-4xl md:text-6xl font-black text-white mb-4 leading-tight shadow-sm">
-                {trip.title[language]}
-              </h1>
-              <div className="flex items-center gap-6 text-slate-200 font-bold text-sm md:text-base">
-                 <span className="flex items-center gap-2"><FaMapMarkerAlt className="text-sky-400" /> {trip.location[language]}</span>
-                 <span className="flex items-center gap-2"><FaClock className="text-sky-400" /> {trip.duration[language]}</span>
-              </div>
-           </motion.div>
+          <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="max-w-4xl">
+            <h1 className="text-4xl md:text-6xl font-black text-white mb-4 leading-tight shadow-sm">
+              {trip.title[language]}
+            </h1>
+            <div className="flex items-center gap-6 text-slate-200 font-bold text-sm md:text-base">
+              <span className="flex items-center gap-2"><FaMapMarkerAlt className="text-sky-400" /> {trip.location[language]}</span>
+              <span className="flex items-center gap-2"><FaClock className="text-sky-400" /> {trip.duration[language]}</span>
+            </div>
+          </motion.div>
         </div>
       </div>
 
       {/* ────────────────── MAIN CONTENT ────────────────── */}
       <div className="container mx-auto px-4 -mt-10 relative z-20 grid grid-cols-1 lg:grid-cols-3 gap-10">
-        
+
         {/* LEFT COLUMN (Details & Itinerary) */}
         <div className="lg:col-span-2 space-y-10">
-            
-            {/* ABOUT & HIGHLIGHTS */}
-            <div className="bg-white rounded-3xl p-8 shadow-xl shadow-slate-200/50 border border-slate-100">
-             <h2 className="text-2xl font-bold text-slate-800 mb-4">{text.about}</h2>
-             <p className="text-slate-600 leading-relaxed text-lg mb-8">{trip.description?.[language]}</p>
-             
-             {/* TRIP HIGHLIGHTS */}
-             {trip.highlights && trip.highlights.length > 0 && (
-               <div className="mb-8 p-6 bg-sky-50 rounded-2xl border border-sky-100">
-                 <h3 className="text-lg font-bold text-sky-900 mb-4 flex items-center gap-2">
-                   <FaStar className="text-sky-500" /> {text.highlights}
-                 </h3>
-                 <ul className="grid grid-cols-1 md:grid-cols-2 gap-3">
-                   {trip.highlights.map((highlight, index) => (
-                     <li key={index} className="flex items-start gap-2 text-slate-700">
-                       <span className="mt-1.5 w-1.5 h-1.5 rounded-full bg-sky-500 flex-shrink-0" />
-                       <span className="text-sm font-medium leading-relaxed">{highlight[language] || highlight.mn}</span>
-                     </li>
-                   ))}
-                 </ul>
-               </div>
-             )}
 
-             {/* INCLUDED / EXCLUDED GRID */}
-             <div className="grid grid-cols-1 md:grid-cols-2 gap-8 border-t border-slate-100 pt-8">
-                {/* Included */}
-                <div>
-                  <h3 className="text-lg font-bold text-slate-800 mb-4 flex items-center gap-2">
-                    <FaCheckCircle className="text-green-500" /> {text.included}
-                  </h3>
-                  <ul className="space-y-3">
-                    {trip.includedServices?.map((item, i) => (
-                      <li key={i} className="flex items-start gap-3 text-sm text-slate-600">
-                        <FaCheck className="text-green-500 mt-1 shrink-0 text-xs" />
-                        <span>{item[language] || item.mn}</span>
-                      </li>
-                    )) || (
+          {/* ABOUT & HIGHLIGHTS */}
+          <div className="bg-white rounded-3xl p-8 shadow-xl shadow-slate-200/50 border border-slate-100">
+            <h2 className="text-2xl font-bold text-slate-800 mb-4">{text.about}</h2>
+            <p className="text-slate-600 leading-relaxed text-lg mb-8">{trip.description?.[language]}</p>
+
+            {/* TRIP HIGHLIGHTS */}
+            {trip.highlights && trip.highlights.length > 0 && (
+              <div className="mb-8 p-6 bg-sky-50 rounded-2xl border border-sky-100">
+                <h3 className="text-lg font-bold text-sky-900 mb-4 flex items-center gap-2">
+                  <FaStar className="text-sky-500" /> {text.highlights}
+                </h3>
+                <ul className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                  {trip.highlights.map((highlight, index) => (
+                    <li key={index} className="flex items-start gap-2 text-slate-700">
+                      <span className="mt-1.5 w-1.5 h-1.5 rounded-full bg-sky-500 flex-shrink-0" />
+                      <span className="text-sm font-medium leading-relaxed">{highlight[language] || highlight.mn}</span>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            )}
+
+            {/* INCLUDED / EXCLUDED GRID */}
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-8 border-t border-slate-100 pt-8">
+              {/* Included */}
+              <div>
+                <h3 className="text-lg font-bold text-slate-800 mb-4 flex items-center gap-2">
+                  <FaCheckCircle className="text-green-500" /> {text.included}
+                </h3>
+                <ul className="space-y-3">
+                  {trip.includedServices?.map((item, i) => (
+                    <li key={i} className="flex items-start gap-3 text-sm text-slate-600">
+                      <FaCheck className="text-green-500 mt-1 shrink-0 text-xs" />
+                      <span>{item[language] || item.mn}</span>
+                    </li>
+                  )) || (
                       // Fallback content if empty
                       <>
                         <li className="flex items-start gap-3 text-sm text-slate-600"><FaCheck className="text-green-500 mt-1 shrink-0 text-xs" /> Accommodation</li>
                         <li className="flex items-start gap-3 text-sm text-slate-600"><FaCheck className="text-green-500 mt-1 shrink-0 text-xs" /> Transportation</li>
                       </>
                     )}
-                  </ul>
-                </div>
+                </ul>
+              </div>
 
-                {/* Excluded */}
-                <div>
-                  <h3 className="text-lg font-bold text-slate-800 mb-4 flex items-center gap-2">
-                    <FaTimes className="text-red-500" /> {text.excluded}
-                  </h3>
-                  <ul className="space-y-3">
-                    {trip.excludedServices?.map((item, i) => (
-                      <li key={i} className="flex items-start gap-3 text-sm text-slate-600">
-                        <FaTimes className="text-red-400 mt-1 shrink-0 text-xs" />
-                        <span>{item[language] || item.mn}</span>
-                      </li>
-                    )) || (
+              {/* Excluded */}
+              <div>
+                <h3 className="text-lg font-bold text-slate-800 mb-4 flex items-center gap-2">
+                  <FaTimes className="text-red-500" /> {text.excluded}
+                </h3>
+                <ul className="space-y-3">
+                  {trip.excludedServices?.map((item, i) => (
+                    <li key={i} className="flex items-start gap-3 text-sm text-slate-600">
+                      <FaTimes className="text-red-400 mt-1 shrink-0 text-xs" />
+                      <span>{item[language] || item.mn}</span>
+                    </li>
+                  )) || (
                       // Fallback content if empty
                       <>
                         <li className="flex items-start gap-3 text-sm text-slate-600"><FaTimes className="text-red-400 mt-1 shrink-0 text-xs" /> International Flights</li>
                         <li className="flex items-start gap-3 text-sm text-slate-600"><FaTimes className="text-red-400 mt-1 shrink-0 text-xs" /> Personal Expenses</li>
                       </>
                     )}
-                  </ul>
-                </div>
-             </div>
+                </ul>
+              </div>
+            </div>
           </div>
-          
-           {/* ITINERARY SECTION */}
-           <div className="bg-white rounded-3xl p-8 shadow-xl shadow-slate-200/50 border border-slate-100">
-             <h2 className="text-2xl font-bold text-slate-800 mb-8">{text.itineraryTitle}</h2>
-             {itinerary.length > 0 ? (
-               <div className="relative border-l-2 border-slate-100 ml-3 space-y-10">
-                  {itinerary.map((day, i) => (
-                    <div key={i} className="relative pl-8">
-                       {/* Timeline Dot */}
-                       <div className="absolute -left-[9px] top-0 w-4 h-4 rounded-full bg-white border-4 border-sky-500 shadow-sm" />
-                       
-                       <div className="flex flex-col sm:flex-row sm:items-baseline gap-2 mb-2">
-                         <span className="text-xs font-bold uppercase tracking-wider text-sky-600 bg-sky-50 px-2 py-1 rounded-md">
-                           Day {day.day}
-                         </span>
-                         <h4 className="text-lg font-bold text-slate-800">{day.title[language]}</h4>
-                       </div>
-                       
-                       <div className="text-slate-600 text-sm leading-7 bg-slate-50/50 p-4 rounded-xl border border-slate-50">
-                         {day.desc[language]}
-                       </div>
+
+          {/* ITINERARY SECTION */}
+          <div className="bg-white rounded-3xl p-8 shadow-xl shadow-slate-200/50 border border-slate-100">
+            <h2 className="text-2xl font-bold text-slate-800 mb-8">{text.itineraryTitle}</h2>
+            {itinerary.length > 0 ? (
+              <div className="relative border-l-2 border-slate-100 ml-3 space-y-10">
+                {itinerary.map((day, i) => (
+                  <div key={i} className="relative pl-8">
+                    {/* Timeline Dot */}
+                    <div className="absolute -left-[9px] top-0 w-4 h-4 rounded-full bg-white border-4 border-sky-500 shadow-sm" />
+
+                    <div className="flex flex-col sm:flex-row sm:items-baseline gap-2 mb-2">
+                      <span className="text-xs font-bold uppercase tracking-wider text-sky-600 bg-sky-50 px-2 py-1 rounded-md">
+                        Day {day.day}
+                      </span>
+                      <h4 className="text-lg font-bold text-slate-800">{day.title[language]}</h4>
                     </div>
-                  ))}
-               </div>
-             ) : (
-               <p className="text-slate-500 italic text-center py-8">{text.itineraryEmpty}</p>
-             )}
+
+                    <div className="text-slate-600 text-sm leading-7 bg-slate-50/50 p-4 rounded-xl border border-slate-50">
+                      {day.desc[language]}
+                    </div>
+                  </div>
+                ))}
+              </div>
+            ) : (
+              <p className="text-slate-500 italic text-center py-8">{text.itineraryEmpty}</p>
+            )}
           </div>
         </div>
 
         {/* RIGHT COLUMN (Price & Booking) */}
         <div className="lg:col-span-1">
-           <div className="sticky top-24 h-fit">
-              <motion.div 
-                 className="bg-white rounded-3xl p-6 shadow-2xl shadow-sky-100 border border-slate-100"
-              >
-                 {/* PRICE CARD HEADER */}
-                 <div className="mb-6">
-                    {hasDiscount && (
-                      <div className="bg-rose-500 text-white text-xs font-bold px-3 py-1.5 rounded-full mb-3 w-fit shadow-md shadow-rose-200">
-                        {discountPercentage}% {text.saveBadge}
-                      </div>
-                    )}
+          <div className="sticky top-24 h-fit">
+            <motion.div
+              className="bg-white rounded-3xl p-6 shadow-2xl shadow-sky-100 border border-slate-100"
+            >
+              {/* PRICE CARD HEADER */}
+              <div className="mb-6">
+                {hasDiscount && (
+                  <div className="bg-rose-500 text-white text-xs font-bold px-3 py-1.5 rounded-full mb-3 w-fit shadow-md shadow-rose-200">
+                    {discountPercentage}% {text.saveBadge}
+                  </div>
+                )}
 
-                    <div className="space-y-4">
-                        {/* Adult Price */}
-                        <div>
-                            <p className="text-slate-500 text-xs font-bold uppercase mb-1">{text.adultLabel}</p>
-                            <div className="flex items-end gap-3">
-                                <span className="text-4xl font-black text-slate-900">{formatMoney(finalAdultPrice)}</span>
-                                {hasDiscount && (
-                                    <span className="text-lg text-slate-400 line-through mb-1 decoration-rose-400 decoration-2">
-                                        {formatMoney(adultPriceBase)}
-                                    </span>
-                                )}
-                            </div>
-                        </div>
-
-                        {/* Child Price (if exists) */}
-                        {childPrice > 0 && (
-                            <div className="pt-3 border-t border-slate-100">
-                                <p className="text-slate-400 text-xs font-bold uppercase mb-1">{text.childLabel}</p>
-                                <span className="text-xl font-bold text-slate-700">{formatMoney(childPrice)}</span>
-                            </div>
-                        )}
+                <div className="space-y-4">
+                  {/* Adult Price */}
+                  <div>
+                    <p className="text-slate-500 text-xs font-bold uppercase mb-1">{text.adultLabel}</p>
+                    <div className="flex items-end gap-3">
+                      <span className="text-4xl font-black text-slate-900">{formatMoney(finalAdultPrice)}</span>
+                      {hasDiscount && (
+                        <span className="text-lg text-slate-400 line-through mb-1 decoration-rose-400 decoration-2">
+                          {formatMoney(adultPriceBase)}
+                        </span>
+                      )}
                     </div>
-                 </div>
+                  </div>
 
-                 {/* 6. UPDATED BUTTON: Uses handleBookClick */}
-                 <button 
-                    onClick={handleBookClick}
-                    className="w-full py-4 rounded-xl bg-slate-900 text-white font-bold text-lg shadow-lg hover:bg-sky-600 transition-all active:scale-95 mb-3"
-                 >
-                    {text.bookBtn}
-                 </button>
-                 
-                 <p className="text-xs text-center text-slate-400">{text.terms}</p>
-              </motion.div>
-           </div>
+                  {/* Child Price (if exists) */}
+                  {childPrice > 0 && (
+                    <div className="pt-3 border-t border-slate-100">
+                      <p className="text-slate-400 text-xs font-bold uppercase mb-1">{text.childLabel}</p>
+                      <span className="text-xl font-bold text-slate-700">{formatMoney(childPrice)}</span>
+                    </div>
+                  )}
+                </div>
+              </div>
+
+              {/* 6. UPDATED BUTTON: Uses handleBookClick */}
+              <button
+                onClick={handleBookClick}
+                className="w-full py-4 rounded-xl bg-slate-900 text-white font-bold text-lg shadow-lg hover:bg-sky-600 transition-all active:scale-95 mb-3"
+              >
+                {text.bookBtn}
+              </button>
+
+              <p className="text-xs text-center text-slate-400">{text.terms}</p>
+            </motion.div>
+          </div>
         </div>
       </div>
 
@@ -488,34 +489,34 @@ const TourDetailClient = ({ trip }: { trip: Trip }) => {
       <AnimatePresence>
         {isModalOpen && (
           <>
-            <motion.div 
+            <motion.div
               initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
               onClick={() => setModalOpen(false)}
               className="fixed inset-0 bg-black/60 backdrop-blur-sm z-[999]"
             />
-            <motion.div 
-              initial={{ opacity: 0, scale: 0.9, y: 20 }} 
-              animate={{ opacity: 1, scale: 1, y: 0 }} 
+            <motion.div
+              initial={{ opacity: 0, scale: 0.9, y: 20 }}
+              animate={{ opacity: 1, scale: 1, y: 0 }}
               exit={{ opacity: 0, scale: 0.9, y: 20 }}
               className="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[90%] max-w-md bg-white rounded-2xl shadow-2xl z-[1000] overflow-hidden"
             >
-              
+
               {/* Modal Header */}
               <div className="bg-slate-900 text-white p-5 flex justify-between items-center">
                 <h3 className="font-bold text-lg flex items-center gap-2">
-                   <FaPlane className="text-sky-400"/> {text.modalTitle}
+                  <FaPlane className="text-sky-400" /> {text.modalTitle}
                 </h3>
-                <button onClick={() => setModalOpen(false)} className="hover:text-sky-400 transition"><FaTimes size={20}/></button>
+                <button onClick={() => setModalOpen(false)} className="hover:text-sky-400 transition"><FaTimes size={20} /></button>
               </div>
 
               {/* Modal Body */}
               <div className="p-6">
-                
+
                 {status === 'success' ? (
                   // SUCCESS STATE
                   <div className="text-center py-8">
-                    <motion.div 
-                      initial={{ scale: 0 }} animate={{ scale: 1 }} 
+                    <motion.div
+                      initial={{ scale: 0 }} animate={{ scale: 1 }}
                       className="w-20 h-20 bg-green-100 text-green-500 rounded-full flex items-center justify-center mx-auto mb-4"
                     >
                       <FaCheckCircle size={40} />
@@ -528,45 +529,45 @@ const TourDetailClient = ({ trip }: { trip: Trip }) => {
                   <form onSubmit={handleSubmit} className="space-y-4">
                     <div>
                       <label className="block text-xs font-bold text-slate-500 uppercase mb-1">{text.formName}</label>
-                      <input 
-                        required type="text" 
+                      <input
+                        required type="text"
                         className="w-full px-4 py-3 rounded-xl border border-slate-200 focus:border-sky-500 focus:ring-2 focus:ring-sky-200 outline-none transition"
-                        value={formData.name} onChange={e => setFormData({...formData, name: e.target.value})}
+                        value={formData.name} onChange={e => setFormData({ ...formData, name: e.target.value })}
                       />
                     </div>
                     <div>
                       <label className="block text-xs font-bold text-slate-500 uppercase mb-1">{text.formEmail}</label>
-                      <input 
-                        required type="email" 
+                      <input
+                        required type="email"
                         className="w-full px-4 py-3 rounded-xl border border-slate-200 focus:border-sky-500 focus:ring-2 focus:ring-sky-200 outline-none transition"
-                        value={formData.email} onChange={e => setFormData({...formData, email: e.target.value})}
+                        value={formData.email} onChange={e => setFormData({ ...formData, email: e.target.value })}
                       />
                     </div>
                     <div className="grid grid-cols-2 gap-4">
                       <div>
                         <label className="block text-xs font-bold text-slate-500 uppercase mb-1">{text.formPhone}</label>
-                        <input 
-                          required type="tel" 
+                        <input
+                          required type="tel"
                           className="w-full px-4 py-3 rounded-xl border border-slate-200 focus:border-sky-500 focus:ring-2 focus:ring-sky-200 outline-none transition"
-                          value={formData.phone} onChange={e => setFormData({...formData, phone: e.target.value})}
+                          value={formData.phone} onChange={e => setFormData({ ...formData, phone: e.target.value })}
                         />
                       </div>
                       <div>
                         <label className="block text-xs font-bold text-slate-500 uppercase mb-1">{text.formGuests}</label>
-                        <input 
+                        <input
                           required type="number" min="1"
                           className="w-full px-4 py-3 rounded-xl border border-slate-200 focus:border-sky-500 focus:ring-2 focus:ring-sky-200 outline-none transition"
-                          value={formData.guests} onChange={e => setFormData({...formData, guests: Number(e.target.value)})}
+                          value={formData.guests} onChange={e => setFormData({ ...formData, guests: Number(e.target.value) })}
                         />
                       </div>
                     </div>
                     <div>
                       <label className="block text-xs font-bold text-slate-500 uppercase mb-1">{text.formDate}</label>
-                      <input 
-                         required
-                         type="date" 
-                         className="w-full px-4 py-3 rounded-xl border border-slate-200 focus:border-sky-500 focus:ring-2 focus:ring-sky-200 outline-none transition"
-                         value={formData.date} onChange={e => setFormData({...formData, date: e.target.value})}
+                      <input
+                        required
+                        type="date"
+                        className="w-full px-4 py-3 rounded-xl border border-slate-200 focus:border-sky-500 focus:ring-2 focus:ring-sky-200 outline-none transition"
+                        value={formData.date} onChange={e => setFormData({ ...formData, date: e.target.value })}
                       />
                     </div>
 
@@ -574,7 +575,7 @@ const TourDetailClient = ({ trip }: { trip: Trip }) => {
                       <p className="text-red-500 text-sm text-center bg-red-50 p-2 rounded-lg">{text.errorMsg}</p>
                     )}
 
-                    <button 
+                    <button
                       disabled={loading}
                       className="w-full py-3.5 bg-sky-600 text-white font-bold rounded-xl shadow-lg hover:bg-sky-500 transition active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed mt-4"
                     >
@@ -594,10 +595,10 @@ const TourDetailClient = ({ trip }: { trip: Trip }) => {
 
 const FeatureIcon = ({ icon: Icon, label }: any) => (
   <div className="flex flex-col items-center gap-2 text-center">
-     <div className="w-12 h-12 bg-slate-50 rounded-full flex items-center justify-center text-slate-400">
-        <Icon />
-     </div>
-     <span className="text-xs font-bold text-slate-600 leading-tight">{label}</span>
+    <div className="w-12 h-12 bg-slate-50 rounded-full flex items-center justify-center text-slate-400">
+      <Icon />
+    </div>
+    <span className="text-xs font-bold text-slate-600 leading-tight">{label}</span>
   </div>
 );
 

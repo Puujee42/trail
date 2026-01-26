@@ -1,4 +1,5 @@
 import { ObjectId } from "mongodb";
+
 import clientPromise from "./index";
 
 const DB_NAME = "travel_db";

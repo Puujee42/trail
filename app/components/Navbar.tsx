@@ -13,13 +13,12 @@ import {
 } from "framer-motion";
 
 // Icons matching the image style
-import { 
-  HiHome, HiOutlineHome, 
-  HiChartBar, HiOutlineChartBar, 
-  HiClock, HiOutlineClock, 
-  HiBell, HiOutlineBell, 
+import {
+  HiHome, HiOutlineHome,
   HiUser, HiOutlineUser,
-  HiChevronDown, HiGlobeAlt
+  HiChevronDown, HiGlobeAlt, HiOutlineGlobeAlt,
+  HiDocumentText, HiOutlineDocumentText,
+  HiInformationCircle, HiOutlineInformationCircle
 } from "react-icons/hi2";
 import { FaPlane, FaTachometerAlt } from "react-icons/fa";
 
@@ -59,14 +58,14 @@ const Navbar: React.FC<{ dictionary: any }> = ({ dictionary }) => {
 
   const mobileTabs = useMemo(() => [
     { id: "home", href: `/${language}`, icon: HiOutlineHome, activeIcon: HiHome },
-    { id: "stats", href: `/${language}/packages`, icon: HiOutlineChartBar, activeIcon: HiChartBar },
-    { id: "recent", href: `/${language}/rewards`, icon: HiOutlineClock, activeIcon: HiClock },
-    { id: "notifs", href: `/${language}/notifications`, icon: HiOutlineBell, activeIcon: HiBell },
+    { id: "packages", href: `/${language}/packages`, icon: HiOutlineGlobeAlt, activeIcon: HiGlobeAlt },
+    { id: "blog", href: `/${language}/blog`, icon: HiOutlineDocumentText, activeIcon: HiDocumentText },
+    { id: "about", href: `/${language}/about`, icon: HiOutlineInformationCircle, activeIcon: HiInformationCircle },
     { id: "profile", href: `/${language}/dashboard`, icon: HiOutlineUser, activeIcon: HiUser },
   ], [language]);
 
   // Find active index for the mobile dip animation
-  const activeIndex = mobileTabs.findIndex(tab => 
+  const activeIndex = mobileTabs.findIndex(tab =>
     pathname === tab.href || (tab.id === 'home' && pathname === `/${language}`)
   );
 
@@ -84,12 +83,12 @@ const Navbar: React.FC<{ dictionary: any }> = ({ dictionary }) => {
             </div>
             <span className="font-black text-slate-800 tracking-tighter">MONGOL TRAIL</span>
           </Link>
-          
+
           <div className="flex gap-6">
             {desktopLinks.map(link => (
-               <Link key={link.id} href={link.href} className="text-sm font-bold text-slate-600 hover:text-black">
-                 {link.label}
-               </Link>
+              <Link key={link.id} href={link.href} className="text-sm font-bold text-slate-600 hover:text-black">
+                {link.label}
+              </Link>
             ))}
             <SignedIn>
               <Link href={`/${language}/dashboard`} className="text-sm font-bold text-blue-600 hover:text-blue-700">
@@ -109,7 +108,7 @@ const Navbar: React.FC<{ dictionary: any }> = ({ dictionary }) => {
       {/* ──────────────── MOBILE TAB BAR (IMAGE ACCURATE) ──────────────── */}
       <div className="fixed bottom-0 inset-x-0 z-50 md:hidden flex justify-center pb-6 px-4">
         <div className="relative w-full max-w-md h-[70px] flex items-center justify-around">
-          
+
           {/* THE SVG BACKGROUND WITH ANIMATED DIP */}
           <div className="absolute inset-0 z-0">
             <svg
@@ -170,7 +169,7 @@ function generatePath(index: number, totalTabs: number) {
   const width = 400; // SVG coordinate width
   const tabWidth = width / totalTabs;
   const centerX = tabWidth * index + tabWidth / 2;
-  
+
   // Dip dimensions
   const dipWidth = 60;
   const dipDepth = 45;

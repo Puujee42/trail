@@ -37,34 +37,37 @@ pub struct ItineraryItem {
     pub desc: LocalizedString,
 }
 
-#[derive(Debug, Serialize, Deserialize)]
+#[derive(Debug, Serialize, Deserialize, Clone)]
+pub struct Price {
+    pub adult: LocalizedPrice,
+    pub child: LocalizedPrice,
+}
+
+#[derive(Debug, Serialize, Deserialize, Clone)]
+#[serde(rename_all = "camelCase")]
 pub struct Trip {
     #[serde(rename = "_id", skip_serializing_if = "Option::is_none")]
     pub id: Option<ObjectId>,
-    pub type_name: Option<String>, // Renamed from type to avoid keyword conflict
+    #[serde(rename = "type")]
+    pub trip_type: Option<String>,
     pub region: Option<String>,
     
     pub title: LocalizedString,
     pub location: LocalizedString,
     pub duration: LocalizedString,
     pub description: Option<LocalizedString>,
-    #[serde(rename = "ageGroup")]
     pub age_group: Option<LocalizedString>,
 
     pub category: String,
     pub rating: f64,
     pub image: String,
-    pub price: LocalizedPrice, // Changed to support object
+    pub price: Price,
+    pub discount: Option<f64>,
     pub tags: Option<Vec<String>>,
     pub featured: Option<bool>,
-    #[serde(rename = "oldPrice")]
-    pub old_price: Option<f64>,
-    pub reviews: Option<i32>,
-    pub perks: Option<Vec<String>>,
-    #[serde(rename = "saleMonth")]
-    pub sale_month: Option<i32>,
-    #[serde(rename = "seatsLeft")]
-    pub seats_left: Option<i32>,
+    pub highlights: Option<Vec<LocalizedString>>,
+    pub included: Vec<String>,
+    pub not_included: Vec<String>,
     pub itinerary: Option<Vec<ItineraryItem>>,
     pub dates: Option<Vec<TripDate>>,
 }
