@@ -65,5 +65,69 @@
     "rewards": {
         "title": "Rewards Program",
         "description": "Earn points and get exclusive travel benefits."
+    },
+    "customTrip": {
+        "header": {
+            "title": "Create Your Masterpiece",
+            "subtitle": "\"Tailor-made expeditions designed around your curiosity and pace.\""
+        },
+        "travelParty": {
+            "title": "Travel Party",
+            "subtitle": "Who is exploring?",
+            "adults": "Adults",
+            "adultsSub": "12+ years",
+            "children": "Children",
+            "childrenSub": "2-11 years",
+            "infants": "Infants",
+            "infantsSub": "Under 2y"
+        },
+        "hotelStyle": {
+            "title": "Sanctuary Style",
+            "subtitle": "Where do you rest?",
+            "options": {
+                "5stars": {
+                    "title": "5 Stars",
+                    "desc": "Premium luxury and top-tier service; $180+/room"
+                },
+                "4stars": {
+                    "title": "4 Stars",
+                    "desc": "High comfort and central location; $100-180/room"
+                },
+                "3stars": {
+                    "title": "3 Stars",
+                    "desc": "Reliable standards and great value; $60-100/room"
+                },
+                "self": {
+                    "title": "Self-booking",
+                    "desc": "I will organize my own accommodations"
+                }
+            }
+        },
+        "interests": {
+            "title": "Curiosities",
+            "subtitle": "What sparks your interest?",
+            "items": {
+                "nature": "Nature and Wild",
+                "iconic": "Iconic Sites",
+                "adventure": "Adventure",
+                "history": "History",
+                "local": "Local Life",
+                "photography": "Photography",
+                "hiking": "Hiking"
+            }
+        },
+        "details": {
+            "arrivalDate": "Arrival Date",
+            "budget": "Budget Per Soul ($)",
+            "budgetPlaceholder": "e.g. 2500",
+            "narrative": "The Narrative",
+            "narrativePlaceholder": "Share your specific dreams or requirements for this journey..."
+        },
+        "contact": {
+            "title": "Personal Details",
+            "namePlaceholder": "Full Name",
+            "emailPlaceholder": "Email Address"
+        },
+        "submit": "Dispatch Inquiry"
     }
 }

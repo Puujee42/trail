@@ -38,7 +38,7 @@ export async function generateMetadata({ params }: { params: Promise<{ lang: str
       telephone: true,
     },
     verification: {
-      google: 'YOUR_GOOGLE_VERIFICATION_CODE', 
+      google: 'YOUR_GOOGLE_VERIFICATION_CODE',
     },
     openGraph: {
       type: 'website',
@@ -49,7 +49,7 @@ export async function generateMetadata({ params }: { params: Promise<{ lang: str
       siteName: 'Mongol Trail',
       images: [
         {
-          url: '/try.png',
+          url: '/logo.jpg',
           width: 1200,
           height: 630,
           alt: 'Mongol Trail Adventure',
@@ -72,7 +72,7 @@ export async function generateMetadata({ params }: { params: Promise<{ lang: str
       title: 'Mongol Trail | Your Gateway to Adventure',
       description: 'Experience the ultimate adventure with Mongol Trail.',
       creator: '@mongoltrail',
-      images: ['/try.png'],
+      images: ['/logo.jpg'],
     },
     appleWebApp: {
       capable: true,
@@ -109,7 +109,7 @@ export default async function RootLayout(props: {
     '@context': 'https://schema.org',
     '@type': 'TravelAgency',
     name: 'Mongol Trail',
-    image: 'https://www.mongoltrail.com/try.png',
+    image: 'https://www.mongoltrail.com/logo.jpg',
     url: 'https://www.mongoltrail.com',
     telephone: '+976 7766-1626',
     priceRange: '$$',

@@ -4,7 +4,7 @@ use dotenv::dotenv;
 use mongodb::{Client, options::ClientOptions};
 use std::env;
 use futures::stream::TryStreamExt;
-use mongodb::bson::{doc, Document};
+use mongodb::bson::doc;
 
 mod models;
 use models::Trip;

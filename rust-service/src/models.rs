@@ -1,21 +1,24 @@
 use serde::{Deserialize, Serialize};
 use mongodb::bson::oid::ObjectId;
 
-#[derive(Debug, Serialize, Deserialize)]
+// 1. Added Clone here
+#[derive(Debug, Serialize, Deserialize, Clone)]
 pub struct LocalizedString {
     pub mn: Option<String>,
     pub en: Option<String>,
     pub ko: Option<String>,
 }
 
-#[derive(Debug, Serialize, Deserialize)]
+// 2. Added Clone here
+#[derive(Debug, Serialize, Deserialize, Clone)]
 pub struct LocalizedPrice {
     pub mn: Option<f64>,
     pub en: Option<f64>,
     pub ko: Option<f64>,
 }
 
-#[derive(Debug, Serialize, Deserialize)]
+// 3. Added Clone here
+#[derive(Debug, Serialize, Deserialize, Clone)]
 pub struct TripDate {
     pub id: String,
     #[serde(rename = "startDate")]
@@ -30,19 +33,28 @@ pub struct TripDate {
     pub price_modifier: Option<f64>,
 }
 
-#[derive(Debug, Serialize, Deserialize)]
+// 4. Added Clone here
+#[derive(Debug, Serialize, Deserialize, Clone)]
 pub struct ItineraryItem {
     pub day: i32,
     pub title: LocalizedString,
     pub desc: LocalizedString,
 }
 
+// Price already has Clone, but it needs its child (LocalizedPrice) to have it too
 #[derive(Debug, Serialize, Deserialize, Clone)]
 pub struct Price {
     pub adult: LocalizedPrice,
     pub child: LocalizedPrice,
+    pub infant: LocalizedPrice,
+    pub senior: LocalizedPrice,
+    pub pet: LocalizedPrice,
+    pub discount: LocalizedPrice,
+    pub total: LocalizedPrice,
+    pub currency: String,
 }
 
+// Trip already has Clone, but it needs ALL its children to have it too
 #[derive(Debug, Serialize, Deserialize, Clone)]
 #[serde(rename_all = "camelCase")]
 pub struct Trip {

@@ -5,11 +5,11 @@ import { getPosts } from '@/lib/mongo/blog';
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const baseUrl = 'https://www.mongoltrail.com';
   const locales = ['mn', 'en', 'ko'];
-  
+
   // 1. Absolute Root Homepage (The very first entry)
   const homepages: MetadataRoute.Sitemap = [
     {
-      url: baseUrl,
+      url: `${baseUrl}/`,
       lastModified: new Date(),
       changeFrequency: 'daily',
       priority: 1,
@@ -35,6 +35,9 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     '/blog',
     '/contact',
     '/faq',
+    '/custom-trip',
+    '/tour-calendar',
+    '/rewards',
   ];
 
   const staticRoutes: MetadataRoute.Sitemap = [];

@@ -61,6 +61,7 @@ interface Trip {
   salePrice?: LocalizedPrice;  // New: Discounted Price
   oldPrice?: LocalizedPrice | number;
   seatsLeft?: number;
+  map_image_url?: string; // New: Route Map
 }
 
 const TourDetailClient = ({ trip }: { trip: Trip }) => {
@@ -155,7 +156,8 @@ const TourDetailClient = ({ trip }: { trip: Trip }) => {
       submitting: "Илгээж байна...",
       successTitle: "Захиалга амжилттай!",
       successMsg: "Таны аяллын цаг баталгаажлаа. Бид таны имэйл рүү мэдээлэл илгээлээ.",
-      errorMsg: "Алдаа гарлаа. Дахин оролдоно уу."
+      errorMsg: "Алдаа гарлаа. Дахин оролдоно уу.",
+      mapTitle: "Аяллын карт"
     },
     en: {
       back: "Back",
@@ -188,7 +190,8 @@ const TourDetailClient = ({ trip }: { trip: Trip }) => {
       submitting: "Sending...",
       successTitle: "Booking Confirmed!",
       successMsg: "Your appointment is set. We have sent confirmation to your email.",
-      errorMsg: "Something went wrong. Please try again."
+      errorMsg: "Something went wrong. Please try again.",
+      mapTitle: "Route Map"
     },
     ko: {
       back: "뒤로가기",
@@ -221,7 +224,8 @@ const TourDetailClient = ({ trip }: { trip: Trip }) => {
       submitting: "전송 중...",
       successTitle: "예약 완료!",
       successMsg: "예약이 확정되었습니다. 이메일로 확인 메세지를 보냈습니다.",
-      errorMsg: "오류가 발생했습니다. 다시 시도해 주세요."
+      errorMsg: "오류가 발생했습니다. 다시 시도해 주세요.",
+      mapTitle: "노선도"
     }
   };
 
@@ -336,27 +340,47 @@ const TourDetailClient = ({ trip }: { trip: Trip }) => {
         {/* LEFT COLUMN (Details & Itinerary) */}
         <div className="lg:col-span-2 space-y-10">
 
-          {/* ABOUT & HIGHLIGHTS */}
+          {/* ABOUT, HIGHLIGHTS & MAP */}
           <div className="bg-white rounded-3xl p-8 shadow-xl shadow-slate-200/50 border border-slate-100">
-            <h2 className="text-2xl font-bold text-slate-800 mb-4">{text.about}</h2>
-            <p className="text-slate-600 leading-relaxed text-lg mb-8">{trip.description?.[language]}</p>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
+              {/* Left Column: Story & Highlights */}
+              <div className="space-y-8">
+                <div>
+                  <h2 className="text-2xl font-bold text-slate-800 mb-4">{text.about}</h2>
+                  <p className="text-slate-600 leading-relaxed text-lg">{trip.description?.[language]}</p>
+                </div>
 
-            {/* TRIP HIGHLIGHTS */}
-            {trip.highlights && trip.highlights.length > 0 && (
-              <div className="mb-8 p-6 bg-sky-50 rounded-2xl border border-sky-100">
-                <h3 className="text-lg font-bold text-sky-900 mb-4 flex items-center gap-2">
-                  <FaStar className="text-sky-500" /> {text.highlights}
-                </h3>
-                <ul className="grid grid-cols-1 md:grid-cols-2 gap-3">
-                  {trip.highlights.map((highlight, index) => (
-                    <li key={index} className="flex items-start gap-2 text-slate-700">
-                      <span className="mt-1.5 w-1.5 h-1.5 rounded-full bg-sky-500 flex-shrink-0" />
-                      <span className="text-sm font-medium leading-relaxed">{highlight[language] || highlight.mn}</span>
-                    </li>
-                  ))}
-                </ul>
+                {trip.highlights && trip.highlights.length > 0 && (
+                  <div className="p-6 bg-sky-50 rounded-2xl border border-sky-100">
+                    <h3 className="text-lg font-bold text-sky-900 mb-4 flex items-center gap-2">
+                      <FaStar className="text-sky-500" /> {text.highlights}
+                    </h3>
+                    <ul className="space-y-3">
+                      {trip.highlights.map((highlight, index) => (
+                        <li key={index} className="flex items-start gap-2 text-slate-700">
+                          <span className="mt-1.5 w-1.5 h-1.5 rounded-full bg-sky-500 flex-shrink-0" />
+                          <span className="text-sm font-medium leading-relaxed">{highlight[language] || highlight.mn}</span>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                )}
               </div>
-            )}
+
+              {/* Right Column: Route Map (Very High) */}
+              {trip.map_image_url && (
+                <div className="space-y-4">
+                  <h3 className="text-lg font-bold text-slate-800 flex items-center gap-2">
+                    <FaMapMarkerAlt className="text-sky-500" /> {text.mapTitle}
+                  </h3>
+                  <div className="relative rounded-2xl overflow-hidden border border-slate-100 bg-slate-50 group shadow-lg shadow-sky-100/50">
+                    <img src={trip.map_image_url} alt="Route Map" className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" />
+                    <div className="absolute inset-0 bg-gradient-to-t from-slate-900/10 to-transparent pointer-events-none" />
+                  </div>
+                  <p className="text-[10px] font-black uppercase text-slate-400 tracking-widest text-center mt-2">Expedition Route Map</p>
+                </div>
+              )}
+            </div>
 
             {/* INCLUDED / EXCLUDED GRID */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8 border-t border-slate-100 pt-8">
@@ -431,6 +455,7 @@ const TourDetailClient = ({ trip }: { trip: Trip }) => {
               <p className="text-slate-500 italic text-center py-8">{text.itineraryEmpty}</p>
             )}
           </div>
+
         </div>
 
         {/* RIGHT COLUMN (Price & Booking) */}

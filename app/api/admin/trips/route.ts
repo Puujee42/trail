@@ -16,7 +16,7 @@ export async function POST(req: Request) {
   try {
     await checkAdmin();
     const body = await req.json();
-    
+
     const client = await clientPromise;
     const db = client.db("travel_db");
 
@@ -35,15 +35,33 @@ export async function POST(req: Request) {
 export async function PATCH(req: Request) {
   try {
     await checkAdmin();
-    const { _id, ...updateData } = await req.json();
+    const { _id, departures, ...updateData } = await req.json();
 
     const client = await clientPromise;
     const db = client.db("travel_db");
 
+    // 1. Update Trip Document
     await db.collection("trips").updateOne(
       { _id: new ObjectId(_id) },
       { $set: updateData }
     );
+
+    // 2. Sync Departures (if provided)
+    if (departures && Array.isArray(departures)) {
+      // Clear existing departures for this trip
+      await db.collection("departures").deleteMany({ trip_id: _id });
+
+      // Insert new ones (cleaning up IDs if they came from the frontend)
+      if (departures.length > 0) {
+        const cleanedDepartures = departures.map(({ _id, ...rest }) => ({
+          ...rest,
+          trip_id: _id, // Ensure trip_id is correct
+          createdAt: new Date()
+        })).map(d => ({ ...d, trip_id: _id })); // Fix accidental override
+
+        await db.collection("departures").insertMany(cleanedDepartures);
+      }
+    }
 
     return NextResponse.json({ success: true });
   } catch (error: any) {

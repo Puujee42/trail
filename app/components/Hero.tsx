@@ -31,8 +31,9 @@ const itemVariants: Variants = {
 const AUTOPLAY_DURATION = 7000;
 
 /* ────────────────────── Main Component ────────────────────── */
-const Hero = ({ trips }: { trips: Trip[] }) => {
+const Hero = ({ trips, lang, dictionary }: { trips: Trip[], lang: "mn" | "en" | "ko", dictionary: any }) => {
   const { language } = useLanguage();
+  const activeLang = lang || language; // Fallback to context but prefer prop for sync
   const [slideIndex, setSlideIndex] = useState(0);
   const videoRef = useRef<HTMLVideoElement>(null);
 
@@ -43,7 +44,7 @@ const Hero = ({ trips }: { trips: Trip[] }) => {
     if (!trips) return [];
     // Clone array to avoid mutating props, reverse/sort if needed, then take top 3
     // Assuming your API already sends them sorted or you want the absolute last ones in the array:
-    return [...trips].slice(-3).reverse(); 
+    return [...trips].slice(-3).reverse();
     // OR if you want specific sorting by date (if you have createdAt):
     // return [...trips].sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()).slice(0, 3);
   }, [trips]);
@@ -52,11 +53,11 @@ const Hero = ({ trips }: { trips: Trip[] }) => {
     (input: any) => {
       if (!input) return "";
       if (typeof input === "object" && (input.mn || input.en || input.ko)) {
-        return input[language as "mn" | "en" | "ko"] || input.en || input.mn || "";
+        return input[activeLang as "mn" | "en" | "ko"] || input.en || input.mn || "";
       }
       return input;
     },
-    [language]
+    [activeLang]
   );
 
   useEffect(() => {
@@ -66,6 +67,15 @@ const Hero = ({ trips }: { trips: Trip[] }) => {
     }, AUTOPLAY_DURATION);
     return () => clearInterval(timer);
   }, [heroTrips.length]);
+
+  // Force video to play
+  useEffect(() => {
+    if (videoRef.current) {
+      videoRef.current.play().catch(error => {
+        console.error("Video play failed:", error);
+      });
+    }
+  }, []);
 
   if (!heroTrips || heroTrips.length === 0) {
     return (
@@ -78,8 +88,9 @@ const Hero = ({ trips }: { trips: Trip[] }) => {
   const activeSlide = heroTrips[slideIndex];
 
   const getButtonText = () => {
-    if (language === "mn") return "Аялал захиалах";
-    if (language === "ko") return "예약하기";
+    if (dictionary?.book) return dictionary.book;
+    if (activeLang === "mn") return "Аялал захиалах";
+    if (activeLang === "ko") return "예약하기";
     return "Book Now";
   };
 
@@ -93,15 +104,16 @@ const Hero = ({ trips }: { trips: Trip[] }) => {
           loop
           muted
           playsInline
-          className="w-full h-full object-cover opacity-90"
+          preload="auto"
+          className="w-full h-full object-cover opacity-100"
         >
-          <source src="/hero.mp4" type="video/mp4" />
+          <source src="https://res.cloudinary.com/dc127wztz/video/upload/hero_uzq5wr.mp4" type="video/mp4" />
         </video>
       </div>
 
       {/* ─── 2. Blue Gradient Overlays ─── */}
-      <div className="absolute inset-0 z-0 bg-gradient-to-r from-blue-100/95 via-sky-50/80 to-transparent" />
-      <div className="absolute inset-0 z-0 bg-gradient-to-t from-blue-600/20 via-transparent to-transparent" />
+      <div className="absolute inset-0 z-0 bg-gradient-to-r from-blue-100/60 via-sky-50/40 to-transparent" />
+      <div className="absolute inset-0 z-0 bg-gradient-to-t from-blue-600/10 via-transparent to-transparent" />
 
       {/* ─── 3. Content ─── */}
       <div className="relative z-10 container mx-auto px-6 max-w-screen-2xl w-full grid grid-cols-12 items-center h-full">
@@ -122,14 +134,14 @@ const Hero = ({ trips }: { trips: Trip[] }) => {
                 className="mb-6 flex flex-wrap items-center gap-4"
               >
                 <span className="relative px-4 py-2 rounded-full overflow-hidden bg-white/60 backdrop-blur-md border border-sky-200 group">
-                    <span className="absolute inset-0 bg-gradient-to-r from-sky-100 to-blue-100 opacity-50" />
-                    <span className="relative text-xs font-extrabold uppercase tracking-widest text-transparent bg-clip-text bg-gradient-to-r from-sky-600 to-teal-600 flex items-center gap-2">
-                      <FaPlane className="text-sky-500" size={10} />
-                      {t(activeSlide.category)}
-                    </span>
+                  <span className="absolute inset-0 bg-gradient-to-r from-sky-100 to-blue-100 opacity-50" />
+                  <span className="relative text-xs font-extrabold uppercase tracking-widest text-transparent bg-clip-text bg-gradient-to-r from-sky-600 to-teal-600 flex items-center gap-2">
+                    <FaPlane className="text-sky-500" size={10} />
+                    {t(activeSlide.category)}
+                  </span>
                 </span>
                 <span className="flex items-center gap-1.5 text-slate-700 font-bold text-sm bg-white/60 border border-white/50 px-3 py-1.5 rounded-full backdrop-blur-md shadow-sm">
-                  <FaStar className="text-yellow-400 text-base" /> 
+                  <FaStar className="text-yellow-400 text-base" />
                   <span>{activeSlide.rating || 5.0}</span>
                 </span>
               </motion.div>
@@ -159,11 +171,11 @@ const Hero = ({ trips }: { trips: Trip[] }) => {
               >
                 <div className="flex items-center gap-3 bg-gradient-to-br from-white/80 to-blue-50/50 px-5 py-3.5 rounded-2xl shadow-lg shadow-blue-900/5 border border-white/60 backdrop-blur-xl">
                   <div className="p-2 bg-sky-100 text-sky-600 rounded-full">
-                     <FaClock className="text-sm" />
+                    <FaClock className="text-sm" />
                   </div>
                   {t(activeSlide.duration)}
                 </div>
-                
+
                 <div className="flex items-center gap-3 bg-gradient-to-br from-white/80 to-blue-50/50 px-5 py-3.5 rounded-2xl shadow-lg shadow-blue-900/5 border border-white/60 backdrop-blur-xl">
                   <div className="p-2 bg-teal-100 text-teal-600 rounded-full">
                     <FaMapMarkerAlt className="text-sm" />
@@ -186,7 +198,7 @@ const Hero = ({ trips }: { trips: Trip[] }) => {
         {/* Right Column: Pagination (Using heroTrips instead of all trips) */}
         <div className="hidden lg:flex col-span-5 h-full flex-col justify-center items-end pr-10">
           <VerticalPagination
-            items={heroTrips} 
+            items={heroTrips}
             currentIndex={slideIndex}
             onSelect={setSlideIndex}
             t={t}
@@ -237,33 +249,29 @@ const VerticalPagination: React.FC<{
           className="group relative flex items-center gap-5 text-right transition-all duration-300 outline-none"
         >
           <div
-            className={`flex-1 transition-all duration-300 ${
-              isActive
-                ? "opacity-100 translate-x-0"
-                : "opacity-40 group-hover:opacity-70 translate-x-2"
-            }`}
+            className={`flex-1 transition-all duration-300 ${isActive
+              ? "opacity-100 translate-x-0"
+              : "opacity-40 group-hover:opacity-70 translate-x-2"
+              }`}
           >
             <p
-              className={`text-xs font-bold uppercase tracking-wider mb-1 ${
-                isActive ? "text-blue-600" : "text-slate-400"
-              }`}
+              className={`text-xs font-bold uppercase tracking-wider mb-1 ${isActive ? "text-blue-600" : "text-slate-400"
+                }`}
             >
               0{index + 1}
             </p>
             <p
-              className={`text-lg font-bold truncate ${
-                isActive ? "text-slate-900" : "text-slate-500"
-              }`}
+              className={`text-lg font-bold truncate ${isActive ? "text-slate-900" : "text-slate-500"
+                }`}
             >
               {t(item.location)}
             </p>
           </div>
           <div
-            className={`w-1.5 h-14 rounded-full overflow-hidden transition-all duration-300 border ${
-              isActive
-                ? "border-transparent shadow-lg shadow-blue-500/20 scale-y-110"
-                : "border-slate-300 bg-white/30"
-            }`}
+            className={`w-1.5 h-14 rounded-full overflow-hidden transition-all duration-300 border ${isActive
+              ? "border-transparent shadow-lg shadow-blue-500/20 scale-y-110"
+              : "border-slate-300 bg-white/30"
+              }`}
           >
             {isActive && (
               <motion.div

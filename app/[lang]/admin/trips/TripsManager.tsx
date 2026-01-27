@@ -42,9 +42,9 @@ interface Trip {
   duration: LocalizedString;
   ageGroup: LocalizedString;
   price: LocalizedPrice;
-  priceAdult?: LocalizedPrice;
   priceChild?: LocalizedPrice;
   salePrice?: LocalizedPrice;
+  salePriceChild?: LocalizedPrice;
   discountPercentage?: number;
   rating: number;
   featured: boolean;
@@ -57,6 +57,10 @@ interface Trip {
   highlights?: LocalizedString[];
   includedServices?: LocalizedString[];
   excludedServices?: LocalizedString[];
+  map_image_url?: string;
+  tour_code?: string;
+  availability_text?: string;
+  start_location?: string;
   itinerary: ItineraryItem[];
   availableDates?: FlexibleDate[];
   allowCustomDate?: boolean;
@@ -95,7 +99,6 @@ const BLANK_FORM_DATA: Partial<Trip> = {
   duration: { mn: "", en: "", ko: "" },
   ageGroup: { mn: "Бүх нас", en: "All Ages", ko: "전연령" },
   price: { mn: 0, en: 0, ko: 0 },
-  priceAdult: { mn: 0, en: 0, ko: 0 },
   priceChild: { mn: 0, en: 0, ko: 0 },
   salePrice: { mn: 0, en: 0, ko: 0 },
   discountPercentage: 0,
@@ -110,6 +113,10 @@ const BLANK_FORM_DATA: Partial<Trip> = {
   includedServices: [],
   excludedServices: [],
   image: "",
+  map_image_url: "",
+  tour_code: "",
+  availability_text: "",
+  start_location: "",
   itinerary: [],
   availableDates: [],
   allowCustomDate: true,
@@ -119,29 +126,30 @@ const BLANK_FORM_DATA: Partial<Trip> = {
 const TrilingualArrayInput: React.FC<{
   label: string;
   items: LocalizedString[];
+  activeLang: Language;
   onChange: (index: number, lang: Language, value: string) => void;
   onAdd: () => void;
   onRemove: (index: number) => void;
-}> = ({ label, items, onChange, onAdd, onRemove }) => (
-  <div className="space-y-3 p-4 bg-slate-50 rounded-xl border border-slate-200">
+}> = ({ label, items, activeLang, onChange, onAdd, onRemove }) => (
+  <div className="space-y-3 p-4 bg-slate-50 rounded-xl border border-slate-200 shadow-inner">
     <div className="flex justify-between items-center">
-      <label className="text-xs font-bold text-slate-500 uppercase">{label}</label>
-      <button type="button" onClick={onAdd} className="text-blue-600 hover:text-blue-700 text-xs font-bold flex items-center gap-1">
-        <FaPlus size={10} /> Add Item
+      <label className="text-xs font-black text-slate-400 uppercase tracking-widest leading-none">{label}</label>
+      <button type="button" onClick={onAdd} className="text-blue-600 hover:text-blue-700 text-[10px] font-black uppercase tracking-widest flex items-center gap-1.5 p-1 px-2 bg-blue-50 rounded-md">
+        <FaPlus size={8} /> Add Entry
       </button>
     </div>
     <div className="space-y-2">
       {items.map((item, idx) => (
         <div key={idx} className="flex gap-2 items-start">
           <div className="flex-1 grid grid-cols-1 md:grid-cols-3 gap-2">
-            <input value={item.mn} onChange={e => onChange(idx, 'mn', e.target.value)} placeholder="MN" className="w-full border p-1.5 rounded text-xs" />
-            <input value={item.en} onChange={e => onChange(idx, 'en', e.target.value)} placeholder="EN" className="w-full border p-1.5 rounded text-xs" />
-            <input value={item.ko} onChange={e => onChange(idx, 'ko', e.target.value)} placeholder="KO" className="w-full border p-1.5 rounded text-xs" />
+            <input value={item.mn} onChange={e => onChange(idx, 'mn', e.target.value)} placeholder="MONGOLIAN" className={`w-full border p-2 rounded text-xs transition-all ${activeLang === 'mn' ? 'ring-2 ring-blue-500/20 border-blue-400 bg-blue-50/10' : 'bg-white'}`} />
+            <input value={item.en} onChange={e => onChange(idx, 'en', e.target.value)} placeholder="ENGLISH" className={`w-full border p-2 rounded text-xs transition-all ${activeLang === 'en' ? 'ring-2 ring-blue-500/20 border-blue-400 bg-blue-50/10' : 'bg-white'}`} />
+            <input value={item.ko} onChange={e => onChange(idx, 'ko', e.target.value)} placeholder="KOREAN" className={`w-full border p-2 rounded text-xs transition-all ${activeLang === 'ko' ? 'ring-2 ring-blue-500/20 border-blue-400 bg-blue-50/10' : 'bg-white'}`} />
           </div>
-          <button type="button" onClick={() => onRemove(idx)} className="mt-1.5 text-red-400 hover:text-red-600"><FaTrash size={12} /></button>
+          <button type="button" onClick={() => onRemove(idx)} className="mt-1 text-red-300 hover:text-red-500 transition-colors p-1"><FaTrash size={12} /></button>
         </div>
       ))}
-      {items.length === 0 && <p className="text-xs text-slate-400 italic">No items added.</p>}
+      {items.length === 0 && <p className="text-[10px] text-slate-400 italic">No entries yet.</p>}
     </div>
   </div>
 );
@@ -149,12 +157,14 @@ const TrilingualArrayInput: React.FC<{
 export default function TripsManager({ initialTrips }: { initialTrips: Trip[] }) {
   const router = useRouter();
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const [activeAdminLang, setActiveAdminLang] = useState<Language>('en');
   const [trips, setTrips] = useState(initialTrips);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editingTrip, setEditingTrip] = useState<Trip | null>(null);
   const [formData, setFormData] = useState<Partial<Trip>>(BLANK_FORM_DATA);
   const [loading, setLoading] = useState(false);
   const [uploadingImage, setUploadingImage] = useState(false);
+  const [uploadingMap, setUploadingMap] = useState(false);
   const [exchangeRates, setExchangeRates] = useState<{ USD: number; KRW: number }>({ USD: 0, KRW: 0 });
 
   // Fetch Exchange Rates
@@ -216,9 +226,19 @@ export default function TripsManager({ initialTrips }: { initialTrips: Trip[] })
     setFormData(prev => ({ ...prev, [field]: { ...(prev[field] as any), [lang]: value } }));
   };
 
-  const handlePriceChange = (field: 'price' | 'priceAdult' | 'priceChild' | 'salePrice', lang: Language, value: string) => {
+  const calculateSalePrice = (baseMnt: number, discount: number) => {
+    if (discount <= 0) return null;
+    const saleMnt = Math.round(baseMnt * (1 - discount / 100));
+    return {
+      mn: saleMnt,
+      en: exchangeRates.USD > 0 ? Math.round(saleMnt / exchangeRates.USD) : 0,
+      ko: exchangeRates.KRW > 0 ? Math.round(saleMnt / exchangeRates.KRW) : 0
+    };
+  };
+
+  const handlePriceChange = (field: 'price' | 'priceChild' | 'salePrice', lang: Language, value: string) => {
     const numValue = Number(value) || 0;
-    if (lang !== 'mn') return; // Strictly only allow MNT change for automation
+    if (lang !== 'mn') return;
 
     setFormData(prev => {
       const updatedPrice = {
@@ -226,7 +246,40 @@ export default function TripsManager({ initialTrips }: { initialTrips: Trip[] })
         en: exchangeRates.USD > 0 ? Math.round(numValue / exchangeRates.USD) : 0,
         ko: exchangeRates.KRW > 0 ? Math.round(numValue / exchangeRates.KRW) : 0
       };
-      return { ...prev, [field]: updatedPrice };
+
+      let nextState = { ...prev, [field]: updatedPrice };
+
+      // If Base Price or Discount changes, auto-calculate Sale Price
+      if (field === 'price' && prev.discountPercentage && prev.discountPercentage > 0) {
+        const newSalePrice = calculateSalePrice(numValue, prev.discountPercentage);
+        if (newSalePrice) nextState.salePrice = newSalePrice;
+      }
+
+      // Handle Child Sale Price calculation when child base price changes
+      if (field === 'priceChild' && prev.discountPercentage && prev.discountPercentage > 0) {
+        const newSalePriceChild = calculateSalePrice(numValue, prev.discountPercentage);
+        if (newSalePriceChild) nextState.salePriceChild = newSalePriceChild;
+      }
+
+      return nextState;
+    });
+  };
+
+  const handleDiscountChange = (value: string) => {
+    const discount = Number(value) || 0;
+    setFormData(prev => {
+      const baseMnt = prev.price?.mn || 0;
+      const baseChildMnt = prev.priceChild?.mn || 0;
+
+      const newSalePrice = calculateSalePrice(baseMnt, discount);
+      const newSalePriceChild = calculateSalePrice(baseChildMnt, discount);
+
+      return {
+        ...prev,
+        discountPercentage: discount,
+        salePrice: newSalePrice || { mn: 0, en: 0, ko: 0 },
+        salePriceChild: newSalePriceChild || { mn: 0, en: 0, ko: 0 }
+      };
     });
   };
   const handleLocalizedArrayChange = (field: 'highlights' | 'includedServices' | 'excludedServices', index: number, lang: Language, value: string) => {
@@ -287,6 +340,24 @@ export default function TripsManager({ initialTrips }: { initialTrips: Trip[] })
       alert("Image upload failed.");
     }
     finally { setUploadingImage(false); }
+  };
+
+  const handleMapUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    setUploadingMap(true);
+    const formPayload = new FormData();
+    formPayload.append("file", file);
+    formPayload.append("upload_preset", process.env.NEXT_PUBLIC_CLOUDINARY_PRESET || "euro_trails");
+    try {
+      const res = await fetch(`https://api.cloudinary.com/v1_1/${process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME}/upload`, { method: "POST", body: formPayload });
+      const data = await res.json();
+      setFormData(prev => ({ ...prev, map_image_url: data.secure_url }));
+    } catch (err) {
+      console.error("Map upload error:", err);
+      alert("Map upload failed.");
+    }
+    finally { setUploadingMap(false); }
   };
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -444,16 +515,29 @@ export default function TripsManager({ initialTrips }: { initialTrips: Trip[] })
       {/* Header & Main List */}
       <div className="flex justify-between items-center mb-6">
         <h1 className="text-3xl font-bold text-slate-800">Manage Trips</h1>
-        <button onClick={handleOpenCreate} className="flex items-center gap-2 bg-blue-600 text-white px-6 py-2.5 rounded-lg font-bold hover:bg-blue-700">
-          <FaPlus /> Create New Trip
-        </button>
+        <div className="flex items-center gap-4">
+          <div className="flex bg-slate-100 p-1 rounded-lg border border-slate-200">
+            {(['mn', 'en', 'ko'] as Language[]).map(lang => (
+              <button
+                key={lang}
+                onClick={() => setActiveAdminLang(lang)}
+                className={`px-4 py-1.5 rounded-md text-xs font-bold uppercase transition-all ${activeAdminLang === lang ? 'bg-white shadow text-blue-600' : 'text-slate-400 hover:text-slate-600'}`}
+              >
+                {lang}
+              </button>
+            ))}
+          </div>
+          <button onClick={handleOpenCreate} className="flex items-center gap-2 bg-blue-600 text-white px-6 py-2.5 rounded-lg font-bold hover:bg-blue-700 shadow-sm">
+            <FaPlus /> Create New Trip
+          </button>
+        </div>
       </div>
       <div className="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden">
         <table className="w-full text-left">
           <thead className="bg-slate-50 text-slate-500 text-sm uppercase">
             <tr>
               <th className="p-4">Image</th>
-              <th className="p-4">Title (EN)</th>
+              <th className="p-4">Title ({activeAdminLang.toUpperCase()})</th>
               <th className="p-4">Dates</th>
               <th className="p-4 text-right">Actions</th>
             </tr>
@@ -470,7 +554,7 @@ export default function TripsManager({ initialTrips }: { initialTrips: Trip[] })
                     </div>
                   )}
                 </td>
-                <td className="p-4 font-bold text-slate-800">{trip.title.en}</td>
+                <td className="p-4 font-bold text-slate-800">{trip.title[activeAdminLang] || trip.title.en}</td>
                 <td className="p-4 text-sm text-slate-600">
                   {trip.dates?.length > 0 ? (
                     <span className="bg-green-100 text-green-700 px-2 py-1 rounded text-xs font-bold">
@@ -498,65 +582,101 @@ export default function TripsManager({ initialTrips }: { initialTrips: Trip[] })
               </div>
               <form id="tripForm" onSubmit={handleSubmit} className="flex-1 overflow-y-auto p-6 space-y-8">
                 {/* 1. Top Section */}
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <div className="grid grid-cols-1 md:grid-cols-4 gap-6 bg-slate-50 p-6 rounded-2xl border border-slate-200">
                   <div className="col-span-1">
-                    <label className="block text-sm font-bold text-slate-700 mb-2">Cover Image</label>
-                    <div onClick={() => fileInputRef.current?.click()} className="border-2 border-dashed h-48 rounded-lg flex items-center justify-center cursor-pointer hover:bg-slate-50 relative overflow-hidden bg-slate-50">
-                      {uploadingImage ? <FaSpinner className="animate-spin text-2xl" /> : formData.image ? <img src={formData.image} className="w-full h-full object-cover" /> : <div className="text-slate-400 text-center"><FaCloudUploadAlt className="text-3xl mx-auto" /><p>Upload</p></div>}
+                    <label className="block text-xs font-black uppercase text-slate-400 tracking-widest mb-3">{activeAdminLang === 'mn' ? 'Нүүр зураг' : 'Cover Image'}</label>
+                    <div onClick={() => fileInputRef.current?.click()} className="border-2 border-dashed h-40 rounded-xl flex items-center justify-center cursor-pointer hover:bg-white hover:border-blue-400 transition-all relative overflow-hidden bg-white shadow-sm">
+                      {uploadingImage ? <FaSpinner className="animate-spin text-2xl text-blue-500" /> : formData.image ? <img src={formData.image} className="w-full h-full object-cover" /> : <div className="text-slate-400 text-center"><FaCloudUploadAlt className="text-3xl mx-auto mb-1" /><p className="text-[10px] font-bold uppercase">{activeAdminLang === 'mn' ? 'Зураг хуулах' : 'Main Photo'}</p></div>}
                       <input type="file" ref={fileInputRef} className="hidden" accept="image/*" onChange={handleImageUpload} />
                     </div>
                   </div>
+
+                  <div className="col-span-1">
+                    <label className="block text-xs font-black uppercase text-slate-400 tracking-widest mb-3">{activeAdminLang === 'mn' ? 'Замын зураг' : 'Route Map Image'}</label>
+                    <div
+                      onClick={() => {
+                        const input = document.createElement('input');
+                        input.type = 'file'; input.accept = 'image/*';
+                        input.onchange = (e) => handleMapUpload(e as any);
+                        input.click();
+                      }}
+                      className="border-2 border-dashed h-40 rounded-xl flex items-center justify-center cursor-pointer hover:bg-white hover:border-green-400 transition-all relative overflow-hidden bg-white shadow-sm"
+                    >
+                      {uploadingMap ? <FaSpinner className="animate-spin text-2xl text-green-500" /> : formData.map_image_url ? <img src={formData.map_image_url} className="w-full h-full object-contain p-2" /> : <div className="text-slate-400 text-center"><FaMapSigns className="text-3xl mx-auto mb-1" /><p className="text-[10px] font-bold uppercase">{activeAdminLang === 'mn' ? 'Газрын зураг' : 'Upload Map'}</p></div>}
+                    </div>
+                  </div>
+
                   <div className="col-span-2 grid grid-cols-2 gap-4">
                     <div>
-                      <label className="text-xs font-bold text-slate-500">Package Category</label>
-                      <select
-                        className="w-full border p-2 rounded text-sm bg-white"
-                        value={formData.type || 'standard'}
-                        onChange={e => setFormData({ ...formData, type: e.target.value })}
-                      >
-                        <option value="standard">Standard</option>
-                        <option value="family">Family</option>
-                        <option value="solo">Solo</option>
-                        <option value="club">Club</option>
-                        <option value="honeymoon">Honeymoon</option>
-                      </select>
+                      <label className="text-xs font-bold text-slate-500 uppercase tracking-widest">{activeAdminLang === 'mn' ? 'Тур код' : 'Tour Code'}</label>
+                      <input className="w-full border p-2 rounded-lg text-sm bg-white border-slate-200 font-bold" placeholder="e.g. P10-1" value={formData.tour_code || ''} onChange={e => setFormData({ ...formData, tour_code: e.target.value })} />
                     </div>
-                    <div><label className="text-xs font-bold text-slate-500">Region</label><input className="w-full border p-2 rounded text-sm" value={formData.region || ''} onChange={e => setFormData({ ...formData, region: e.target.value })} /></div>
-                    <div><label className="text-xs font-bold text-slate-500">Category</label><input className="w-full border p-2 rounded text-sm" value={formData.category || ''} onChange={e => setFormData({ ...formData, category: e.target.value })} /></div>
-                    <div><label className="text-xs font-bold text-slate-500">Rating</label><input type="number" step="0.1" className="w-full border p-2 rounded text-sm" value={formData.rating || ''} onChange={e => setFormData({ ...formData, rating: Number(e.target.value) })} /></div>
+                    <div>
+                      <label className="text-xs font-bold text-slate-500 uppercase tracking-widest">{activeAdminLang === 'mn' ? 'Эхлэх цэг' : 'Start Location'}</label>
+                      <input className="w-full border p-2 rounded-lg text-sm bg-white border-slate-200" placeholder="e.g. Ulaanbaatar" value={formData.start_location || ''} onChange={e => setFormData({ ...formData, start_location: e.target.value })} />
+                    </div>
+                    <div>
+                      <label className="text-xs font-bold text-slate-500 uppercase tracking-widest">{activeAdminLang === 'mn' ? 'Боломжит хугацаа' : 'Availability'}</label>
+                      <input className="w-full border p-2 rounded-lg text-sm bg-white border-slate-200" placeholder="e.g. 1 Jun - 20 Sep" value={formData.availability_text || ''} onChange={e => setFormData({ ...formData, availability_text: e.target.value })} />
+                    </div>
+                    <div>
+                      <label className="text-xs font-bold text-slate-500 uppercase tracking-widest">{activeAdminLang === 'mn' ? 'Үнэлгээ' : 'Rating'}</label>
+                      <input type="number" step="0.1" className="w-full border p-2 rounded-lg text-sm bg-white border-slate-200" value={formData.rating || ''} onChange={e => setFormData({ ...formData, rating: Number(e.target.value) })} />
+                    </div>
+                  </div>
+                </div>
+
+                <div className="grid grid-cols-1 md:grid-cols-4 gap-4 pt-4">
+                  <div>
+                    <label className="text-xs font-bold text-slate-500 uppercase tracking-widest">{activeAdminLang === 'mn' ? 'Төрөл' : 'Package Category'}</label>
+                    <select
+                      className="w-full border p-2 rounded-lg text-sm bg-white border-slate-200"
+                      value={formData.type || 'standard'}
+                      onChange={e => setFormData({ ...formData, type: e.target.value })}
+                    >
+                      <option value="standard">Standard</option>
+                      <option value="family">Family</option>
+                      <option value="solo">Solo</option>
+                      <option value="club">Club</option>
+                      <option value="honeymoon">Honeymoon</option>
+                    </select>
+                  </div>
+                  <div><label className="text-xs font-bold text-slate-500 uppercase tracking-widest">{activeAdminLang === 'mn' ? 'Бүс' : 'Region'}</label><input className="w-full border p-2 rounded-lg text-sm border-slate-200" value={formData.region || ''} onChange={e => setFormData({ ...formData, region: e.target.value })} /></div>
+                  <div><label className="text-xs font-bold text-slate-500 uppercase tracking-widest">{activeAdminLang === 'mn' ? 'Ангилал' : 'Category'}</label><input className="w-full border p-2 rounded-lg text-sm border-slate-200" value={formData.category || ''} onChange={e => setFormData({ ...formData, category: e.target.value })} /></div>
+                  <div className="flex items-center gap-3 pt-6">
+                    <label className="text-xs font-bold text-slate-500 uppercase tracking-widest">{activeAdminLang === 'mn' ? 'Онцлох' : 'Featured'}</label>
+                    <button type="button" onClick={() => setFormData({ ...formData, featured: !formData.featured })} className={`w-10 h-5 rounded-full transition-colors relative ${formData.featured ? 'bg-orange-500' : 'bg-slate-300'}`}>
+                      <div className={`absolute top-0.5 w-4 h-4 bg-white rounded-full transition-all ${formData.featured ? 'left-5.5' : 'left-0.5'}`} />
+                    </button>
                   </div>
                 </div>
                 {/* 2. Trilingual & Details */}
                 <div className="space-y-4 border-t pt-6">
-                  <TrilingualInput label="Trip Title" field="title" value={formData.title || { mn: '', en: '', ko: '' }} onChange={handleTrilingualChange} />
-                  <TrilingualInput label="Location" field="location" value={formData.location || { mn: '', en: '', ko: '' }} onChange={handleTrilingualChange} />
-                  <TrilingualInput label="Description" field="description" value={formData.description || { mn: '', en: '', ko: '' }} onChange={handleTrilingualChange} isTextarea={true} />
-                  <TrilingualInput label="Duration" field="duration" value={formData.duration || { mn: '', en: '', ko: '' }} onChange={handleTrilingualChange} />
-                  <TrilingualInput label="Age Group" field="ageGroup" value={formData.ageGroup || { mn: '', en: '', ko: '' }} onChange={handleTrilingualChange} />
+                  <TrilingualInput label={activeAdminLang === 'mn' ? 'Аяллын нэр' : 'Trip Title'} field="title" value={formData.title || { mn: '', en: '', ko: '' }} activeLang={activeAdminLang} onChange={handleTrilingualChange} />
+                  <TrilingualInput label={activeAdminLang === 'mn' ? 'Байршил' : 'Location'} field="location" value={formData.location || { mn: '', en: '', ko: '' }} activeLang={activeAdminLang} onChange={handleTrilingualChange} />
+                  <TrilingualInput label={activeAdminLang === 'mn' ? 'Тайлбар' : 'Description'} field="description" value={formData.description || { mn: '', en: '', ko: '' }} activeLang={activeAdminLang} onChange={handleTrilingualChange} isTextarea={true} />
+                  <TrilingualInput label={activeAdminLang === 'mn' ? 'Үргэлжлэх хугацаа' : 'Duration'} field="duration" value={formData.duration || { mn: '', en: '', ko: '' }} activeLang={activeAdminLang} onChange={handleTrilingualChange} />
+                  <TrilingualInput label={activeAdminLang === 'mn' ? 'Насны ангилал' : 'Age Group'} field="ageGroup" value={formData.ageGroup || { mn: '', en: '', ko: '' }} activeLang={activeAdminLang} onChange={handleTrilingualChange} />
                 </div>
 
                 <div className="space-y-4 border-t pt-6">
                   <div className="flex justify-between items-center">
-                    <h3 className="text-lg font-bold text-slate-800">Pricing Details</h3>
+                    <h3 className="text-lg font-bold text-slate-800">{activeAdminLang === 'mn' ? 'Үнийн мэдээлэл' : 'Pricing Details'}</h3>
                     <div className="text-[10px] font-bold text-slate-400 uppercase tracking-widest bg-slate-100 px-2 py-1 rounded">
                       Rates: 1 USD = {exchangeRates.USD}₮ | 1 KRW = {exchangeRates.KRW}₮
                     </div>
                   </div>
+
+                  {/* Pricing Calculator Integration */}
+
+
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <div className="space-y-3">
-                      <label className="block text-xs font-bold text-slate-500 mb-1 uppercase tracking-wider">Base Price (Legacy)</label>
+                      <label className="block text-xs font-bold text-slate-500 mb-1 uppercase tracking-wider">Base Price (Adult)</label>
                       <div className="grid grid-cols-3 gap-2">
                         <input type="number" value={formData.price?.mn || ''} onChange={(e) => handlePriceChange('price', 'mn', e.target.value)} placeholder="MNT" className="w-full border p-2 rounded text-sm bg-blue-50 border-blue-200" />
                         <input type="number" value={formData.price?.en || ''} readOnly placeholder="USD" className="w-full border p-2 rounded text-sm bg-slate-50 text-slate-500 cursor-not-allowed" />
                         <input type="number" value={formData.price?.ko || ''} readOnly placeholder="KRW" className="w-full border p-2 rounded text-sm bg-slate-50 text-slate-500 cursor-not-allowed" />
-                      </div>
-                    </div>
-                    <div className="space-y-3">
-                      <label className="block text-xs font-bold text-slate-500 mb-1 uppercase tracking-wider">Adult Price</label>
-                      <div className="grid grid-cols-3 gap-2">
-                        <input type="number" value={formData.priceAdult?.mn || ''} onChange={(e) => handlePriceChange('priceAdult', 'mn', e.target.value)} placeholder="MNT" className="w-full border p-2 rounded text-sm bg-blue-50 border-blue-200" />
-                        <input type="number" value={formData.priceAdult?.en || ''} readOnly placeholder="USD" className="w-full border p-2 rounded text-sm bg-slate-50 text-slate-500 cursor-not-allowed" />
-                        <input type="number" value={formData.priceAdult?.ko || ''} readOnly placeholder="KRW" className="w-full border p-2 rounded text-sm bg-slate-50 text-slate-500 cursor-not-allowed" />
                       </div>
                     </div>
                     <div className="space-y-3">
@@ -568,25 +688,41 @@ export default function TripsManager({ initialTrips }: { initialTrips: Trip[] })
                       </div>
                     </div>
                     <div className="space-y-3">
-                      <label className="block text-xs font-bold text-slate-500 mb-1 uppercase tracking-wider">Sale Price (Optional)</label>
-                      <div className="grid grid-cols-3 gap-2">
-                        <input type="number" value={formData.salePrice?.mn || ''} onChange={(e) => handlePriceChange('salePrice', 'mn', e.target.value)} placeholder="MNT" className="w-full border p-2 rounded text-sm bg-blue-50 border-blue-200" />
-                        <input type="number" value={formData.salePrice?.en || ''} readOnly placeholder="USD" className="w-full border p-2 rounded text-sm bg-slate-50 text-slate-500 cursor-not-allowed" />
-                        <input type="number" value={formData.salePrice?.ko || ''} readOnly placeholder="KRW" className="w-full border p-2 rounded text-sm bg-slate-50 text-slate-500 cursor-not-allowed" />
-                      </div>
+                      <label className="block text-xs font-bold text-slate-500 mb-1 uppercase tracking-wider">Discount Percentage (%)</label>
+                      <input
+                        type="number"
+                        className="w-full border p-2 rounded text-sm bg-white border-blue-300 ring-2 ring-blue-50"
+                        value={formData.discountPercentage || ''}
+                        onChange={e => handleDiscountChange(e.target.value)}
+                        placeholder="e.g. 20"
+                      />
                     </div>
-                    <div className="col-span-2">
-                      <label className="text-xs font-bold text-slate-500 uppercase">Discount Percentage (%)</label>
-                      <input type="number" className="w-full border p-2 rounded text-sm mt-1" value={formData.discountPercentage || ''} onChange={e => setFormData({ ...formData, discountPercentage: Number(e.target.value) })} placeholder="e.g. 20" />
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                      <div className="space-y-3">
+                        <label className="block text-xs font-bold text-green-600 mb-1 uppercase tracking-wider">Adult Sale Price</label>
+                        <div className="grid grid-cols-3 gap-2">
+                          <input type="number" value={formData.salePrice?.mn || ''} readOnly className="w-full border p-2 rounded text-sm bg-green-50 text-green-700 font-bold border-green-200" />
+                          <input type="number" value={formData.salePrice?.en || ''} readOnly className="w-full border p-2 rounded text-sm bg-slate-50 text-slate-400" />
+                          <input type="number" value={formData.salePrice?.ko || ''} readOnly className="w-full border p-2 rounded text-sm bg-slate-50 text-slate-400" />
+                        </div>
+                      </div>
+                      <div className="space-y-3">
+                        <label className="block text-xs font-bold text-green-600 mb-1 uppercase tracking-wider">Child Sale Price</label>
+                        <div className="grid grid-cols-3 gap-2">
+                          <input type="number" value={formData.salePriceChild?.mn || ''} readOnly className="w-full border p-2 rounded text-sm bg-green-50 text-green-700 font-bold border-green-200" />
+                          <input type="number" value={formData.salePriceChild?.en || ''} readOnly className="w-full border p-2 rounded text-sm bg-slate-50 text-slate-400" />
+                          <input type="number" value={formData.salePriceChild?.ko || ''} readOnly className="w-full border p-2 rounded text-sm bg-slate-50 text-slate-400" />
+                        </div>
+                      </div>
                     </div>
                   </div>
                 </div>
 
                 <div className="space-y-6 border-t pt-6">
-                  <h3 className="text-lg font-bold text-slate-800">Highlights & Services</h3>
-                  <TrilingualArrayInput label="Trip Highlights" items={formData.highlights || []} onChange={(i, l, v) => handleLocalizedArrayChange('highlights', i, l, v)} onAdd={() => addLocalizedArrayItem('highlights')} onRemove={(i) => removeLocalizedArrayItem('highlights', i)} />
-                  <TrilingualArrayInput label="What's Included" items={formData.includedServices || []} onChange={(i, l, v) => handleLocalizedArrayChange('includedServices', i, l, v)} onAdd={() => addLocalizedArrayItem('includedServices')} onRemove={(i) => removeLocalizedArrayItem('includedServices', i)} />
-                  <TrilingualArrayInput label="What's Not Included" items={formData.excludedServices || []} onChange={(i, l, v) => handleLocalizedArrayChange('excludedServices', i, l, v)} onAdd={() => addLocalizedArrayItem('excludedServices')} onRemove={(i) => removeLocalizedArrayItem('excludedServices', i)} />
+                  <h3 className="text-lg font-bold text-slate-800">{activeAdminLang === 'mn' ? 'Онцлох болон Үйлчилгээ' : 'Highlights & Services'}</h3>
+                  <TrilingualArrayInput label={activeAdminLang === 'mn' ? 'Аяллын онцлох' : 'Trip Highlights'} items={formData.highlights || []} activeLang={activeAdminLang} onChange={(i, l, v) => handleLocalizedArrayChange('highlights', i, l, v)} onAdd={() => addLocalizedArrayItem('highlights')} onRemove={(i) => removeLocalizedArrayItem('highlights', i)} />
+                  <TrilingualArrayInput label={activeAdminLang === 'mn' ? 'Багтсан үйлчилгээ' : "What's Included"} items={formData.includedServices || []} activeLang={activeAdminLang} onChange={(i, l, v) => handleLocalizedArrayChange('includedServices', i, l, v)} onAdd={() => addLocalizedArrayItem('includedServices')} onRemove={(i) => removeLocalizedArrayItem('includedServices', i)} />
+                  <TrilingualArrayInput label={activeAdminLang === 'mn' ? 'Багтаагүй үйлчилгээ' : "What's Not Included"} items={formData.excludedServices || []} activeLang={activeAdminLang} onChange={(i, l, v) => handleLocalizedArrayChange('excludedServices', i, l, v)} onAdd={() => addLocalizedArrayItem('excludedServices')} onRemove={(i) => removeLocalizedArrayItem('excludedServices', i)} />
                 </div>
 
                 <div className="space-y-4 border-t pt-6">
@@ -610,10 +746,10 @@ export default function TripsManager({ initialTrips }: { initialTrips: Trip[] })
                 <div className="border-t pt-6 bg-purple-50 p-4 rounded-lg">
                   <div className="flex justify-between items-center mb-4">
                     <h3 className="text-lg font-bold text-slate-800 flex items-center gap-2">
-                      <FaCalendarAlt className="text-purple-600" /> Flexible / Available Dates
+                      <FaCalendarAlt className="text-purple-600" /> {activeAdminLang === 'mn' ? 'Боломжит өдрүүд' : 'Available Dates'}
                     </h3>
                     <button type="button" onClick={addFlexibleDate} className="flex items-center gap-2 text-sm bg-purple-600 text-white font-bold px-3 py-1.5 rounded-lg hover:bg-purple-700 shadow-sm">
-                      <FaPlus /> Add Date
+                      <FaPlus /> {activeAdminLang === 'mn' ? 'Өдөр нэмэх' : 'Add Date'}
                     </button>
                   </div>
                   <div className="grid grid-cols-1 gap-3">
@@ -637,10 +773,10 @@ export default function TripsManager({ initialTrips }: { initialTrips: Trip[] })
                 <div className="border-t pt-6 bg-blue-50 p-4 rounded-lg">
                   <div className="flex justify-between items-center mb-4">
                     <h3 className="text-lg font-bold text-slate-800 flex items-center gap-2">
-                      <FaCalendarAlt className="text-blue-600" /> Fixed Departure Groups
+                      <FaCalendarAlt className="text-blue-600" /> {activeAdminLang === 'mn' ? 'Товлосон аялал' : 'Fixed Departure Groups'}
                     </h3>
                     <button type="button" onClick={addDateGroup} className="flex items-center gap-2 text-sm bg-blue-600 text-white font-bold px-3 py-1.5 rounded-lg hover:bg-blue-700 shadow-sm">
-                      <FaPlus /> Add Date
+                      <FaPlus /> {activeAdminLang === 'mn' ? 'Өдөр нэмэх' : 'Add Date'}
                     </button>
                   </div>
                   {formData.dates && formData.dates.length > 0 ? (
@@ -685,19 +821,19 @@ export default function TripsManager({ initialTrips }: { initialTrips: Trip[] })
                 {/* 4. Itinerary (Standard) */}
                 <div className="border-t pt-6">
                   <div className="flex justify-between items-center mb-4">
-                    <h3 className="text-lg font-bold text-slate-800 flex items-center gap-2"><FaMapSigns /> Itinerary</h3>
+                    <h3 className="text-lg font-bold text-slate-800 flex items-center gap-2"><FaMapSigns /> {activeAdminLang === 'mn' ? 'Аяллын хөтөлбөр' : 'Itinerary'}</h3>
                     <button type="button" onClick={addItineraryDay} className="flex items-center gap-2 text-sm bg-slate-100 text-slate-600 font-bold px-3 py-1 rounded-lg hover:bg-slate-200">
-                      <FaPlus /> Add Day
+                      <FaPlus /> {activeAdminLang === 'mn' ? 'Өдөр нэмэх' : 'Add Day'}
                     </button>
                   </div>
                   {formData.itinerary && formData.itinerary.length > 0 ? (
                     <div className="grid grid-cols-1 gap-3">
                       {formData.itinerary.map((item, index) => (
                         <div key={index} className="bg-white p-4 rounded border border-slate-200 shadow-sm">
-                          <h4 className="text-md font-bold mb-4">Day {item.day}</h4>
+                          <h4 className="text-md font-bold mb-4">{activeAdminLang === 'mn' ? `Өдөр ${item.day}` : `Day ${item.day}`}</h4>
                           <div className="space-y-4">
-                            <TrilingualItinInput label="Title" value={item.title} onChange={(lang, value) => handleItineraryChange(index, lang, 'title', value)} />
-                            <TrilingualItinInput label="Description" value={item.desc} onChange={(lang, value) => handleItineraryChange(index, lang, 'desc', value)} isTextarea={true} />
+                            <TrilingualItinInput label={activeAdminLang === 'mn' ? 'Гарчиг' : 'Title'} value={item.title} activeLang={activeAdminLang} onChange={(lang, value) => handleItineraryChange(index, lang, 'title', value)} />
+                            <TrilingualItinInput label={activeAdminLang === 'mn' ? 'Тайлбар' : 'Description'} value={item.desc} activeLang={activeAdminLang} onChange={(lang, value) => handleItineraryChange(index, lang, 'desc', value)} isTextarea={true} />
                           </div>
                           <div className="mt-4 flex justify-end">
                             <button type="button" onClick={() => removeItineraryDay(index)} className="p-2 text-red-400 hover:bg-red-50 rounded">
@@ -708,14 +844,14 @@ export default function TripsManager({ initialTrips }: { initialTrips: Trip[] })
                       ))}
                     </div>
                   ) : (
-                    <p className="text-sm text-slate-500 italic">No days added yet.</p>
+                    <p className="text-sm text-slate-500 italic">{activeAdminLang === 'mn' ? 'Хөтөлбөр ороогүй байна.' : 'No days added yet.'}</p>
                   )}
                 </div>
               </form>
               <div className="p-6 border-t mt-auto flex justify-end gap-3 bg-slate-50">
-                <button type="button" onClick={handleCloseModal} className="px-6 py-2 text-slate-600 font-bold hover:bg-slate-200 rounded">Cancel</button>
+                <button type="button" onClick={handleCloseModal} className="px-6 py-2 text-slate-600 font-bold hover:bg-slate-200 rounded">{activeAdminLang === 'mn' ? 'Болих' : 'Cancel'}</button>
                 <button type="submit" form="tripForm" disabled={loading || uploadingImage} className="px-6 py-2 bg-blue-600 text-white font-bold rounded hover:bg-blue-700 disabled:opacity-50">
-                  {loading ? "Saving..." : "Save Trip"}
+                  {loading ? (activeAdminLang === 'mn' ? "Хадгалж байна..." : "Saving...") : (activeAdminLang === 'mn' ? "Хадгалах" : "Save Trip")}
                 </button>
               </div>
             </motion.div>
@@ -835,30 +971,30 @@ export default function TripsManager({ initialTrips }: { initialTrips: Trip[] })
   );
 }
 // Helper (Standard)
-const TrilingualInput: React.FC<TrilingualInputProps> = ({ label, field, value, onChange, isTextarea = false }) => {
+const TrilingualInput: React.FC<TrilingualInputProps & { activeLang: Language }> = ({ label, field, value, onChange, activeLang, isTextarea = false }) => {
   const currentField = field || 'title';
   const InputComponent = isTextarea ? 'textarea' : 'input';
   return (
     <div className="mb-2">
-      <label className="block text-xs font-bold text-slate-500 mb-1">{label}</label>
+      <label className="block text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1.5">{label}</label>
       <div className="grid grid-cols-1 md:grid-cols-3 gap-2">
-        <InputComponent value={value?.mn || ''} onChange={(e) => onChange(currentField, 'mn', e.target.value)} placeholder="MN" className="w-full border p-2 rounded text-sm focus:ring-2 focus:ring-blue-100 outline-none" rows={isTextarea ? 3 : undefined} />
-        <InputComponent value={value?.en || ''} onChange={(e) => onChange(currentField, 'en', e.target.value)} placeholder="EN" className="w-full border p-2 rounded text-sm focus:ring-2 focus:ring-blue-100 outline-none" rows={isTextarea ? 3 : undefined} />
-        <InputComponent value={value?.ko || ''} onChange={(e) => onChange(currentField, 'ko', e.target.value)} placeholder="KO" className="w-full border p-2 rounded text-sm focus:ring-2 focus:ring-blue-100 outline-none" rows={isTextarea ? 3 : undefined} />
+        <InputComponent value={value?.mn || ''} onChange={(e) => onChange(currentField, 'mn', e.target.value)} placeholder="MONGOLIAN" className={`w-full border p-2 rounded text-sm transition-all outline-none ${activeLang === 'mn' ? 'ring-2 ring-blue-500/20 border-blue-400 bg-blue-50/10' : 'bg-white'}`} rows={isTextarea ? 3 : undefined} />
+        <InputComponent value={value?.en || ''} onChange={(e) => onChange(currentField, 'en', e.target.value)} placeholder="ENGLISH" className={`w-full border p-2 rounded text-sm transition-all outline-none ${activeLang === 'en' ? 'ring-2 ring-blue-500/20 border-blue-400 bg-blue-50/10' : 'bg-white'}`} rows={isTextarea ? 3 : undefined} />
+        <InputComponent value={value?.ko || ''} onChange={(e) => onChange(currentField, 'ko', e.target.value)} placeholder="KOREAN" className={`w-full border p-2 rounded text-sm transition-all outline-none ${activeLang === 'ko' ? 'ring-2 ring-blue-500/20 border-blue-400 bg-blue-50/10' : 'bg-white'}`} rows={isTextarea ? 3 : undefined} />
       </div>
     </div>
   );
 };
-// Helper for Itinerary
-const TrilingualItinInput: React.FC<TrilingualItinProps> = ({ label, value, onChange, isTextarea = false }) => {
+
+const TrilingualItinInput: React.FC<TrilingualItinProps & { activeLang: Language }> = ({ label, value, onChange, activeLang, isTextarea = false }) => {
   const InputComponent = isTextarea ? 'textarea' : 'input';
   return (
     <div className="mb-2">
-      <label className="block text-xs font-bold text-slate-500 mb-1">{label}</label>
+      <label className="block text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1.5">{label}</label>
       <div className="grid grid-cols-1 md:grid-cols-3 gap-2">
-        <InputComponent value={value?.mn || ''} onChange={(e) => onChange('mn', e.target.value)} placeholder="MN" className="w-full border p-2 rounded text-sm focus:ring-2 focus:ring-blue-100 outline-none" rows={isTextarea ? 3 : undefined} />
-        <InputComponent value={value?.en || ''} onChange={(e) => onChange('en', e.target.value)} placeholder="EN" className="w-full border p-2 rounded text-sm focus:ring-2 focus:ring-blue-100 outline-none" rows={isTextarea ? 3 : undefined} />
-        <InputComponent value={value?.ko || ''} onChange={(e) => onChange('ko', e.target.value)} placeholder="KO" className="w-full border p-2 rounded text-sm focus:ring-2 focus:ring-blue-100 outline-none" rows={isTextarea ? 3 : undefined} />
+        <InputComponent value={value?.mn || ''} onChange={(e: any) => onChange('mn', e.target.value)} placeholder="MONGOLIAN" className={`w-full border p-2 rounded text-sm transition-all outline-none ${activeLang === 'mn' ? 'ring-2 ring-blue-500/20 border-blue-400 bg-blue-50/10' : 'bg-white'}`} rows={isTextarea ? 3 : undefined} />
+        <InputComponent value={value?.en || ''} onChange={(e: any) => onChange('en', e.target.value)} placeholder="ENGLISH" className={`w-full border p-2 rounded text-sm transition-all outline-none ${activeLang === 'en' ? 'ring-2 ring-blue-500/20 border-blue-400 bg-blue-50/10' : 'bg-white'}`} rows={isTextarea ? 3 : undefined} />
+        <InputComponent value={value?.ko || ''} onChange={(e: any) => onChange('ko', e.target.value)} placeholder="KOREAN" className={`w-full border p-2 rounded text-sm transition-all outline-none ${activeLang === 'ko' ? 'ring-2 ring-blue-500/20 border-blue-400 bg-blue-50/10' : 'bg-white'}`} rows={isTextarea ? 3 : undefined} />
       </div>
     </div>
   );

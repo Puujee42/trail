@@ -32,6 +32,7 @@ export async function generateMetadata(props: { params: Promise<{ lang: Locale }
         'x-default': `${baseUrl}/mn`,
       }
     }
+
   };
 }
 
@@ -59,7 +60,7 @@ export default async function Home(props: { params: Promise<{ lang: Locale }> })
       />
       {/* Load Hero independently */}
       <Suspense fallback={<div className="h-screen w-full bg-slate-900 animate-pulse" />}>
-        <HeroWrapper />
+        <HeroWrapper lang={params.lang} />
       </Suspense>
 
       {/* Load Featured Trips independently */}

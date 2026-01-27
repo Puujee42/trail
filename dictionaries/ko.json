@@ -65,5 +65,69 @@
     "rewards": {
         "title": "리워드 프로그램",
         "description": "포인트를 적립하고 독점적인 여행 혜택을 받으세요."
+    },
+    "customTrip": {
+        "header": {
+            "title": "나만의 여행 만들기",
+            "subtitle": "\"당신의 호기심과 리듬에 맞춘 맞춤형 원정.\""
+        },
+        "travelParty": {
+            "title": "여행 인원",
+            "subtitle": "누가 여행합니까?",
+            "adults": "성인",
+            "adultsSub": "12세 이상",
+            "children": "어린이",
+            "childrenSub": "2-11세",
+            "infants": "유아",
+            "infantsSub": "2세 미만"
+        },
+        "hotelStyle": {
+            "title": "숙박 스타일",
+            "subtitle": "어디서 쉬고 싶으신가요?",
+            "options": {
+                "5stars": {
+                    "title": "5성급",
+                    "desc": "프리미엄 럭셔리 및 최상급 서비스; $180+/객실"
+                },
+                "4stars": {
+                    "title": "4성급",
+                    "desc": "높은 편안함과 중심지 위치; $100-180/객실"
+                },
+                "3stars": {
+                    "title": "3성급",
+                    "desc": "신뢰할 수 있는 수준 및 합리적인 가격; $60-100/객실"
+                },
+                "self": {
+                    "title": "개별 예약",
+                    "desc": "직접 숙소를 예약하겠습니다"
+                }
+            }
+        },
+        "interests": {
+            "title": "관심사",
+            "subtitle": "무엇에 관심이 있으신가요?",
+            "items": {
+                "nature": "자연과 야생",
+                "iconic": "상징적인 명소",
+                "adventure": "모험",
+                "history": "역사",
+                "local": "현지 생활",
+                "photography": "사진",
+                "hiking": "하이킹"
+            }
+        },
+        "details": {
+            "arrivalDate": "도착 날짜",
+            "budget": "1인당 예산 ($)",
+            "budgetPlaceholder": "예: 2500",
+            "narrative": "여행 내러티브",
+            "narrativePlaceholder": "이 여행에 대한 구체적인 꿈이나 요구 사항을 공유해 주세요..."
+        },
+        "contact": {
+            "title": "개인 정보",
+            "namePlaceholder": "성명",
+            "emailPlaceholder": "이메일 주소"
+        },
+        "submit": "문의 보내기"
     }
 }

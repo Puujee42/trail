@@ -19,8 +19,16 @@ export interface TripDate {
 }
 export interface ItineraryItem {
   day: number;
-  title: LocalizedString; // Changed from string
-  desc: LocalizedString;  // Changed from string
+  title: LocalizedString;
+  desc: LocalizedString;
+  accommodation?: string;
+  meals?: { B: boolean; L: boolean; D: boolean };
+  B?: boolean;
+  L?: boolean;
+  D?: boolean;
+  imageUrl?: string;
+  hotelCost?: number;
+  transportCost?: number;
 }
 export interface LocalizedPrice {
   mn: number;
@@ -31,12 +39,12 @@ export interface Trip {
   _id: string;
   type?: string;
   region?: string;
-  
+
   // Update these to LocalizedString
   title: LocalizedString;
   location: LocalizedString;
   duration: LocalizedString;
-  description?: LocalizedString; 
+  description?: LocalizedString;
   ageGroup?: LocalizedString;
 
   category: string;
@@ -60,6 +68,7 @@ export interface Trip {
   itinerary?: ItineraryItem[];
   availableDates?: { date: string; status: string; isFull?: boolean }[]; // New flexible dates
   allowCustomDate?: boolean; // Enable/Disable "Plan your own dates"
+  season_availability?: string; // e.g., "Year around", "10 Jun - 10 Sep"
   dates: TripDate[];
 }
 function mapTrip(doc: any): Trip {
@@ -77,10 +86,10 @@ function mapTrip(doc: any): Trip {
 export async function getAllTrips() {
   const client = await clientPromise;
   const collection = client.db(DB_NAME).collection(COLLECTION);
-  
+
   const trips = await collection
     .find({})
-    .sort({ featured: -1, _id: -1 }) 
+    .sort({ featured: -1, _id: -1 })
     .toArray();
 
   return trips.map(mapTrip);
@@ -90,7 +99,7 @@ export async function getAllTrips() {
 export async function getTripsByType(type: string) {
   const client = await clientPromise;
   const collection = client.db(DB_NAME).collection(COLLECTION);
-  
+
   const trips = await collection
     .find({ type: type })
     .toArray();
@@ -102,7 +111,7 @@ export async function getTripsByType(type: string) {
 export async function getTripsByRegion(region: string) {
   const client = await clientPromise;
   const collection = client.db(DB_NAME).collection(COLLECTION);
-  
+
   const trips = await collection
     .find({ region: region })
     .toArray();
@@ -123,7 +132,7 @@ export async function getMongoliaTrips() {
 export async function getFeaturedTrips() {
   const client = await clientPromise;
   const collection = client.db(DB_NAME).collection(COLLECTION);
-  
+
   const trips = await collection
     .find({ featured: true })
     .limit(5)
@@ -136,10 +145,10 @@ export async function getFeaturedTrips() {
 export async function getRecentTrips() {
   const client = await clientPromise;
   const collection = client.db(DB_NAME).collection(COLLECTION);
-  
+
   const trips = await collection
     .find({})
-    .sort({ _id: -1 }) 
+    .sort({ _id: -1 })
     .limit(6)
     .toArray();
 
@@ -165,10 +174,10 @@ export async function getSoloTrips() {
 export async function getSaleTrips() {
   const client = await clientPromise;
   const collection = client.db(DB_NAME).collection(COLLECTION);
-  
+
   const trips = await collection
-    .find({ 
-      oldPrice: { $exists: true, $ne: null } 
+    .find({
+      oldPrice: { $exists: true, $ne: null }
     })
     .sort({ price: 1 })
     .toArray();

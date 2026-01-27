@@ -10,6 +10,9 @@
   },
   "dependencies": {
     "@clerk/nextjs": "^6.35.5",
+    "@dnd-kit/core": "^6.3.1",
+    "@dnd-kit/sortable": "^10.0.0",
+    "@dnd-kit/utilities": "^3.2.2",
     "@formatjs/intl-localematcher": "^0.7.5",
     "@tiptap/extension-image": "^3.12.1",
     "@tiptap/react": "^3.12.1",
