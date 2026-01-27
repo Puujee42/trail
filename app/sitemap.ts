@@ -1,73 +1,90 @@
+import { MetadataRoute } from 'next';
+import { getAllTrips } from '@/lib/mongo/trips';
+import { getPosts } from '@/lib/mongo/blog';
 
-  import { MetadataRoute } from 'next';
-  import { getAllTrips } from '@/lib/mongo/trips';
-  import { getPosts } from '@/lib/mongo/blog';
+export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
+  const baseUrl = 'https://www.mongoltrail.com';
+  const locales = ['mn', 'en', 'ko'];
+  
+  // 1. Absolute Root Homepage (The very first entry)
+  const homepages: MetadataRoute.Sitemap = [
+    {
+      url: baseUrl,
+      lastModified: new Date(),
+      changeFrequency: 'daily',
+      priority: 1,
+    }
+  ];
 
-  export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-    const baseUrl = 'https://www.mongoltrail.com';
+  // 2. Localized Homepages (e.g., /mn, /en, /ko)
+  for (const locale of locales) {
+    homepages.push({
+      url: `${baseUrl}/${locale}`,
+      lastModified: new Date(),
+      changeFrequency: 'daily',
+      priority: 1,
+    });
+  }
 
-    // 1. Static Routes   
-    const locales = ['mn', 'en', 'ko'];
-    const routes = [
-      '',
-      '/about',
-      '/packages',
-      '/packages/europe',
-      '/packages/mongolia',
-      '/blog',
-      '/contact',
-      '/faq',
-    ];
+  // 3. Other Static Routes
+  const otherRoutes = [
+    '/about',
+    '/packages',
+    '/packages/europe',
+    '/packages/mongolia',
+    '/blog',
+    '/contact',
+    '/faq',
+  ];
 
-    // 1. Static Routes with Localized Variants
-    const staticRoutes: MetadataRoute.Sitemap = [];
+  const staticRoutes: MetadataRoute.Sitemap = [];
+  for (const route of otherRoutes) {
+    for (const locale of locales) {
+      staticRoutes.push({
+        url: `${baseUrl}/${locale}${route}`,
+        lastModified: new Date(),
+        changeFrequency: route === '/contact' ? 'yearly' : 'monthly',
+        priority: 0.8,
+      });
+    }
+  }
 
-    for (const route of routes) {
+  // 4. Dynamic Routes: Trips
+  let tripRoutes: MetadataRoute.Sitemap = [];
+  try {
+    const trips = await getAllTrips();
+    for (const trip of trips) {
       for (const locale of locales) {
-        staticRoutes.push({
-          url: `${baseUrl}/${locale}${route}`,
+        tripRoutes.push({
+          url: `${baseUrl}/${locale}/tours/${trip._id}`,
           lastModified: new Date(),
-          changeFrequency: route === '' ? 'daily' : route === '/contact' ? 'yearly' : 'monthly',
-          priority: route === '' ? 1 : 0.8,
+          changeFrequency: 'weekly',
+          priority: 0.8,
         });
       }
     }
-
-    // 2. Dynamic Routes: Trips
-    let tripRoutes: MetadataRoute.Sitemap = [];
-    try {
-      const trips = await getAllTrips();
-      for (const trip of trips) {
-        for (const locale of locales) {
-          tripRoutes.push({
-            url: `${baseUrl}/${locale}/tours/${trip._id}`,
-            lastModified: new Date(),
-            changeFrequency: 'weekly',
-            priority: 0.8,
-          });
-        }
-      }
-    } catch (error) {
-      console.error('Sitemap Error: Failed to fetch trips', error);
-    }
-
-    // 3. Dynamic Routes: Blog Posts
-    let blogRoutes: MetadataRoute.Sitemap = [];
-    try {
-      const posts = await getPosts();
-      for (const post of posts) {
-        for (const locale of locales) {
-          blogRoutes.push({
-            url: `${baseUrl}/${locale}/blog/${post._id}`,
-            lastModified: new Date(post.date || new Date()),
-            changeFrequency: 'monthly',
-            priority: 0.6,
-          });
-        }
-      }
-    } catch (error) {
-      console.error('Sitemap Error: Failed to fetch posts', error);
-    }
-
-    return [...staticRoutes, ...tripRoutes, ...blogRoutes];
+  } catch (error) {
+    console.error('Sitemap Error: Failed to fetch trips', error);
   }
+
+  // 5. Dynamic Routes: Blog Posts
+  let blogRoutes: MetadataRoute.Sitemap = [];
+  try {
+    const posts = await getPosts();
+    for (const post of posts) {
+      for (const locale of locales) {
+        blogRoutes.push({
+          url: `${baseUrl}/${locale}/blog/${post._id}`,
+          lastModified: new Date(post.date || new Date()),
+          changeFrequency: 'monthly',
+          priority: 0.6,
+        });
+      }
+    }
+  } catch (error) {
+    console.error('Sitemap Error: Failed to fetch posts', error);
+  }
+
+  // Combine in order: Homepages FIRST, then static, then trips, then blogs
+  return [...homepages, ...staticRoutes, ...tripRoutes, ...blogRoutes];
+}
