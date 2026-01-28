@@ -41,11 +41,21 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
     description = `Explore ${tourName} with Mongol Trail. ${duration} private expedition${highlightsText}. Book your 2025 adventure today.`;
   }
 
+  // Entity Keyword Injection
+  const keywords = [
+    trip.title[lang] || trip.title.en,
+    trip.location[lang] || trip.location.en,
+    ...(trip.tags || []),
+    ...(trip.highlights?.map(h => h[lang] || h.en).slice(0, 5) || []),
+    'Mongolia Travel', 'Adventure Tours', 'Gobi Desert', 'Mongol Trail'
+  ].filter(Boolean).join(', ');
+
   const baseUrl = 'https://www.mongoltrail.com';
 
   return {
     title,
     description,
+    keywords,
     alternates: {
       canonical: `${baseUrl}/${lang}/tours/${id}`,
       languages: {
@@ -147,18 +157,30 @@ export default async function TourPage({ params }: PageProps) {
     itinerary: trip.itinerary?.map(item => ({
       '@type': 'City',
       name: item.title[lang] || item.title.en,
-      description: item.desc[lang] || item.desc.en
+      description: item.desc[lang] || item.desc.en,
+      url: `https://www.mongoltrail.com/${lang}/destinations/${encodeURIComponent((item.title[lang] || item.title.en).toLowerCase().replace(/\s+/g, '-'))}`
     })),
     offers: {
       '@type': 'Offer',
       price: typeof trip.price === 'number' ? trip.price : (trip.price?.[lang] || trip.price?.en || 0),
       priceCurrency: 'USD',
-      url: `${baseUrl}/${lang}/tours/${id}`
+      url: `${baseUrl}/${lang}/tours/${id}`,
+      availability: 'https://schema.org/InStock',
+      validFrom: new Date().toISOString()
     },
     provider: {
       '@type': 'TravelAgency',
       name: 'Mongol Trail',
-      url: 'https://www.mongoltrail.com'
+      url: 'https://www.mongoltrail.com',
+      logo: 'https://www.mongoltrail.com/logo.jpg',
+      image: 'https://www.mongoltrail.com/logo.jpg',
+      telephone: '+976-99123456',
+      address: {
+        '@type': 'PostalAddress',
+        streetAddress: 'Sukhbaatar District',
+        addressLocality: 'Ulaanbaatar',
+        addressCountry: 'MN'
+      }
     }
   };
 

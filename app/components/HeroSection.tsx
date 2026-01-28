@@ -4,11 +4,11 @@ import { useEffect, useState } from "react";
 import { motion, useScroll, useTransform } from "framer-motion";
 import CountUp from "react-countup";
 import { TypeAnimation } from "react-type-animation";
-import { 
-  FaPlaneDeparture, 
-  FaMapMarkedAlt, 
-  FaSuitcaseRolling, 
-  FaPassport, 
+import {
+  FaPlaneDeparture,
+  FaMapMarkedAlt,
+  FaSuitcaseRolling,
+  FaPassport,
   FaSearch,
   FaStar,
   FaUmbrellaBeach,
@@ -45,8 +45,8 @@ interface Content {
 
 const HeroSection = () => {
   // 👇 2. Use the hook to get current language
-  const { language } = useLanguage(); 
-  
+  const { language } = useLanguage();
+
   const [hasScrolled, setHasScrolled] = useState(false);
   const { scrollY } = useScroll();
 
@@ -131,23 +131,23 @@ const HeroSection = () => {
 
   return (
     <section className="relative min-h-[100vh] flex flex-col items-center justify-center overflow-hidden bg-white pt-20">
-      
+
       {/* ────────────────── ATMOSPHERIC BACKGROUND ────────────────── */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
         <div className="absolute inset-0 bg-gradient-to-b from-sky-300 via-blue-50 to-white" />
-        
+
         <motion.div
           style={{ y: yOrb }}
           className="absolute top-[-10%] right-[-5%] w-[600px] h-[600px] bg-yellow-200/40 rounded-full blur-[100px] mix-blend-screen"
         />
 
-        <motion.div 
+        <motion.div
           style={{ y: yClouds }}
           animate={{ x: [-50, 50] }}
           transition={{ duration: 20, repeat: Infinity, repeatType: "mirror", ease: "easeInOut" }}
           className="absolute top-[20%] left-[-10%] w-[400px] h-[400px] bg-white/60 rounded-full blur-[80px]"
         />
-        <motion.div 
+        <motion.div
           style={{ y: yClouds }}
           animate={{ x: [50, -50] }}
           transition={{ duration: 25, repeat: Infinity, repeatType: "mirror", ease: "easeInOut" }}
@@ -169,13 +169,13 @@ const HeroSection = () => {
 
       {/* ────────────────── MAIN CONTENT ────────────────── */}
       <div className="container relative z-10 px-4 py-10 text-center">
-        
+
         {/* Floating Badge */}
         <motion.div
           initial={{ y: -30, opacity: 0 }}
           animate={{ y: 0, opacity: 1 }}
-          transition={{ delay: 0.2 }}
-          className="inline-flex items-center gap-2 px-5 py-2 rounded-full bg-white/60 backdrop-blur-md border border-white/50 text-sky-700 text-xs font-bold uppercase tracking-widest shadow-sm mb-8"
+          transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }} // Apple-like spring ease
+          className="inline-flex items-center gap-2 px-5 py-2 rounded-full bg-white/70 backdrop-blur-xl border border-white/50 text-sky-700 text-xs font-bold uppercase tracking-widest shadow-lg shadow-sky-100/20 mb-8"
         >
           <FaStar className="text-yellow-400" />
           {t.badge}
@@ -183,20 +183,16 @@ const HeroSection = () => {
 
         {/* Typography */}
         <div className="max-w-5xl mx-auto mb-8">
-          <motion.h1 
-            initial={{ opacity: 0, scale: 0.95 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ duration: 0.8 }}
-            className="text-5xl md:text-7xl lg:text-8xl font-black text-slate-800 leading-tight tracking-tight drop-shadow-sm"
+          <motion.h1
+            initial={{ opacity: 0, scale: 0.95, y: 10 }}
+            animate={{ opacity: 1, scale: 1, y: 0 }}
+            transition={{ duration: 0.8, ease: "easeOut" }}
+            className="text-5xl md:text-7xl lg:text-8xl font-black text-slate-800 leading-tight tracking-tight drop-shadow-sm will-change-transform"
           >
             {t.headlinePrefix} <br />
             <span className="text-transparent bg-clip-text bg-gradient-to-r from-sky-500 to-blue-600">
-               {/* 
-                  KEY PROP IS IMPORTANT: 
-                  When language changes, 'key' changes, forcing TypeAnimation to restart with new words 
-               */}
-               <TypeAnimation
-                key={language} 
+              <TypeAnimation
+                key={language}
                 sequence={t.typeSequence}
                 speed={50}
                 repeat={Infinity}
@@ -209,7 +205,7 @@ const HeroSection = () => {
         <motion.p
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.4 }}
+          transition={{ delay: 0.2, duration: 0.8 }}
           className="text-lg md:text-xl text-slate-500 max-w-2xl mx-auto mb-12 font-medium leading-relaxed"
         >
           {t.subheadline}
@@ -219,35 +215,32 @@ const HeroSection = () => {
         <motion.div
           initial={{ y: 40, opacity: 0 }}
           animate={{ y: 0, opacity: 1 }}
-          transition={{ delay: 0.6 }}
+          transition={{ delay: 0.4, duration: 0.8, ease: "easeOut" }}
           className="max-w-3xl mx-auto mb-16 relative z-20"
         >
           {/* Search Container */}
-          <div className="p-2 bg-white rounded-3xl sm:rounded-full shadow-[0_20px_50px_rgba(8,112,184,0.15)] border border-slate-100 flex flex-col sm:flex-row items-center gap-2">
-            
+          <div className="p-2 bg-white/80 backdrop-blur-xl rounded-3xl sm:rounded-full shadow-[0_20px_60px_rgba(8,112,184,0.12)] border border-white/60 flex flex-col sm:flex-row items-center gap-2 transition-all hover:shadow-[0_25px_70px_rgba(8,112,184,0.18)] hover:-translate-y-1">
+
             {/* Input Section */}
-            <div className="flex-1 flex items-center px-6 w-full h-14">
-              <FaSearch className="text-slate-300 mr-4 text-lg" />
+            <div className="flex-1 flex items-center px-6 w-full h-14 border-b sm:border-b-0 sm:border-r border-slate-100 sm:border-slate-100">
+              <FaSearch className="text-sky-500 mr-4 text-lg" />
               <div className="flex flex-col items-start w-full">
                 <label className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">{t.searchLabelDest}</label>
-                <input 
-                  type="text" 
-                  placeholder={t.searchPlaceholder} 
+                <input
+                  type="text"
+                  placeholder={t.searchPlaceholder}
                   className="w-full bg-transparent outline-none text-slate-700 font-bold placeholder:font-normal placeholder:text-slate-400"
                 />
               </div>
             </div>
 
-            {/* Divider */}
-            <div className="hidden sm:block w-px h-8 bg-slate-200 mx-2" />
-
             {/* Date Section (Visual Only) */}
             <div className="hidden sm:flex flex-1 items-center px-4 w-full h-14">
               <div className="flex flex-col items-start w-full cursor-pointer hover:bg-slate-50 rounded-lg p-2 transition-colors">
-                 <label className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">{t.searchLabelDate}</label>
-                 <span className="text-slate-700 font-semibold text-sm flex items-center gap-2">
-                    {t.searchDateValue}
-                 </span>
+                <label className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">{t.searchLabelDate}</label>
+                <span className="text-slate-700 font-semibold text-sm flex items-center gap-2">
+                  {t.searchDateValue}
+                </span>
               </div>
             </div>
 
@@ -257,13 +250,16 @@ const HeroSection = () => {
             </button>
           </div>
 
-          {/* Quick Tags below search */}
+          {/* Quick Tags below search - STAGGERED ENTRANCE */}
           <div className="flex flex-wrap justify-center gap-3 mt-6">
             {t.tags.map((tag, i) => (
-              <motion.span 
-                key={i} 
-                whileHover={{ scale: 1.05 }}
-                className="flex items-center gap-2 text-sm text-slate-500 bg-white/50 px-4 py-2 rounded-full border border-slate-200 hover:border-sky-300 hover:text-sky-600 hover:bg-white cursor-pointer transition-all shadow-sm"
+              <motion.span
+                key={i}
+                initial={{ opacity: 0, scale: 0.8, y: 10 }}
+                animate={{ opacity: 1, scale: 1, y: 0 }}
+                transition={{ delay: 0.6 + (i * 0.1), duration: 0.5 }}
+                whileHover={{ scale: 1.05, y: -2 }}
+                className="flex items-center gap-2 text-sm text-slate-600 bg-white/60 backdrop-blur-md px-4 py-2 rounded-full border border-white/50 hover:border-sky-300 hover:text-sky-600 hover:bg-white cursor-pointer transition-all shadow-sm"
               >
                 <tag.icon /> {tag.text}
               </motion.span>
@@ -271,24 +267,35 @@ const HeroSection = () => {
           </div>
         </motion.div>
 
-        {/* ────────────────── FLOATING STATS ────────────────── */}
+        {/* ────────────────── FLOATING STATS: ANTIGRAVITY ────────────────── */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-4xl mx-auto">
           {t.stats.map((stat, i) => (
             <motion.div
               key={i}
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.8 + i * 0.1 }}
-              whileHover={{ y: -5 }}
-              className="bg-white/40 backdrop-blur-md border border-white/60 p-6 rounded-2xl shadow-sm hover:shadow-md transition-all group"
+              initial={{ opacity: 0, y: 40 }}
+              animate={{
+                opacity: 1,
+                y: [0, -15, 0] // Physics-based float
+              }}
+              transition={{
+                opacity: { delay: 0.8 + i * 0.1, duration: 0.8 },
+                y: {
+                  delay: 0.8 + i * 0.1, // Stagger start
+                  duration: 4 + i, // Randomize duration for natural feel (4s, 5s, 6s)
+                  repeat: Infinity,
+                  ease: "easeInOut"
+                }
+              }}
+              whileHover={{ scale: 1.05, y: -5, transition: { duration: 0.3 } }}
+              className="bg-white/40 backdrop-blur-xl border border-white/60 p-6 rounded-3xl shadow-lg hover:shadow-xl transition-all group will-change-transform"
             >
-              <div className="flex items-center justify-center w-12 h-12 bg-sky-100 text-sky-600 rounded-full mx-auto mb-3 group-hover:scale-110 transition-transform">
+              <div className="flex items-center justify-center w-12 h-12 bg-gradient-to-br from-sky-100 to-white text-sky-600 rounded-full mx-auto mb-3 shadow-inner group-hover:scale-110 transition-transform">
                 <stat.icon size={20} />
               </div>
               <div className="text-3xl font-black text-slate-800 mb-1">
                 <CountUp end={stat.end} duration={2.5} separator="," />{stat.label.includes('%') || (language === "mn" ? stat.label === 'Сэтгэл ханамж' : stat.label === 'Satisfaction') ? '%' : '+'}
               </div>
-              <div className="text-sm font-bold text-slate-400 uppercase tracking-wide">
+              <div className="text-xs font-bold text-slate-500 uppercase tracking-widest">
                 {stat.label}
               </div>
             </motion.div>
@@ -299,24 +306,24 @@ const HeroSection = () => {
 
       {/* ────────────────── DECORATIVE ELEMENTS ────────────────── */}
       <motion.div
-        animate={{ 
-          x: ["-10vw", "110vw"], 
+        animate={{
+          x: ["-10vw", "110vw"],
           y: ["10vh", "-40vh"],
           rotate: [10, -5]
         }}
-        transition={{ 
-          duration: 15, 
-          repeat: Infinity, 
+        transition={{
+          duration: 25, // Slower for premium feel 
+          repeat: Infinity,
           ease: "linear",
-          delay: 1 
+          delay: 1
         }}
-        className="absolute top-1/2 left-0 pointer-events-none z-0 text-slate-900/5"
+        className="absolute top-1/2 left-0 pointer-events-none z-0 text-slate-900/5 blur-[1px]"
       >
         <FaPlaneDeparture size={200} />
       </motion.div>
 
       <div className="absolute bottom-0 left-0 w-full h-32 bg-gradient-to-t from-white to-transparent pointer-events-none" />
-      
+
     </section>
   );
 };

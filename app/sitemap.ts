@@ -62,7 +62,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
           url: `${baseUrl}/${locale}/tours/${trip._id}`,
           lastModified: new Date(),
           changeFrequency: 'weekly',
-          priority: 0.8,
+          priority: 0.9,
         });
       }
     }
@@ -88,6 +88,25 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     console.error('Sitemap Error: Failed to fetch posts', error);
   }
 
-  // Combine in order: Homepages FIRST, then static, then trips, then blogs
-  return [...homepages, ...staticRoutes, ...tripRoutes, ...blogRoutes];
+  // 6. Dynamic Routes: Destinations (pSEO)
+  let destinationRoutes: MetadataRoute.Sitemap = [];
+  try {
+    const { getAllDestinations } = await import('@/lib/mongo/destinations');
+    const destinations = await getAllDestinations();
+    for (const dest of destinations) {
+      for (const locale of locales) {
+        destinationRoutes.push({
+          url: `${baseUrl}/${locale}/destinations/${dest.slug}`,
+          lastModified: new Date(),
+          changeFrequency: 'weekly',
+          priority: 0.8,
+        });
+      }
+    }
+  } catch (error) {
+    console.error('Sitemap Error: Failed to fetch destinations', error);
+  }
+
+  // Combine in order: Homepages FIRST, then static, then trips, then destinations, then blogs
+  return [...homepages, ...staticRoutes, ...tripRoutes, ...destinationRoutes, ...blogRoutes];
 }

@@ -2,7 +2,7 @@
 import { ImageResponse } from 'next/og';
 import { getTripById } from '@/lib/mongo/trips';
 
-export const runtime = 'edge';
+export const runtime = 'nodejs';
 
 // Image metadata
 export const alt = 'Mongol Trail Tour Detail';
