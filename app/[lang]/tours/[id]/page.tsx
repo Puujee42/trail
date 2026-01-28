@@ -17,8 +17,29 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
 
   if (!trip) return {};
 
-  const title = `${trip.title[lang] || trip.title.en} | Mongol Trail`;
-  const description = trip.description?.[lang] || trip.description?.en || `Join our ${trip.title[lang] || trip.title.en} tour. Explore ${trip.location[lang] || trip.location.en} for ${trip.duration[lang] || trip.duration.en}. Book your adventure with Mongol Trail.`;
+  const title = `${trip.title[lang] || trip.title.en}`;
+
+  // Smart description logic: Use custom description or auto-generate
+  let description: string;
+
+  if (trip.description?.[lang] || trip.description?.en) {
+    description = trip.description[lang] || trip.description.en || '';
+  } else {
+    // Auto-generate description from highlights
+    const tourName = trip.title[lang] || trip.title.en;
+    const duration = trip.duration[lang] || trip.duration.en;
+
+    let highlightsText = '';
+    if (trip.highlights && trip.highlights.length > 0) {
+      const keyHighlights = trip.highlights
+        .slice(0, 2)
+        .map(h => h[lang] || h.en)
+        .join(', ');
+      highlightsText = ` including ${keyHighlights}`;
+    }
+
+    description = `Explore ${tourName} with Mongol Trail. ${duration} private expedition${highlightsText}. Book your 2025 adventure today.`;
+  }
 
   const baseUrl = 'https://www.mongoltrail.com';
 
@@ -38,6 +59,9 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
       description,
       images: [trip.image],
       url: `${baseUrl}/${lang}/tours/${id}`,
+      siteName: 'Mongol Trail',
+      locale: lang === 'mn' ? 'mn_MN' : lang === 'ko' ? 'ko_KR' : 'en_US',
+      type: 'website',
     },
     twitter: {
       card: 'summary_large_image',
@@ -75,6 +99,11 @@ export default async function TourPage({ params }: PageProps) {
       priceCurrency: 'USD',
       availability: 'https://schema.org/InStock',
       url: `${baseUrl}/${lang}/tours/${id}`,
+      offeredBy: {
+        '@type': 'TravelAgency',
+        name: 'Mongol Trail',
+        url: 'https://www.mongoltrail.com'
+      }
     },
     aggregateRating: {
       '@type': 'AggregateRating',

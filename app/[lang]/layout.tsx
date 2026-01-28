@@ -20,7 +20,7 @@ export async function generateMetadata({ params }: { params: Promise<{ lang: str
     metadataBase: new URL(baseUrl),
     title: {
       default: 'Official Mongol Trail | Your Gateway to Adventure',
-      template: '%s | Mongol Trail',
+      template: '%s | Mongol Trail - Premium Mongolia Private Tours',
     },
     description: 'Experience the ultimate adventure with Mongol Trail. We offer premier tours across Mongolia, Europe, and the world. Book your next hiking, cultural, or overland trip today.',
     keywords: [
@@ -105,25 +105,6 @@ export default async function RootLayout(props: {
   const { children } = props;
   const dict = await getDictionary(params.lang as any);
 
-  const jsonLd = {
-    '@context': 'https://schema.org',
-    '@type': 'TravelAgency',
-    name: 'Mongol Trail',
-    image: 'https://www.mongoltrail.com/logo.jpg',
-    url: 'https://www.mongoltrail.com',
-    telephone: '+976 7766-1626',
-    priceRange: '$$',
-    currenciesAccepted: 'USD, EUR, MNT, KRW',
-    paymentAccepted: 'Cash, Credit Card, Bank Transfer',
-    address: {
-      '@type': 'PostalAddress',
-      streetAddress: 'Room 502, 5th Floor, Erkhi Center, West 4 Road',
-      addressLocality: 'Ulaanbaatar',
-      postalCode: '11000',
-      addressCountry: 'MN',
-    },
-  };
-
   return (
     <ClerkProvider signInUrl={`/${params.lang}/sign-in`}
       signUpUrl={`/${params.lang}/sign-up`}>
@@ -134,10 +115,6 @@ export default async function RootLayout(props: {
           <link rel="preconnect" href="https://www.transparenttextures.com" />
         </head>
         <body className={inter.className}>
-          <script
-            type="application/ld+json"
-            dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
-          />
           <LanguageProvider initialLang={params.lang as any}>
             <CurrencyProvider>
               <Navbar dictionary={dict.nav} />

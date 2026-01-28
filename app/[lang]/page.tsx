@@ -42,6 +42,31 @@ export default async function Home(props: { params: Promise<{ lang: Locale }> })
 
   return (
     <>
+      {/* Organization Schema - Knowledge Graph */}
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify({
+            '@context': 'https://schema.org',
+            '@type': 'TravelAgency',
+            name: 'Mongol Trail',
+            url: 'https://www.mongoltrail.com',
+            logo: 'https://www.mongoltrail.com/logo.png',
+            sameAs: [
+              'https://www.facebook.com/mongoltrail',
+              'https://www.instagram.com/mongoltrail'
+            ],
+            priceRange: '$$$',
+            address: {
+              '@type': 'PostalAddress',
+              addressLocality: 'Ulaanbaatar',
+              addressCountry: 'MN'
+            }
+          })
+        }}
+      />
+
+      {/* WebSite Schema - Search Action */}
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{
