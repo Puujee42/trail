@@ -65,13 +65,15 @@ const Navbar: React.FC<{ dictionary: any }> = ({ dictionary }) => {
           </div>
 
           {/* RIGHT: Icons & Auth */}
-          <div className="flex items-center gap-6">
+          <div className="flex items-center gap-4">
+
+            {/* Mobile: Language Switcher ALWAYS VISIBLE */}
+            <LanguageDropdown language={language} setLanguage={setLanguage} />
+
             <div className="hidden sm:flex items-center gap-6">
               <button className="text-slate-600 hover:text-sky-500 transition-colors">
                 <Search size={20} strokeWidth={1.5} />
               </button>
-
-              <LanguageDropdown language={language} setLanguage={setLanguage} />
 
               <SignedIn>
                 <UserButton afterSignOutUrl={`/${language}`} />

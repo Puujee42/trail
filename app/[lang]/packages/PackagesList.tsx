@@ -10,6 +10,8 @@ import { FaArrowRight, FaClock, FaFire, FaMapMarkerAlt, FaSearch, FaStar } from 
 /* ────────────────────── Static Constants ────────────────────── */
 const categories = [
   { id: "all", label: { mn: "Бүгд", en: "All", ko: "전체" } },
+  { id: "mongolia", label: { mn: "Монгол", en: "Mongolia", ko: "몽골" } },
+  { id: "europe", label: { mn: "Европ", en: "Europe", ko: "유럽" } },
   { id: "nature", label: { mn: "Байгаль", en: "Nature", ko: "자연" } },
   { id: "city", label: { mn: "Хотын аялал", en: "City Tours", ko: "도시 투어" } },
   { id: "beach", label: { mn: "Далайн эрэг", en: "Beach", ko: "해변" } },
@@ -54,7 +56,12 @@ const PackagesList = ({
 
   // Filtering Logic
   const filteredPackages = packages.filter((pkg) => {
-    const matchesCategory = activeTab === "all" || pkg.category === activeTab;
+    // UPDATED: Check for region match if activeTab is a region, otherwise check category
+    const matchesRegion = (activeTab === "mongolia" || activeTab === "europe")
+      ? pkg.region?.toLowerCase() === activeTab
+      : false;
+
+    const matchesCategory = activeTab === "all" || pkg.category === activeTab || matchesRegion;
 
     // Safe access for trilingual titles/locations
     const currentTitle = pkg.title?.[language] || "";
