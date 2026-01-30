@@ -1,12 +1,20 @@
 import { MetadataRoute } from 'next';
 
 export default function robots(): MetadataRoute.Robots {
+  const baseUrl = 'https://www.mongoltrail.com';
+
   return {
-    rules: {
-      userAgent: '*',
-      allow: '/',
-      disallow: ['/admin/', '/api/'],
-    },
-    sitemap: 'https://www.mongoltrail.com/sitemap.xml',
+    rules: [
+      {
+        userAgent: ['GPTBot', 'ChatGPT-User', 'Google-Extended', 'CCBot', 'ClaudeBot'],
+        allow: '/',
+      },
+      {
+        userAgent: '*',
+        allow: '/',
+        disallow: ['/admin/', '/dashboard/', '/api/', '/sign-in/', '/sign-up/'],
+      },
+    ],
+    sitemap: `${baseUrl}/sitemap.xml`,
   };
 }
