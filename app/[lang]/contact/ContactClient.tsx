@@ -12,12 +12,16 @@ import {
 } from "react-icons/fa";
 import { useLanguage } from "../../context/LanguageContext";
 
+// @ts-ignore
+import GoogleBusinessCard, { GoogleCardLabels } from "../../components/ui/GoogleBusinessCard";
+
 /* ────────────────────── Main Page Component ────────────────────── */
 const ContactClient = () => {
     const { language } = useLanguage();
 
     const content = {
         mn: {
+            // ... existing
             headerTitlePrefix: "Бидэнтэй",
             headerTitleSuffix: "Холбогдоорой",
             headerDesc: "Таны дараагийн аяллын талаар ярилцахад бид үргэлж бэлэн. Асуух зүйл байвал доорх хэсгийг ашиглана уу.",
@@ -37,6 +41,26 @@ const ContactClient = () => {
             infoHours: "Даваа - Баасан: 09:00 - 18:00",
             infoLabels: ["Манай оффис", "Холбоо барих", "И-мэйл хаяг", "Ажиллах цагийн хуваарь"],
             mapPlaceholder: "Интерактив Газрын Зураг",
+
+            googleCard: {
+                title: "Mongol Trail (Mongol Ayalal)",
+                subtitle: "Аялал жуулчлалын агентлаг",
+                reviews: "120 Google сэтгэгдэл",
+                website: "Вэбсайт",
+                directions: "Чиглэл",
+                save: "Хадгалах",
+                call: "Залгах",
+                share: "Хуваалцах",
+                mapView: "Газрын зураг",
+                seePhotos: "Зураг үзэх",
+                address: "Улаанбаатар, Баруун 4 зам, Эрхи Төв, 5 давхар",
+                hours: "Нээлттэй",
+                phone: "+976 7766-1626",
+                suggestEdit: "Засвар санал болгох",
+                ownThisBusiness: "Энэ бизнес таных уу?",
+                openStatus: "Нээлттэй",
+                opensAt: "Хаах цаг 18:00"
+            },
 
             faqTitle: "Түгээмэл Асуултууд",
             faqDesc: "Таны асуултын хариулт энд байж магадгүй.",
@@ -68,6 +92,26 @@ const ContactClient = () => {
             infoLabels: ["Our Office", "Contact Us", "Email Address", "Working Hours"],
             mapPlaceholder: "Interactive Map",
 
+            googleCard: {
+                title: "Mongol Trail (Mongol Ayalal)",
+                subtitle: "Travel agency",
+                reviews: "120 Google reviews",
+                website: "Website",
+                directions: "Directions",
+                save: "Save",
+                call: "Call",
+                share: "Share",
+                mapView: "Map View",
+                seePhotos: "See photos",
+                address: "Room 502, 5th Floor, Erkhi Center, Ulaanbaatar",
+                hours: "Open",
+                phone: "+976 7766-1626",
+                suggestEdit: "Suggest an edit",
+                ownThisBusiness: "Own this business?",
+                openStatus: "Open",
+                opensAt: "Closes 6PM"
+            },
+
             faqTitle: "Frequently Asked Questions",
             faqDesc: "You might find your answer here.",
             faqs: [
@@ -97,6 +141,26 @@ const ContactClient = () => {
             infoHours: "월요일 - 금요일: 09:00 - 18:00",
             infoLabels: ["우리 사무실", "문의하기", "이메일 주소", "근무 시간"],
             mapPlaceholder: "인터랙티브 지도",
+
+            googleCard: {
+                title: "Mongol Trail (Mongol Ayalal)",
+                subtitle: "여행사",
+                reviews: "120 Google 리뷰",
+                website: "웹사이트",
+                directions: "길찾기",
+                save: "저장",
+                call: "전화",
+                share: "공유",
+                mapView: "지도 보기",
+                seePhotos: "사진 보기",
+                address: "울란바토르 서부 4거리, 에르키 센터 5층 502호",
+                hours: "영업 중",
+                phone: "+976 7766-1626",
+                suggestEdit: "수정 제안",
+                ownThisBusiness: "이 비즈니스의 소유주입니까?",
+                openStatus: "영업 중",
+                opensAt: "오후 6시 마감"
+            },
 
             faqTitle: "자주 묻는 질문",
             faqDesc: "여기에서 답을 찾을 수 있습니다.",
@@ -197,50 +261,71 @@ const FormInput = ({ type, placeholder }: { type: string; placeholder: string })
     />
 );
 
-// 2. Contact Info
-const ContactInfo = ({ t }: any) => (
-    <motion.div
-        initial={{ opacity: 0, x: 50 }}
-        animate={{ opacity: 1, x: 0 }}
-        transition={{ duration: 0.8, ease: "easeOut" }}
-        className="space-y-8"
-    >
-        {/* Map Placeholder */}
-        <div className="bg-white rounded-3xl p-4 shadow-lg border border-slate-100">
-            <div className="bg-slate-100 rounded-2xl h-64 flex items-center justify-center text-slate-400 font-medium">
-                {t.mapPlaceholder}
-            </div>
-        </div>
+// 2. Contact Info with Google Business Card Integration
+const ContactInfo = ({ t }: any) => {
+    // Labels for the Google Card based on language
+    const googleCardLabels = t.googleCard || {
+        title: "Mongol Trail (Mongol Ayalal)",
+        subtitle: "Travel agency",
+        reviews: "120 Google reviews",
+        website: "Website",
+        directions: "Directions",
+        save: "Save",
+        call: "Call",
+        share: "Share",
+        mapView: "Map View",
+        seePhotos: "See photos",
+        address: t.infoAddress,
+        hours: "Open",
+        phone: t.infoPhone,
+        suggestEdit: "Suggest an edit",
+        ownThisBusiness: "Own this business?",
+        openStatus: "Open",
+        opensAt: "Closes 6PM"
+    };
 
-        {/* Contact Details */}
-        <div className="space-y-6">
-            <InfoBlock
-                icon={FaMapMarkerAlt}
-                title={t.infoLabels[0]}
-                text={t.infoAddress}
-                live={false}
-            />
-            <InfoBlock
-                icon={FaPhoneAlt}
-                title={t.infoLabels[1]}
-                text={t.infoPhone}
-                live={true}
-            />
-            <InfoBlock
-                icon={FaEnvelope}
-                title={t.infoLabels[2]}
-                text={t.infoEmail}
-                live={true}
-            />
-            <InfoBlock
-                icon={FaClock}
-                title={t.infoLabels[3]}
-                text={t.infoHours}
-                live={false}
-            />
-        </div>
-    </motion.div>
-);
+    return (
+        <motion.div
+            initial={{ opacity: 0, x: 50 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ duration: 0.8, ease: "easeOut" }}
+            className="space-y-8"
+        >
+            {/* Google Business Card instead of generic placeholder */}
+            <div className="flex justify-center lg:justify-end">
+                <GoogleBusinessCard labels={googleCardLabels} className="shadow-2xl shadow-slate-200" />
+            </div>
+
+            {/* Contact Details */}
+            <div className="space-y-6">
+                <InfoBlock
+                    icon={FaMapMarkerAlt}
+                    title={t.infoLabels[0]}
+                    text={t.infoAddress}
+                    live={false}
+                />
+                <InfoBlock
+                    icon={FaPhoneAlt}
+                    title={t.infoLabels[1]}
+                    text={t.infoPhone}
+                    live={true}
+                />
+                <InfoBlock
+                    icon={FaEnvelope}
+                    title={t.infoLabels[2]}
+                    text={t.infoEmail}
+                    live={true}
+                />
+                <InfoBlock
+                    icon={FaClock}
+                    title={t.infoLabels[3]}
+                    text={t.infoHours}
+                    live={false}
+                />
+            </div>
+        </motion.div>
+    );
+};
 
 const InfoBlock = ({ icon: Icon, title, text, live }: any) => (
     <div className="flex items-start gap-4">
