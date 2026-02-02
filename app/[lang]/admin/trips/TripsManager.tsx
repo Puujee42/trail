@@ -21,6 +21,7 @@ interface ItineraryItem {
   day: number;
   title: LocalizedString;
   desc: LocalizedString;
+  imageUrl?: string;
 }
 interface TripDate {
   id: string;
@@ -164,6 +165,7 @@ export default function TripsManager({ initialTrips }: { initialTrips: Trip[] })
   const [formData, setFormData] = useState<Partial<Trip>>(BLANK_FORM_DATA);
   const [loading, setLoading] = useState(false);
   const [uploadingImage, setUploadingImage] = useState(false);
+  const [uploadingDayIndex, setUploadingDayIndex] = useState<number | null>(null);
   const [uploadingMap, setUploadingMap] = useState(false);
   const [exchangeRates, setExchangeRates] = useState<{ USD: number; KRW: number }>({ USD: 0, KRW: 0 });
 
@@ -317,6 +319,28 @@ export default function TripsManager({ initialTrips }: { initialTrips: Trip[] })
       newItinerary[index] = { ...newItinerary[index], [field]: { ...(newItinerary[index][field]), [lang]: value } };
       return { ...prev, itinerary: newItinerary };
     });
+  };
+  const handleItineraryImageUpload = async (index: number, e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    setUploadingDayIndex(index);
+    const formPayload = new FormData();
+    formPayload.append("file", file);
+    formPayload.append("upload_preset", process.env.NEXT_PUBLIC_CLOUDINARY_PRESET || "euro_trails");
+    try {
+      const res = await fetch(`https://api.cloudinary.com/v1_1/${process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME}/upload`, { method: "POST", body: formPayload });
+      const data = await res.json();
+      setFormData(prev => {
+        const newItinerary = [...(prev.itinerary || [])];
+        newItinerary[index] = { ...newItinerary[index], imageUrl: data.secure_url };
+        return { ...prev, itinerary: newItinerary };
+      });
+    } catch (err) {
+      console.error("Itinerary upload error:", err);
+      alert("Image upload failed.");
+    } finally {
+      setUploadingDayIndex(null);
+    }
   };
   const addItineraryDay = () => {
     setFormData(prev => ({ ...prev, itinerary: [...(prev.itinerary || []), { day: (prev.itinerary?.length || 0) + 1, title: { mn: '', en: '', ko: '' }, desc: { mn: '', en: '', ko: '' } }] }));
@@ -834,6 +858,51 @@ export default function TripsManager({ initialTrips }: { initialTrips: Trip[] })
                           <div className="space-y-4">
                             <TrilingualItinInput label={activeAdminLang === 'mn' ? 'Гарчиг' : 'Title'} value={item.title} activeLang={activeAdminLang} onChange={(lang, value) => handleItineraryChange(index, lang, 'title', value)} />
                             <TrilingualItinInput label={activeAdminLang === 'mn' ? 'Тайлбар' : 'Description'} value={item.desc} activeLang={activeAdminLang} onChange={(lang, value) => handleItineraryChange(index, lang, 'desc', value)} isTextarea={true} />
+
+                            {/* Itinerary Image Upload */}
+                            <div className="mt-4">
+                              <label className="block text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1.5">{activeAdminLang === 'mn' ? 'Зураг (Заавал биш)' : 'Upload Image (Optional)'}</label>
+                              {item.imageUrl ? (
+                                <div className="relative w-full max-w-sm h-32 rounded-lg border border-slate-200 overflow-hidden group">
+                                  <img src={item.imageUrl} alt="Day preview" className="w-full h-full object-cover" />
+                                  <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+                                    <button
+                                      type="button"
+                                      onClick={() => {
+                                        setFormData(prev => {
+                                          const newItin = [...(prev.itinerary || [])];
+                                          newItin[index] = { ...newItin[index], imageUrl: "" };
+                                          return { ...prev, itinerary: newItin };
+                                        });
+                                      }}
+                                      className="bg-white/90 text-red-500 p-2 rounded-full hover:bg-white transition-colors shadow-sm"
+                                    >
+                                      <FaTimes />
+                                    </button>
+                                  </div>
+                                </div>
+                              ) : (
+                                <div
+                                  onClick={() => {
+                                    const input = document.createElement('input');
+                                    input.type = 'file';
+                                    input.accept = 'image/*';
+                                    input.onchange = (e) => handleItineraryImageUpload(index, e as any);
+                                    input.click();
+                                  }}
+                                  className="border-2 border-dashed border-slate-300 rounded-lg h-24 flex flex-col items-center justify-center cursor-pointer hover:border-blue-400 hover:bg-slate-50 transition-all"
+                                >
+                                  {uploadingDayIndex === index ? (
+                                    <FaSpinner className="animate-spin text-blue-500" />
+                                  ) : (
+                                    <>
+                                      <FaCloudUploadAlt className="text-slate-400 text-xl mb-1" />
+                                      <span className="text-xs text-slate-500 font-bold uppercase tracking-wider">{activeAdminLang === 'mn' ? 'Зураг оруулах' : 'Add Image'}</span>
+                                    </>
+                                  )}
+                                </div>
+                              )}
+                            </div>
                           </div>
                           <div className="mt-4 flex justify-end">
                             <button type="button" onClick={() => removeItineraryDay(index)} className="p-2 text-red-400 hover:bg-red-50 rounded">

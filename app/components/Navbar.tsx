@@ -7,7 +7,8 @@ import { motion, AnimatePresence } from "framer-motion";
 import {
   Search,
   User,
-  Globe
+  Globe,
+  LayoutDashboard
 } from "lucide-react";
 
 import { SignedOut, SignedIn, UserButton } from "@clerk/nextjs";
@@ -76,6 +77,9 @@ const Navbar: React.FC<{ dictionary: any }> = ({ dictionary }) => {
               </button>
 
               <SignedIn>
+                <Link href={`/${language}/dashboard`} className="text-slate-600 hover:text-sky-500 transition-colors" title="Dashboard">
+                  <LayoutDashboard size={20} strokeWidth={1.5} />
+                </Link>
                 <UserButton afterSignOutUrl={`/${language}`} />
               </SignedIn>
 

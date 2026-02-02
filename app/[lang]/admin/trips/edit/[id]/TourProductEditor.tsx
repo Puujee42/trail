@@ -74,6 +74,7 @@ const TourProductEditor: React.FC<TourProductEditorProps> = ({ initialData }) =>
     const [expandedDay, setExpandedDay] = useState<number | null>(0);
     const [isUploadingDay, setIsUploadingDay] = useState<number | null>(null);
     const [isUploadingMap, setIsUploadingMap] = useState(false);
+    const [isUploadingMainImage, setIsUploadingMainImage] = useState(false);
     const [isSaving, setIsSaving] = useState(false);
 
     // Smart Import Features
@@ -192,6 +193,27 @@ const TourProductEditor: React.FC<TourProductEditorProps> = ({ initialData }) =>
             alert("Map upload failed.");
         } finally {
             setIsUploadingMap(false);
+        }
+    };
+
+    const handleMainImageUpload = async (file: File) => {
+        setIsUploadingMainImage(true);
+        const formPayload = new FormData();
+        formPayload.append("file", file);
+        formPayload.append("upload_preset", process.env.NEXT_PUBLIC_CLOUDINARY_PRESET || "euro_trails");
+
+        try {
+            const res = await fetch(`https://api.cloudinary.com/v1_1/${process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME}/upload`, {
+                method: "POST",
+                body: formPayload
+            });
+            const data = await res.json();
+            setFormData({ ...formData, image: data.secure_url });
+        } catch (err) {
+            console.error("Main image upload error:", err);
+            alert("Main image upload failed.");
+        } finally {
+            setIsUploadingMainImage(false);
         }
     };
 
@@ -808,6 +830,73 @@ const TourProductEditor: React.FC<TourProductEditorProps> = ({ initialData }) =>
                                             <div className="text-center">
                                                 <span className="block text-sm font-black uppercase text-slate-400 tracking-widest">Upload Route Map</span>
                                                 <span className="text-[10px] text-slate-300 uppercase font-bold mt-1 block tracking-[0.2em]">SVG or PNG preferred</span>
+                                            </div>
+                                        </div>
+                                    )}
+                                </div>
+
+                                {/* Main Tour Image Section */}
+                                <div className="bg-white rounded-[40px] p-8 border border-[#E8E2D9] shadow-sm">
+                                    <div className="flex justify-between items-center mb-6">
+                                        <h3 className="text-2xl font-serif text-[#2C362B]">Main Tour Image</h3>
+                                        {formData.image && (
+                                            <button
+                                                onClick={() => {
+                                                    const input = document.createElement('input');
+                                                    input.type = 'file';
+                                                    input.accept = 'image/*';
+                                                    input.onchange = (e: any) => {
+                                                        const file = e.target.files?.[0];
+                                                        if (file) handleMainImageUpload(file);
+                                                    };
+                                                    input.click();
+                                                }}
+                                                className="text-xs font-bold text-[#4B5E4A] hover:underline"
+                                            >
+                                                Replace Image
+                                            </button>
+                                        )}
+                                    </div>
+
+                                    {isUploadingMainImage ? (
+                                        <div className="w-full h-64 rounded-3xl bg-[#FDFBF7] border-2 border-dashed border-[#D2B48C]/30 flex flex-col items-center justify-center gap-4">
+                                            <motion.div animate={{ rotate: 360 }} transition={{ repeat: Infinity, duration: 1, ease: "linear" }}>
+                                                <Save size={32} className="text-[#D2B48C]" />
+                                            </motion.div>
+                                            <span className="text-xs font-bold text-slate-400 uppercase tracking-widest">Uploading Cover...</span>
+                                        </div>
+                                    ) : formData.image ? (
+                                        <div className="relative group rounded-3xl overflow-hidden border border-[#E8E2D9] max-w-2xl mx-auto bg-slate-50">
+                                            <img src={formData.image} alt="Main Tour Cover" className="w-full h-auto object-contain max-h-[400px] block" />
+                                            <div className="absolute top-4 right-4 opacity-0 group-hover:opacity-100 transition-opacity">
+                                                <button onClick={() => setFormData({ ...formData, image: "" })} className="p-2 bg-white/80 backdrop-blur rounded-full text-red-500 hover:bg-white shadow">
+                                                    <Trash2 size={18} />
+                                                </button>
+                                            </div>
+                                        </div>
+                                    ) : (
+                                        <div
+                                            onClick={() => {
+                                                const input = document.createElement('input');
+                                                input.type = 'file';
+                                                input.accept = 'image/*';
+                                                input.onchange = (e: any) => {
+                                                    const file = e.target.files?.[0];
+                                                    if (file) handleMainImageUpload(file);
+                                                };
+                                                input.click();
+                                            }}
+                                            className="w-full h-64 rounded-3xl bg-white border-2 border-dashed border-[#D2B48C]/30 hover:border-[#D2B48C] hover:bg-[#FDFBF7]/50 transition-all cursor-pointer flex flex-col items-center justify-center gap-4 group"
+                                        >
+                                            <div className="w-16 h-16 bg-[#FDFBF7] rounded-full flex items-center justify-center text-[#D2B48C] group-hover:scale-110 transition-transform shadow-sm border border-[#E8E2D9]">
+                                                <div className="relative">
+                                                    <Map size={32} />
+                                                    <Plus className="absolute -top-1 -right-1 bg-white rounded-full p-0.5 text-[#4B5E4A] w-5 h-5" />
+                                                </div>
+                                            </div>
+                                            <div className="text-center">
+                                                <span className="block text-sm font-black uppercase text-slate-400 tracking-widest">Upload Cover Photo</span>
+                                                <span className="text-[10px] text-slate-300 uppercase font-bold mt-1 block tracking-[0.2em]">High Res Landscape</span>
                                             </div>
                                         </div>
                                     )}
