@@ -18,25 +18,25 @@ export default function AdminDashboardClient({ stats }: DashboardProps) {
     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
       <StatCard
         icon={FaPlaneDeparture}
-        label="Total Trips"
+        label="Нийт аялал"
         value={stats.trips}
         color="bg-blue-500"
       />
       <StatCard
         icon={FaBlog}
-        label="Blog Posts"
+        label="Блог нийтлэл"
         value={stats.blogs}
         color="bg-green-500"
       />
       <StatCard
         icon={FaUsers}
-        label="Registered Users"
+        label="Бүртгэлтэй хэрэглэгч"
         value={stats.users}
         color="bg-purple-500"
       />
       <StatCard
         icon={FaShoppingCart}
-        label="Total Bookings"
+        label="Нийт захиалга"
         value={stats.bookings}
         color="bg-orange-500"
       />

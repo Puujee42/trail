@@ -55,6 +55,7 @@ const HeroSection = () => {
   const yClouds = useTransform(scrollY, [0, 500], [0, -100]);
 
   useEffect(() => {
+    if (typeof window === 'undefined') return;
     const handleScroll = () => setHasScrolled(window.scrollY > 50);
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);

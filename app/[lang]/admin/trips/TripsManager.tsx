@@ -416,9 +416,9 @@ export default function TripsManager({ initialTrips }: { initialTrips: Trip[] })
         console.error("Save failure:", errorText);
         try {
           const errorJson = JSON.parse(errorText);
-          alert(`Error: ${errorJson.error || "Failed to save"}`);
+          alert(`Алдаа: ${errorJson.error || "Хадгалж чадсангүй"}`);
         } catch {
-          alert(`Server Error: ${res.status} ${res.statusText}`);
+          alert(`Серверийн алдаа: ${res.status} ${res.statusText}`);
         }
         return;
       }
@@ -428,17 +428,17 @@ export default function TripsManager({ initialTrips }: { initialTrips: Trip[] })
       window.location.reload();
     } catch (err) {
       console.error("Save error:", err);
-      alert("An network error occurred while saving.");
+      alert("Хадгалах үед сүлжээний алдаа гарлаа.");
     }
     finally { setLoading(false); }
   };
   const handleDelete = async (_id: string) => {
-    if (!confirm("Are you sure?")) return;
+    if (!confirm("Та итгэлтэй байна уу?")) return;
     try {
       await fetch("/api/admin/trips", { method: "DELETE", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ _id }) });
       setTrips(prev => prev.filter(t => t._id !== _id));
       router.refresh();
-    } catch (err) { alert("An error occurred."); }
+    } catch (err) { alert("Алдаа гарлаа."); }
   };
   // --- DATE GROUP LOGIC ---
   const addDateGroup = () => {
@@ -459,7 +459,7 @@ export default function TripsManager({ initialTrips }: { initialTrips: Trip[] })
   // 1. Open Passenger Modal & Fetch Data
   const handleManagePassengers = async (date: TripDate) => {
     if (!editingTrip?._id) {
-      alert("Please save the trip first before managing passengers.");
+      alert("Зорчигчдыг удирдахын өмнө аяллаа хадгална уу.");
       return;
     }
     setManagingDate(date);
@@ -486,7 +486,7 @@ export default function TripsManager({ initialTrips }: { initialTrips: Trip[] })
       const data = await res.json();
       setUserSearchResults(data);
     } catch (error) {
-      alert("Search failed");
+      alert("Хайлт амжилтгүй");
     } finally {
       setIsSearchingUsers(false);
     }
@@ -494,7 +494,7 @@ export default function TripsManager({ initialTrips }: { initialTrips: Trip[] })
   // 3. Add User to Date (Create Booking)
   const handleAddPassenger = async (user: ClerkUser) => {
     if (!managingDate || !editingTrip) return;
-    if (!confirm(`Add ${user.name} to this trip?`)) return;
+    if (!confirm(`${user.name}-г энэ аялалд нэмэх үү?`)) return;
     try {
       const res = await fetch("/api/admin/bookings", {
         method: "POST",
@@ -520,17 +520,17 @@ export default function TripsManager({ initialTrips }: { initialTrips: Trip[] })
       if (dateIndex !== undefined && dateIndex > -1) {
         updateDateGroup(dateIndex, 'bookedSeats', (formData.dates![dateIndex].bookedSeats || 0) + 1);
       }
-      alert("Passenger added successfully");
+      alert("Зорчигч амжилттай нэмэгдлээ");
       setUserSearchResults([]);
       setPassengerSearchQuery("");
     } catch (error) {
-      alert("Failed to add passenger");
+      alert("Зорчигч нэмж чадсангүй");
     }
   };
   // 4. DELETE Passenger Handler (NEW)
   const handleRemovePassenger = async (bookingId: string, userName: string) => {
     if (!managingDate || !editingTrip) return;
-    if (!confirm(`Are you sure you want to remove ${userName} from this group?`)) return;
+    if (!confirm(`Та ${userName}-г энэ бүлгээс хасахдаа итгэлтэй байна уу?`)) return;
     try {
       const res = await fetch("/api/admin/bookings", {
         method: "DELETE",
@@ -547,14 +547,14 @@ export default function TripsManager({ initialTrips }: { initialTrips: Trip[] })
         updateDateGroup(dateIndex, 'bookedSeats', Math.max(0, currentSeats - 1));
       }
     } catch (error) {
-      alert("Failed to remove passenger");
+      alert("Зорчигч хасаж чадсангүй");
     }
   };
   return (
     <div>
       {/* Header & Main List */}
       <div className="flex justify-between items-center mb-6">
-        <h1 className="text-3xl font-bold text-slate-800">Manage Trips</h1>
+        <h1 className="text-3xl font-bold text-slate-800">Аялал удирдах</h1>
         <div className="flex items-center gap-4">
           <div className="flex bg-slate-100 p-1 rounded-lg border border-slate-200">
             {(['mn', 'en', 'ko'] as Language[]).map(lang => (
@@ -568,7 +568,7 @@ export default function TripsManager({ initialTrips }: { initialTrips: Trip[] })
             ))}
           </div>
           <button onClick={handleOpenCreate} className="flex items-center gap-2 bg-blue-600 text-white px-6 py-2.5 rounded-lg font-bold hover:bg-blue-700 shadow-sm">
-            <FaPlus /> Create New Trip
+            <FaPlus /> Шинэ аялал үүсгэх
           </button>
         </div>
       </div>
@@ -576,10 +576,10 @@ export default function TripsManager({ initialTrips }: { initialTrips: Trip[] })
         <table className="w-full text-left">
           <thead className="bg-slate-50 text-slate-500 text-sm uppercase">
             <tr>
-              <th className="p-4">Image</th>
-              <th className="p-4">Title ({activeAdminLang.toUpperCase()})</th>
-              <th className="p-4">Dates</th>
-              <th className="p-4 text-right">Actions</th>
+              <th className="p-4">Зураг</th>
+              <th className="p-4">Гарчиг ({activeAdminLang.toUpperCase()})</th>
+              <th className="p-4">Огноо</th>
+              <th className="p-4 text-right">Үйлдэл</th>
             </tr>
           </thead>
           <tbody className="divide-y divide-slate-100">
@@ -617,7 +617,7 @@ export default function TripsManager({ initialTrips }: { initialTrips: Trip[] })
           <div className="fixed inset-0 z-[60] flex items-center justify-center bg-black/50 p-4">
             <motion.div initial={{ y: 50, opacity: 0 }} animate={{ y: 0, opacity: 1 }} exit={{ y: 50, opacity: 0 }} className="bg-white rounded-2xl shadow-2xl w-full max-w-5xl max-h-[90vh] flex flex-col overflow-hidden">
               <div className="p-6 border-b flex justify-between items-center">
-                <h2 className="text-xl font-bold">{editingTrip ? "Edit Trip" : "Create New Trip"}</h2>
+                <h2 className="text-xl font-bold">{editingTrip ? (activeAdminLang === 'mn' ? "Аялал засах" : "Edit Trip") : (activeAdminLang === 'mn' ? "Шинэ аялал үүсгэх" : "Create New Trip")}</h2>
                 <button onClick={handleCloseModal}><FaTimes /></button>
               </div>
               <form id="tripForm" onSubmit={handleSubmit} className="flex-1 overflow-y-auto p-6 space-y-8">
@@ -712,7 +712,7 @@ export default function TripsManager({ initialTrips }: { initialTrips: Trip[] })
 
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <div className="space-y-3">
-                      <label className="block text-xs font-bold text-slate-500 mb-1 uppercase tracking-wider">Base Price (Adult)</label>
+                      <label className="block text-xs font-bold text-slate-500 mb-1 uppercase tracking-wider">{activeAdminLang === 'mn' ? 'Үндсэн үнэ (Том хүн)' : 'Base Price (Adult)'}</label>
                       <div className="grid grid-cols-3 gap-2">
                         <input type="number" value={formData.price?.mn || ''} onChange={(e) => handlePriceChange('price', 'mn', e.target.value)} placeholder="MNT" className="w-full border p-2 rounded text-sm bg-blue-50 border-blue-200" />
                         <input type="number" value={formData.price?.en || ''} readOnly placeholder="USD" className="w-full border p-2 rounded text-sm bg-slate-50 text-slate-500 cursor-not-allowed" />
@@ -720,7 +720,7 @@ export default function TripsManager({ initialTrips }: { initialTrips: Trip[] })
                       </div>
                     </div>
                     <div className="space-y-3">
-                      <label className="block text-xs font-bold text-slate-500 mb-1 uppercase tracking-wider">Child Price</label>
+                      <label className="block text-xs font-bold text-slate-500 mb-1 uppercase tracking-wider">{activeAdminLang === 'mn' ? 'Хүүхдийн үнэ' : 'Child Price'}</label>
                       <div className="grid grid-cols-3 gap-2">
                         <input type="number" value={formData.priceChild?.mn || ''} onChange={(e) => handlePriceChange('priceChild', 'mn', e.target.value)} placeholder="MNT" className="w-full border p-2 rounded text-sm bg-blue-50 border-blue-200" />
                         <input type="number" value={formData.priceChild?.en || ''} readOnly placeholder="USD" className="w-full border p-2 rounded text-sm bg-slate-50 text-slate-500 cursor-not-allowed" />
@@ -728,7 +728,7 @@ export default function TripsManager({ initialTrips }: { initialTrips: Trip[] })
                       </div>
                     </div>
                     <div className="space-y-3">
-                      <label className="block text-xs font-bold text-slate-500 mb-1 uppercase tracking-wider">Discount Percentage (%)</label>
+                      <label className="block text-xs font-bold text-slate-500 mb-1 uppercase tracking-wider">{activeAdminLang === 'mn' ? 'Хямдралын хувь (%)' : 'Discount Percentage (%)'}</label>
                       <input
                         type="number"
                         className="w-full border p-2 rounded text-sm bg-white border-blue-300 ring-2 ring-blue-50"
@@ -739,7 +739,7 @@ export default function TripsManager({ initialTrips }: { initialTrips: Trip[] })
                     </div>
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                       <div className="space-y-3">
-                        <label className="block text-xs font-bold text-green-600 mb-1 uppercase tracking-wider">Adult Sale Price</label>
+                        <label className="block text-xs font-bold text-green-600 mb-1 uppercase tracking-wider">{activeAdminLang === 'mn' ? 'Хямдарсан үнэ (Том хүн)' : 'Adult Sale Price'}</label>
                         <div className="grid grid-cols-3 gap-2">
                           <input type="number" value={formData.salePrice?.mn || ''} readOnly className="w-full border p-2 rounded text-sm bg-green-50 text-green-700 font-bold border-green-200" />
                           <input type="number" value={formData.salePrice?.en || ''} readOnly className="w-full border p-2 rounded text-sm bg-slate-50 text-slate-400" />
@@ -747,7 +747,7 @@ export default function TripsManager({ initialTrips }: { initialTrips: Trip[] })
                         </div>
                       </div>
                       <div className="space-y-3">
-                        <label className="block text-xs font-bold text-green-600 mb-1 uppercase tracking-wider">Child Sale Price</label>
+                        <label className="block text-xs font-bold text-green-600 mb-1 uppercase tracking-wider">{activeAdminLang === 'mn' ? 'Хямдарсан үнэ (Хүүхэд)' : 'Child Sale Price'}</label>
                         <div className="grid grid-cols-3 gap-2">
                           <input type="number" value={formData.salePriceChild?.mn || ''} readOnly className="w-full border p-2 rounded text-sm bg-green-50 text-green-700 font-bold border-green-200" />
                           <input type="number" value={formData.salePriceChild?.en || ''} readOnly className="w-full border p-2 rounded text-sm bg-slate-50 text-slate-400" />
@@ -767,18 +767,18 @@ export default function TripsManager({ initialTrips }: { initialTrips: Trip[] })
 
                 <div className="space-y-4 border-t pt-6">
                   <div className="flex items-center justify-between">
-                    <label className="text-sm font-bold text-slate-700">Allow Custom Date Request</label>
+                    <label className="text-sm font-bold text-slate-700">{activeAdminLang === 'mn' ? 'Тусгай өдрийн хүсэлт зөвшөөрөх' : 'Allow Custom Date Request'}</label>
                     <button type="button" onClick={() => setFormData({ ...formData, allowCustomDate: !formData.allowCustomDate })} className={`w-12 h-6 rounded-full transition-colors relative ${formData.allowCustomDate ? 'bg-blue-600' : 'bg-slate-300'}`}>
                       <div className={`absolute top-1 w-4 h-4 bg-white rounded-full transition-all ${formData.allowCustomDate ? 'left-7' : 'left-1'}`} />
                     </button>
                   </div>
 
                   <div>
-                    <label className="block text-xs font-bold text-slate-500 mb-1 uppercase">Perks (comma separated)</label>
+                    <label className="block text-xs font-bold text-slate-500 mb-1 uppercase">{activeAdminLang === 'mn' ? 'Давуу талууд (таслалаар тусгаарлах)' : 'Perks (comma separated)'}</label>
                     <input className="w-full border p-2 rounded text-sm" value={formData.perks?.join(', ') || ''} onChange={e => handleArrayInput('perks', e.target.value)} />
                   </div>
                   <div>
-                    <label className="block text-xs font-bold text-slate-500 mb-1 uppercase">Tags (comma separated)</label>
+                    <label className="block text-xs font-bold text-slate-500 mb-1 uppercase">{activeAdminLang === 'mn' ? 'Тагууд (таслалаар тусгаарлах)' : 'Tags (comma separated)'}</label>
                     <input className="w-full border p-2 rounded text-sm" value={formData.tags?.join(', ') || ''} onChange={e => handleArrayInput('tags', e.target.value)} />
                   </div>
                 </div>

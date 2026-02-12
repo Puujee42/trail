@@ -58,7 +58,7 @@ export default function BlogsManager({ initialPosts }: { initialPosts: Post[] })
   const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
-    if (file.size > 5 * 1024 * 1024) return alert("Image too large (Max 5MB).");
+    if (file.size > 5 * 1024 * 1024) return alert("Зураг хэт том байна (Дээд хэмжээ 5MB).");
 
     setUploadingImage(true);
     const data = new FormData();
@@ -70,7 +70,7 @@ export default function BlogsManager({ initialPosts }: { initialPosts: Post[] })
       const res = await fetch(`https://api.cloudinary.com/v1_1/${process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME}/image/upload`, { method: "POST", body: data });
       const json = await res.json();
       if (json.secure_url) setFormData(prev => ({ ...prev, image: json.secure_url }));
-    } catch (err) { alert("Image upload failed"); } 
+    } catch (err) { alert("Зураг хуулж чадсангүй"); } 
     finally { setUploadingImage(false); }
   };
 
@@ -98,25 +98,25 @@ export default function BlogsManager({ initialPosts }: { initialPosts: Post[] })
       await fetch("/api/admin/blogs", { method, headers: { "Content-Type": "application/json" }, body: JSON.stringify(body) });
       handleCloseModal();
       router.refresh(); 
-    } catch (err) { alert("An error occurred."); } 
+    } catch (err) { alert("Алдаа гарлаа."); } 
     finally { setLoading(false); }
   };
 
   const handleDelete = async (_id: string) => {
-    if (!confirm("Delete this post?")) return;
+    if (!confirm("Энэ нийтлэлийг устгах уу?")) return;
     try {
       await fetch("/api/admin/blogs", { method: "DELETE", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ _id }) });
       setPosts(prev => prev.filter(p => p._id !== _id));
       router.refresh();
-    } catch (err) { alert("An error occurred."); }
+    } catch (err) { alert("Алдаа гарлаа."); }
   };
 
   return (
     <div>
       <div className="flex justify-between items-center mb-6">
-        <h1 className="text-3xl font-bold text-slate-800">Manage Blog Posts</h1>
+        <h1 className="text-3xl font-bold text-slate-800">Блог нийтлэл удирдах</h1>
         <button onClick={handleOpenCreate} className="flex items-center gap-2 bg-blue-600 text-white px-6 py-2.5 rounded-lg font-bold hover:bg-blue-700">
-          <FaPlus /> Write New Post
+          <FaPlus /> Шинэ нийтлэл бичих
         </button>
       </div>
 
@@ -124,10 +124,10 @@ export default function BlogsManager({ initialPosts }: { initialPosts: Post[] })
         <table className="w-full text-left">
           <thead className="bg-slate-50 text-slate-500 text-sm uppercase">
             <tr>
-              <th className="p-4">Title (EN)</th>
-              <th className="p-4">Author</th>
-              <th className="p-4">Date</th>
-              <th className="p-4 text-right">Actions</th>
+              <th className="p-4">Гарчиг (EN)</th>
+              <th className="p-4">Зохиогч</th>
+              <th className="p-4">Огноо</th>
+              <th className="p-4 text-right">Үйлдэл</th>
             </tr>
           </thead>
           <tbody className="divide-y divide-slate-100">
@@ -151,30 +151,30 @@ export default function BlogsManager({ initialPosts }: { initialPosts: Post[] })
           <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4">
             <motion.div initial={{ y: 50, opacity: 0 }} animate={{ y: 0, opacity: 1 }} exit={{ y: 50, opacity: 0 }} className="bg-white rounded-2xl shadow-2xl w-full max-w-6xl max-h-[90vh] flex flex-col">
               <div className="p-6 border-b flex justify-between items-center">
-                <h2 className="text-xl font-bold">{editingPost ? "Edit Post" : "Create New Post"}</h2>
+                <h2 className="text-xl font-bold">{editingPost ? "Нийтлэл засах" : "Шинэ нийтлэл үүсгэх"}</h2>
                 <button onClick={handleCloseModal}><FaTimes /></button>
               </div>
               <form id="blogForm" onSubmit={handleSubmit} className="overflow-y-auto p-6 space-y-6">
                 
-                <TrilingualInput label="Title" field="title" value={formData.title} onChange={handleTrilingualChange} />
-                <TrilingualInput label="Excerpt (Short Summary)" field="excerpt" value={formData.excerpt} onChange={handleTrilingualChange} />
+                <TrilingualInput label="Гарчиг" field="title" value={formData.title} onChange={handleTrilingualChange} />
+                <TrilingualInput label="Товч агуулга" field="excerpt" value={formData.excerpt} onChange={handleTrilingualChange} />
 
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                    <Input label="Author" value={formData.author} onChange={v => setFormData({...formData, author: v})} />
-                    <Input type="date" label="Date" value={formData.date} onChange={v => setFormData({...formData, date: v})} />
+                    <Input label="Зохиогч" value={formData.author} onChange={v => setFormData({...formData, author: v})} />
+                    <Input type="date" label="Огноо" value={formData.date} onChange={v => setFormData({...formData, date: v})} />
                     
                     {/* Image Upload */}
                     <div>
-                        <label className="block text-sm font-bold text-slate-700 mb-2">Image</label>
+                        <label className="block text-sm font-bold text-slate-700 mb-2">Зураг</label>
                         <div onClick={() => fileInputRef.current?.click()} className="border-2 border-dashed rounded-lg p-4 flex items-center justify-center cursor-pointer hover:bg-slate-50">
-                            {uploadingImage ? "Uploading..." : formData.image ? <img src={formData.image} className="h-20" /> : <FaCloudUploadAlt />}
+                            {uploadingImage ? "Хуулж байна..." : formData.image ? <img src={formData.image} className="h-20" /> : <FaCloudUploadAlt />}
                         </div>
                         <input type="file" ref={fileInputRef} className="hidden" onChange={handleImageUpload} />
                     </div>
                 </div>
 
                 <div>
-                    <label className="block text-sm font-bold text-slate-700 mb-2">Content</label>
+                    <label className="block text-sm font-bold text-slate-700 mb-2">Агуулга</label>
                     <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                         <RichTextEditor content={formData.content?.mn || ''} onChange={data => handleContentChange('mn', data)} placeholder="Монгол агуулга..." />
                         <RichTextEditor content={formData.content?.en || ''} onChange={data => handleContentChange('en', data)} placeholder="English content..." />
@@ -184,9 +184,9 @@ export default function BlogsManager({ initialPosts }: { initialPosts: Post[] })
 
               </form>
               <div className="p-6 border-t mt-auto flex justify-end gap-3">
-                <button type="button" onClick={handleCloseModal} className="px-6 py-2 text-slate-600 font-bold hover:bg-slate-100 rounded">Cancel</button>
+                <button type="button" onClick={handleCloseModal} className="px-6 py-2 text-slate-600 font-bold hover:bg-slate-100 rounded">Болих</button>
                 <button type="submit" form="blogForm" disabled={loading} className="px-6 py-2 bg-blue-600 text-white font-bold rounded hover:bg-blue-700 disabled:opacity-50">
-                  {loading ? "Saving..." : "Save Post"}
+                  {loading ? "Хадгалж байна..." : "Хадгалах"}
                 </button>
               </div>
             </motion.div>

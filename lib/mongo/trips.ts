@@ -35,6 +35,13 @@ export interface LocalizedPrice {
   en: number;
   ko: number;
 }
+export interface PointOfInterest {
+  lat: number;
+  lng: number;
+  title: string;
+  image?: string;
+}
+
 export interface Trip {
   _id: string;
   type?: string;
@@ -70,6 +77,11 @@ export interface Trip {
   allowCustomDate?: boolean; // Enable/Disable "Plan your own dates"
   season_availability?: string; // e.g., "Year around", "10 Jun - 10 Sep"
   dates: TripDate[];
+  verified?: boolean; // New: Verified by Professional Guide badge
+  coordinates?: [number, number]; // New: Lat, Lng for Map
+  elevationData?: { distance: number; elevation: number }[]; // New: Elevation Profile Data
+  gpxUrl?: string; // New: URL to GPX file
+  pointsOfInterest?: PointOfInterest[]; // New: Waypoints
 }
 function mapTrip(doc: any): Trip {
   return {

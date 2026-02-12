@@ -1,7 +1,7 @@
 "use client";
 
-import { useState, useEffect } from "react"; // Added useEffect
-import { motion, AnimatePresence } from "framer-motion";
+import { useState, useEffect, useRef } from "react"; // Added useEffect
+import { motion, AnimatePresence, useScroll, useTransform } from "framer-motion";
 import Link from "next/link";
 import { useRouter } from "next/navigation"; // 1. Import Router
 import { useUser } from "@clerk/nextjs"; // 2. Import Clerk Hook
@@ -21,6 +21,13 @@ import {
   FaCog
 } from "react-icons/fa";
 import { useLanguage } from "@/app/context/LanguageContext";
+import dynamic from "next/dynamic";
+import StickyBookNav from "@/app/components/StickyBookNav";
+import ElevationProfile from "@/app/components/trips/ElevationProfile";
+import InlineGPXCTA from "@/app/components/trips/InlineGPXCTA";
+import RecentActivity from "@/app/components/ui/RecentActivity";
+
+const TripMap = dynamic(() => import("@/app/components/trips/TripMap"), { ssr: false });
 
 /* ────────────────────── Types ────────────────────── */
 interface LocalizedString {
@@ -63,10 +70,18 @@ interface Trip {
   oldPrice?: LocalizedPrice | number;
   seatsLeft?: number;
   map_image_url?: string; // New: Route Map
+  verified?: boolean;
+  coordinates?: [number, number];
+  elevationData?: { distance: number; elevation: number }[]; // New: Elevation Data
+  gpxUrl?: string; // New: URL to GPX file
+  pointsOfInterest?: { lat: number; lng: number; title: string; image?: string }[]; // New: Waypoints
 }
 
 const TourDetailClient = ({ trip }: { trip: Trip }) => {
   const { language } = useLanguage();
+  const containerRef = useRef(null);
+  const { scrollY } = useScroll();
+  const y1 = useTransform(scrollY, [0, 500], [0, 200]); // Parallax Effect
 
   // 3. Initialize Auth and Router
   const { isLoaded, isSignedIn, user } = useUser();
@@ -297,18 +312,19 @@ const TourDetailClient = ({ trip }: { trip: Trip }) => {
   };
 
   return (
-    <div className="bg-slate-50 min-h-screen pb-20">
+    <div className="bg-slate-50 min-h-screen pb-20 overflow-x-hidden" ref={containerRef}>
+      <RecentActivity />
 
       {/* ────────────────── HERO HEADER ────────────────── */}
-      <div className="relative h-[60vh] min-h-[500px] w-full overflow-hidden">
-        <div className="absolute inset-0">
-          {trip.image && <img src={trip.image} alt={trip.title[language]} className="w-full h-full object-cover" />}
+      <div className="relative h-[70vh] min-h-[500px] w-full overflow-hidden">
+        <motion.div style={{ y: y1 }} className="absolute inset-0">
+          {trip.image && <img src={trip.image} alt={trip.title[language]} className="w-full h-full object-cover scale-110" />}
           <div className="absolute inset-0 bg-slate-200 animate-pulse -z-10" /> {/* Fallback/Loading background */}
-          <div className="absolute inset-0 bg-gradient-to-t from-slate-900 via-slate-900/40 to-transparent" />
-        </div>
-        <div className="absolute top-24 left-4 md:left-10 z-20 flex gap-3">
+          <div className="absolute inset-0 bg-gradient-to-t from-slate-900 via-slate-900/30 to-transparent" />
+        </motion.div>
+        <div className="absolute top-24 left-4 md:left-10 z-[60] flex gap-3">
           <Link href="/">
-            <button className="flex items-center gap-2 bg-white/20 backdrop-blur-md text-white px-4 py-2 rounded-full hover:bg-white hover:text-slate-900 transition-all font-bold text-sm border border-white/30">
+            <button className="flex items-center gap-2 bg-white/20 backdrop-blur-md text-white px-4 py-2 rounded-full hover:bg-white hover:text-slate-900 transition-all font-bold text-sm border border-white/30 shadow-sm">
               <FaArrowLeft /> {text.back}
             </button>
           </Link>
@@ -324,6 +340,11 @@ const TourDetailClient = ({ trip }: { trip: Trip }) => {
         </div>
         <div className="absolute bottom-0 left-0 w-full p-6 md:p-12 z-10 container mx-auto">
           <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="max-w-4xl">
+            {trip.verified && (
+              <div className="inline-flex items-center gap-2 bg-green-500/90 backdrop-blur-md text-white px-3 py-1.5 rounded-full mb-4 text-xs font-bold uppercase tracking-wider border border-white/20 shadow-lg">
+                <FaCheckCircle className="text-white" /> Verified by Professional Guide
+              </div>
+            )}
             <h1 className="text-4xl md:text-6xl font-black text-white mb-4 leading-tight shadow-sm">
               {trip.title[language]}
             </h1>
@@ -369,19 +390,38 @@ const TourDetailClient = ({ trip }: { trip: Trip }) => {
               </div>
 
               {/* Right Column: Route Map (Very High) */}
-              {trip.map_image_url && (
-                <div className="space-y-4">
-                  <h3 className="text-lg font-bold text-slate-800 flex items-center gap-2">
-                    <FaMapMarkerAlt className="text-sky-500" /> {text.mapTitle}
-                  </h3>
+              <div className="space-y-4">
+                <h3 className="text-lg font-bold text-slate-800 flex items-center gap-2">
+                  <FaMapMarkerAlt className="text-sky-500" /> {text.mapTitle}
+                </h3>
+                
+                {trip.coordinates ? (
+                   <TripMap 
+                     coordinates={trip.coordinates} 
+                     title={trip.title[language] || trip.title.mn} 
+                     gpxUrl={trip.gpxUrl}
+                     pointsOfInterest={trip.pointsOfInterest}
+                   />
+                ) : trip.map_image_url ? (
                   <div className="relative rounded-2xl overflow-hidden border border-slate-100 bg-slate-50 group shadow-lg shadow-sky-100/50">
                     <img src={trip.map_image_url} alt="Route Map" className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" />
                     <div className="absolute inset-0 bg-gradient-to-t from-slate-900/10 to-transparent pointer-events-none" />
                   </div>
-                  <p className="text-[10px] font-black uppercase text-slate-400 tracking-widest text-center mt-2">Expedition Route Map</p>
-                </div>
-              )}
+                ) : (
+                  <div className="w-full h-[300px] bg-slate-100 rounded-2xl flex items-center justify-center text-slate-400 text-sm">
+                    Map coming soon
+                  </div>
+                )}
+                
+                <p className="text-[10px] font-black uppercase text-slate-400 tracking-widest text-center mt-2">Expedition Route Map</p>
+              </div>
             </div>
+
+            {/* ELEVATION PROFILE */}
+            <ElevationProfile data={trip.elevationData} />
+
+            {/* INLINE GPX CTA */}
+            <InlineGPXCTA />
 
             {/* INCLUDED / EXCLUDED GRID */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8 border-t border-slate-100 pt-8">
@@ -466,52 +506,44 @@ const TourDetailClient = ({ trip }: { trip: Trip }) => {
 
         {/* RIGHT COLUMN (Price & Booking) */}
         <div className="lg:col-span-1">
-          <div className="sticky top-24 h-fit">
-            <motion.div
-              className="bg-white rounded-3xl p-6 shadow-2xl shadow-sky-100 border border-slate-100"
-            >
-              {/* PRICE CARD HEADER */}
-              <div className="mb-6">
+          <div className="sticky top-24 space-y-6">
+            <div className="bg-white rounded-3xl shadow-xl shadow-slate-200/50 border border-slate-100 overflow-hidden transform transition-transform hover:-translate-y-1 duration-300">
+              {/* Header */}
+              <div className="bg-slate-900 p-6 text-white text-center relative overflow-hidden">
+                <div className="absolute inset-0 bg-mongol-blue opacity-10" />
+                <span className="relative text-xs font-bold uppercase tracking-widest opacity-80 mb-1 block">
+                  {text.priceLabel}
+                </span>
+                <div className="relative flex items-center justify-center gap-2">
+                  {hasDiscount && (
+                    <span className="text-lg text-slate-400 line-through font-medium">
+                      {formatMoney(adultPriceBase)}
+                    </span>
+                  )}
+                  <span className="text-4xl font-black">
+                    {formatMoney(finalAdultPrice)}
+                  </span>
+                </div>
                 {hasDiscount && (
-                  <div className="bg-rose-500 text-white text-xs font-bold px-3 py-1.5 rounded-full mb-3 w-fit shadow-md shadow-rose-200">
+                  <div className="absolute top-4 right-4 bg-red-500 text-white text-[10px] font-bold px-2 py-1 rounded-md shadow-sm animate-pulse">
                     {discountPercentage}% {text.saveBadge}
                   </div>
                 )}
-
-                <div className="space-y-4">
-                  {/* Adult Price */}
-                  <div>
-                    <p className="text-slate-500 text-xs font-bold uppercase mb-1">{text.adultLabel}</p>
-                    <div className="flex items-end gap-3">
-                      <span className="text-4xl font-black text-slate-900">{formatMoney(finalAdultPrice)}</span>
-                      {hasDiscount && (
-                        <span className="text-lg text-slate-400 line-through mb-1 decoration-rose-400 decoration-2">
-                          {formatMoney(adultPriceBase)}
-                        </span>
-                      )}
-                    </div>
-                  </div>
-
-                  {/* Child Price (if exists) */}
-                  {childPrice > 0 && (
-                    <div className="pt-3 border-t border-slate-100">
-                      <p className="text-slate-400 text-xs font-bold uppercase mb-1">{text.childLabel}</p>
-                      <span className="text-xl font-bold text-slate-700">{formatMoney(childPrice)}</span>
-                    </div>
-                  )}
-                </div>
               </div>
+              
+              {/* Body */}
+              <div className="p-8">
+                {/* 6. UPDATED BUTTON: Uses handleBookClick */}
+                <button
+                  onClick={handleBookClick}
+                  className="w-full py-4 rounded-xl bg-slate-900 text-white font-bold text-lg shadow-lg hover:bg-sky-600 transition-all active:scale-95 mb-3"
+                >
+                  {text.bookBtn}
+                </button>
 
-              {/* 6. UPDATED BUTTON: Uses handleBookClick */}
-              <button
-                onClick={handleBookClick}
-                className="w-full py-4 rounded-xl bg-slate-900 text-white font-bold text-lg shadow-lg hover:bg-sky-600 transition-all active:scale-95 mb-3"
-              >
-                {text.bookBtn}
-              </button>
-
-              <p className="text-xs text-center text-slate-400">{text.terms}</p>
-            </motion.div>
+                <p className="text-xs text-center text-slate-400">{text.terms}</p>
+              </div>
+            </div>
           </div>
         </div>
       </div>
@@ -619,6 +651,12 @@ const TourDetailClient = ({ trip }: { trip: Trip }) => {
           </>
         )}
       </AnimatePresence>
+
+      <StickyBookNav 
+        onBook={handleBookClick} 
+        price={formatMoney(finalAdultPrice)}
+        onDownloadGpx={() => trip.gpxUrl && window.open(trip.gpxUrl, '_blank')}
+      />
 
     </div>
   );

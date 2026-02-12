@@ -8,6 +8,65 @@ const COLLECTION = "posts";
 const blogPosts = [
   {
     title: {
+      mn: "Монголд аялахад юу бэлдэх вэ?",
+      en: "What to Pack for Mongolia: The Ultimate Guide"
+    },
+    excerpt: {
+      mn: "Монголын цаг агаар, нөхцөл байдалд тохирсон хувцас, хэрэгслийн жагсаалт.",
+      en: "A complete packing list for Mongolia's unpredictable weather and nomadic adventures."
+    },
+    content: `
+      <h2>Clothing Layers are Key</h2>
+      <p>Mongolia is known as the "Land of Blue Sky," but the weather can change rapidly. Layering is essential.</p>
+      <ul>
+        <li><strong>Base Layer:</strong> Thermal underwear (merino wool is best).</li>
+        <li><strong>Mid Layer:</strong> Fleece or wool sweater.</li>
+        <li><strong>Outer Layer:</strong> Windproof and waterproof jacket.</li>
+      </ul>
+      <h2>Essential Gear</h2>
+      <ul>
+        <li>Sturdy hiking boots</li>
+        <li>Power bank (electricity can be scarce in gers)</li>
+        <li>Sunscreen and sunglasses (high altitude sun is strong)</li>
+      </ul>
+    `,
+    category: "tips",
+    author: "Mongol Trail Team",
+    authorImg: "https://api.dicebear.com/7.x/avataaars/svg?seed=MT",
+    date: "2025.12.01",
+    readTime: { mn: "4 мин", en: "4 min" },
+    image: "/packing-mongolia.jpg",
+    featured: false
+  },
+  {
+    title: {
+      mn: "Хөвсгөл нуур руу явах хамгийн тохиромжтой цаг",
+      en: "Best Time to Visit Khuvsgul Lake"
+    },
+    excerpt: {
+      mn: "Хөвсгөл далайг үзэхэд хамгийн тохиромжтой улирал, цаг агаарын онцлог.",
+      en: "When to visit the Blue Pearl of Mongolia for the best experience and weather."
+    },
+    content: `
+      <h2>Summer (July - August)</h2>
+      <p>The most popular time to visit. The weather is pleasant (15°C to 25°C), and the lake is ice-free, perfect for boating and kayaking.</p>
+      
+      <h2>Winter (February - March)</h2>
+      <p>For the adventurous, winter offers the famous <strong>Blue Pearl Ice Festival</strong>. The lake freezes over completely, allowing for driving on ice, skating, and horse sleigh rides.</p>
+      
+      <h2>Shoulder Season (June & September)</h2>
+      <p>Fewer crowds and crisp air. Nights can be freezing, but the autumn colors in September are breathtaking.</p>
+    `,
+    category: "guide",
+    author: "B. Anudari",
+    authorImg: "https://api.dicebear.com/7.x/avataaars/svg?seed=Anu",
+    date: "2025.12.05",
+    readTime: { mn: "5 мин", en: "5 min" },
+    image: "/khuvsgul.jpg",
+    featured: true
+  },
+  {
+    title: {
       mn: "2025 онд заавал очих 10 газар",
       en: "10 Must-Visit Places in 2025"
     },

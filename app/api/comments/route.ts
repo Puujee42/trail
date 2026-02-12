@@ -41,7 +41,7 @@ export async function GET(req: Request) {
 export async function POST(req: Request) {
   try {
     const body = await req.json();
-    const { name, trip, text, location, rating, language } = body;
+    const { name, trip, text, location, rating, language, image } = body;
 
     if (!name || !text || !rating) {
       return NextResponse.json({ error: "Missing required fields" }, { status: 400 });
@@ -57,6 +57,7 @@ export async function POST(req: Request) {
       location: location || "Unknown",
       rating: Number(rating),
       language: language || "mn",
+      image: image || null, // New: User uploaded photo URL
       status: "pending", 
       createdAt: new Date(),
       dateStr: new Date().toISOString().split('T')[0]
@@ -94,6 +95,7 @@ export async function PUT(req: Request) {
         language: "mn",
         status: "approved",
         dateStr: "2025-11-20",
+        image: "https://images.unsplash.com/photo-1533240332313-0db49b459ad6?q=80&w=300&auto=format&fit=crop", // Added sample photo
         createdAt: new Date()
       },
       {
@@ -117,6 +119,7 @@ export async function PUT(req: Request) {
         language: "en",
         status: "approved",
         dateStr: "2025-11-20",
+        image: "https://images.unsplash.com/photo-1533240332313-0db49b459ad6?q=80&w=300&auto=format&fit=crop", // Added sample photo
         createdAt: new Date()
       },
       {

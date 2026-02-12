@@ -47,6 +47,8 @@ export async function generateMetadata(props: PageProps): Promise<Metadata> {
   };
 }
 
+import StructuredData from "@/app/components/seo/StructuredData";
+
 export default async function BlogPostPage(props: PageProps) {
   // 1. Await params (Next.js 15 requirement)
   const params = await props.params;
@@ -62,56 +64,47 @@ export default async function BlogPostPage(props: PageProps) {
   const lang = params.lang as Locale;
   const baseUrl = 'https://www.mongoltrail.com';
 
-  // JSON-LD for Blog SEO
-  const blogJsonLd = {
-    '@context': 'https://schema.org',
-    '@type': 'BlogPosting',
-    headline: post.title[lang] || post.title.en,
-    image: post.image,
-    datePublished: post.date || new Date().toISOString(),
-    author: {
-      '@type': 'Person',
-      name: post.author || 'Mongol Trail Team',
-    },
-    description: post.excerpt[lang] || post.excerpt.en,
-    url: `${baseUrl}/${lang}/blog/${params.id}`,
-  };
-
-  const breadcrumbJsonLd = {
-    '@context': 'https://schema.org',
-    '@type': 'BreadcrumbList',
-    itemListElement: [
-      {
-        '@type': 'ListItem',
-        position: 1,
-        name: 'Home',
-        item: `${baseUrl}/${lang}`,
-      },
-      {
-        '@type': 'ListItem',
-        position: 2,
-        name: 'Blog',
-        item: `${baseUrl}/${lang}/blog`,
-      },
-      {
-        '@type': 'ListItem',
-        position: 3,
-        name: post.title[lang] || post.title.en,
-        item: `${baseUrl}/${lang}/blog/${params.id}`,
-      },
-    ],
-  };
-
   // 4. Render Client UI
   return (
     <>
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(blogJsonLd) }}
+      <StructuredData
+        type="BlogPosting"
+        data={{
+          headline: post.title[lang] || post.title.en,
+          image: post.image,
+          datePublished: post.date || new Date().toISOString(),
+          author: {
+            '@type': 'Person',
+            name: post.author || 'Mongol Trail Team',
+          },
+          description: post.excerpt[lang] || post.excerpt.en,
+          url: `${baseUrl}/${lang}/blog/${params.id}`,
+        }}
       />
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd) }}
+      <StructuredData
+        type="BreadcrumbList"
+        data={{
+          itemListElement: [
+            {
+              '@type': 'ListItem',
+              position: 1,
+              name: 'Home',
+              item: `${baseUrl}/${lang}`,
+            },
+            {
+              '@type': 'ListItem',
+              position: 2,
+              name: 'Blog',
+              item: `${baseUrl}/${lang}/blog`,
+            },
+            {
+              '@type': 'ListItem',
+              position: 3,
+              name: post.title[lang] || post.title.en,
+              item: `${baseUrl}/${lang}/blog/${params.id}`,
+            },
+          ],
+        }}
       />
       <BlogPostClient post={post as any} />
     </>

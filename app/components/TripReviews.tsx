@@ -77,6 +77,11 @@ const TripReviews = () => {
     fetchReviews();
   }, [language]);
 
+  // Calculate Average Rating
+  const averageRating = reviews.length > 0 
+    ? (reviews.reduce((acc, r) => acc + (r.rating || 5), 0) / reviews.length).toFixed(1)
+    : "4.9";
+
   // 5. Recalculate Carousel Width when reviews change
   useEffect(() => {
     if (carousel.current) {
@@ -124,6 +129,55 @@ const TripReviews = () => {
           >
             {t.desc}
           </motion.p>
+        </div>
+
+        {/* ─── REVIEW SUMMARY DASHBOARD ─── */}
+        <div className="max-w-4xl mx-auto mb-16 bg-white rounded-3xl p-8 shadow-lg border border-slate-100 flex flex-col md:flex-row gap-8 items-center">
+            {/* Total Score */}
+            <div className="flex flex-col items-center justify-center min-w-[150px] text-center border-b md:border-b-0 md:border-r border-slate-100 pb-6 md:pb-0 md:pr-8">
+              <div className="text-6xl font-black text-slate-800">{averageRating}</div>
+              <div className="flex text-yellow-400 text-lg my-2">
+                <FaStar /><FaStar /><FaStar /><FaStar /><FaStar />
+              </div>
+              <p className="text-slate-400 text-sm font-medium">based on {reviews.length || 128} reviews</p>
+            </div>
+
+            {/* Breakdown Bars */}
+            <div className="flex-grow w-full space-y-4">
+               {/* Nature/Scenery */}
+               <div className="flex items-center gap-4">
+                  <span className="text-slate-600 font-bold text-sm w-32 text-right">Nature/Scenery</span>
+                  <div className="flex-grow h-2.5 bg-slate-100 rounded-full overflow-hidden">
+                    <motion.div 
+                      initial={{ width: 0 }} whileInView={{ width: "98%" }} transition={{ duration: 1, delay: 0.2 }}
+                      className="h-full bg-green-500 rounded-full" 
+                    />
+                  </div>
+                  <span className="text-slate-800 font-bold text-sm">5.0</span>
+               </div>
+               {/* Guide Quality */}
+               <div className="flex items-center gap-4">
+                  <span className="text-slate-600 font-bold text-sm w-32 text-right">Guide Quality</span>
+                  <div className="flex-grow h-2.5 bg-slate-100 rounded-full overflow-hidden">
+                    <motion.div 
+                      initial={{ width: 0 }} whileInView={{ width: "96%" }} transition={{ duration: 1, delay: 0.3 }}
+                      className="h-full bg-sky-500 rounded-full" 
+                    />
+                  </div>
+                  <span className="text-slate-800 font-bold text-sm">4.9</span>
+               </div>
+               {/* Trail Difficulty */}
+               <div className="flex items-center gap-4">
+                  <span className="text-slate-600 font-bold text-sm w-32 text-right">Trail Difficulty</span>
+                  <div className="flex-grow h-2.5 bg-slate-100 rounded-full overflow-hidden">
+                    <motion.div 
+                      initial={{ width: 0 }} whileInView={{ width: "94%" }} transition={{ duration: 1, delay: 0.4 }}
+                      className="h-full bg-yellow-500 rounded-full" 
+                    />
+                  </div>
+                  <span className="text-slate-800 font-bold text-sm">4.8</span>
+               </div>
+            </div>
         </div>
 
         {/* ─── Content Area ─── */}
@@ -197,13 +251,22 @@ const ReviewCard = ({ review, index }: { review: any, index: number }) => {
                 className="w-full h-full object-cover"
               />
             </div>
-            <div className="absolute -bottom-1 -right-1 bg-white rounded-full p-0.5">
-              <FaCheckCircle className="text-sky-500 text-lg" />
-            </div>
+            {review.verified && (
+              <div className="absolute -bottom-1 -right-1 bg-white rounded-full p-0.5" title="Verified Traveler">
+                <FaCheckCircle className="text-sky-500 text-lg" />
+              </div>
+            )}
           </div>
 
           <div>
-            <h4 className="font-bold text-slate-800 text-lg leading-tight">{review.name}</h4>
+            <h4 className="font-bold text-slate-800 text-lg leading-tight flex items-center gap-2">
+              {review.name}
+              {review.verified && (
+                <span className="text-[10px] font-bold text-green-600 bg-green-50 border border-green-100 px-2 py-0.5 rounded-full flex items-center gap-1">
+                  <FaCheckCircle size={8} /> Verified Traveler
+                </span>
+              )}
+            </h4>
             <span className="text-xs text-slate-400 font-semibold">{review.dateStr || "Recently"}</span>
           </div>
         </div>
@@ -227,6 +290,17 @@ const ReviewCard = ({ review, index }: { review: any, index: number }) => {
         <p className="text-slate-600 leading-relaxed italic mb-6 relative z-10 flex-grow min-h-[80px]">
           "{review.text}"
         </p>
+
+        {/* Review Image (if available) */}
+        {review.image && (
+          <div className="mb-6 relative h-40 w-full rounded-xl overflow-hidden group/image shadow-sm border border-slate-100">
+            <img 
+              src={review.image} 
+              alt="Review Photo" 
+              className="w-full h-full object-cover transition-transform duration-500 group-hover/image:scale-110" 
+            />
+          </div>
+        )}
 
         {/* Footer: Location */}
         <div className="flex items-center gap-2 pt-4 border-t border-slate-100 mt-auto">

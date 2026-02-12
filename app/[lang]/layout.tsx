@@ -4,6 +4,7 @@ import { Metadata } from 'next';
 import '../globals.css';
 import { LanguageProvider } from '../context/LanguageContext';
 import { CurrencyProvider } from '../context/CurrencyContext';
+import { UserProvider } from '../context/UserContext';
 import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
 import { ClerkProvider } from '@clerk/nextjs';
@@ -15,8 +16,13 @@ import { MobileWrapper } from '../components/MobileWrapper';
 import { ExternalLinkHandler } from '../components/ExternalLinkHandler';
 import { MobileLayout } from '../components/MobileLayout';
 import TravelAgencySchema from '../components/seo/TravelAgencySchema';
+import MobileBottomNav from '../components/MobileBottomNav';
 
-const inter = Inter({ subsets: ['latin'] });
+const inter = Inter({ 
+  subsets: ['latin'],
+  variable: '--font-inter',
+  display: 'swap',
+});
 
 export async function generateMetadata({ params }: { params: Promise<{ lang: string }> }): Promise<Metadata> {
   const { lang } = await params;
@@ -36,11 +42,17 @@ export async function generateMetadata({ params }: { params: Promise<{ lang: str
       template: '%s | Mongol Trail',
     },
     description: dict.featured.desc || 'Experience the ultimate adventure with Mongol Trail. Premier tours across Mongolia and the world.',
-    keywords: [
-      'Mongolia Travel', 'Gobi Desert Tours', 'Nomadic Expeditions',
-      'Mongolia Hiking', 'Adventure Travel Mongolia', 'Horseback Riding Mongolia',
-      'Mongol Trail', 'Visit Mongolia', 'Mongolia Tourism'
-    ],
+    keywords: lang === 'mn' 
+      ? [
+          'Монгол аялал', 'Говийн аялал', 'Хөвсгөл нуур', 
+          'Монголд аялах', 'Жуулчлал', 'Аялал жуулчлал', 
+          'Mongol Trail', 'Морин аялал', 'Явган аялал'
+        ]
+      : [
+          'Mongolia Travel', 'Gobi Desert Tours', 'Nomadic Expeditions',
+          'Mongolia Hiking', 'Adventure Travel Mongolia', 'Horseback Riding Mongolia',
+          'Mongol Trail', 'Visit Mongolia', 'Mongolia Tourism'
+        ],
     authors: [{ name: 'Mongol Trail Team' }],
     creator: 'Mongol Trail',
     publisher: 'Mongol Trail',
@@ -98,10 +110,14 @@ export async function generateMetadata({ params }: { params: Promise<{ lang: str
       },
     },
     icons: {
-      icon: '/image.png',
-      shortcut: '/image.png',
-      apple: '/image.png',
+      icon: [
+        { url: '/favicon.ico', sizes: 'any' },
+        { url: '/icon.png', type: 'image/png' },
+      ],
+      apple: '/apple-icon.png',
+      shortcut: '/favicon.ico',
     },
+    manifest: '/site.webmanifest',
   };
 }
 
@@ -122,13 +138,13 @@ export default async function RootLayout(props: {
       signUpUrl={`/${params.lang}/sign-up`}>
       <html lang={params.lang}>
         <head>
-          <link rel="preconnect" href="https://api.dicebear.com" />
-          <link rel="preconnect" href="https://touching-gobbler-96.clerk.accounts.dev" />
-          <link rel="preconnect" href="https://www.transparenttextures.com" />
-          {/* SEO Schema */}
-          <TravelAgencySchema />
-        </head>
-        <body className={inter.className}>
+        <link rel="preconnect" href="https://api.dicebear.com" />
+        <link rel="preconnect" href="https://touching-gobbler-96.clerk.accounts.dev" />
+        <link rel="preconnect" href="https://www.transparenttextures.com" />
+        {/* SEO Schema */}
+        <TravelAgencySchema />
+      </head>
+        <body className={`${inter.variable} antialiased`}>
           <SafeAreaProvider>
             <MobileWrapper>
               <MobileLayout>
@@ -136,11 +152,14 @@ export default async function RootLayout(props: {
                 <ExternalLinkHandler />
                 <LanguageProvider initialLang={params.lang as any}>
                   <CurrencyProvider>
-                    <Navbar dictionary={dict.nav} />
-                    <main className="min-h-screen pt-20">
-                      {children}
-                    </main>
-                    <Footer dictionary={dict.footer} navDictionary={dict.nav} />
+                    <UserProvider>
+                      <Navbar dictionary={dict.nav} />
+                      <main className="min-h-screen pt-20">
+                        {children}
+                      </main>
+                      <Footer dictionary={dict.footer} navDictionary={dict.nav} />
+                      <MobileBottomNav language={params.lang as any} dictionary={dict.nav} />
+                    </UserProvider>
                   </CurrencyProvider>
                 </LanguageProvider>
               </MobileLayout>

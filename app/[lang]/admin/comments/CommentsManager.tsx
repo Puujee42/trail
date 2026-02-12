@@ -61,13 +61,13 @@ export default function CommentsManager({ initialComments }: { initialComments: 
         setNewComment(INITIAL_FORM); // Reset form
         router.refresh(); // Refresh server data
         // Optimistic update (optional, but good for UX)
-        alert("Comment added successfully! Refreshing...");
+        alert("Сэтгэгдэл амжилттай нэмэгдлээ! Шинэчилж байна...");
         window.location.reload(); 
       } else {
-        alert("Failed to create comment.");
+        alert("Сэтгэгдэл үүсгэж чадсангүй.");
       }
     } catch (err) {
-      alert("Error creating comment.");
+      alert("Сэтгэгдэл үүсгэхэд алдаа гарлаа.");
     } finally {
       setLoading(false);
     }
@@ -85,14 +85,14 @@ export default function CommentsManager({ initialComments }: { initialComments: 
       setComments(prev => prev.map(c => c._id === id ? { ...c, status: newStatus } : c));
       router.refresh();
     } catch (err) {
-      alert("Failed to update status.");
+      alert("Төлөв шинэчилж чадсангүй.");
     } finally {
       setLoading(false);
     }
   };
 
   const handleDelete = async (id: string) => {
-    if (!confirm("Are you sure you want to delete this comment?")) return;
+    if (!confirm("Та энэ сэтгэгдлийг устгахдаа итгэлтэй байна уу?")) return;
     try {
       await fetch(`/api/admin/comments?id=${id}`, {
         method: "DELETE",
@@ -100,7 +100,7 @@ export default function CommentsManager({ initialComments }: { initialComments: 
       setComments(prev => prev.filter(c => c._id !== id));
       router.refresh();
     } catch (err) {
-      alert("Failed to delete comment.");
+      alert("Сэтгэгдэл устгаж чадсангүй.");
     }
   };
 
@@ -119,7 +119,7 @@ export default function CommentsManager({ initialComments }: { initialComments: 
       setComments(prev => prev.map(c => c._id === id ? { ...c, text: editText } : c));
       setEditingId(null);
     } catch (err) {
-      alert("Failed to save edit.");
+      alert("Засварыг хадгалж чадсангүй.");
     }
   };
 
@@ -134,11 +134,11 @@ export default function CommentsManager({ initialComments }: { initialComments: 
       <div className="flex justify-between items-center mb-6">
         <div>
             <h1 className="text-3xl font-bold text-slate-800 flex items-center gap-3">
-                <FaCommentDots className="text-blue-500" /> Comments Manager
+                <FaCommentDots className="text-blue-500" /> Сэтгэгдэл удирдах
             </h1>
             <div className="flex gap-2 text-sm font-bold text-slate-500 mt-2">
-                <span className="bg-green-100 text-green-600 px-3 py-1 rounded-full">Approved: {comments.filter(c => c.status === 'approved').length}</span>
-                <span className="bg-yellow-100 text-yellow-600 px-3 py-1 rounded-full">Pending: {comments.filter(c => c.status === 'pending').length}</span>
+                <span className="bg-green-100 text-green-600 px-3 py-1 rounded-full">Зөвшөөрсөн: {comments.filter(c => c.status === 'approved').length}</span>
+                <span className="bg-yellow-100 text-yellow-600 px-3 py-1 rounded-full">Хүлээгдэж буй: {comments.filter(c => c.status === 'pending').length}</span>
             </div>
         </div>
         
@@ -147,7 +147,7 @@ export default function CommentsManager({ initialComments }: { initialComments: 
           onClick={() => setIsModalOpen(true)}
           className="flex items-center gap-2 bg-blue-600 text-white px-5 py-2.5 rounded-lg font-bold shadow-lg hover:bg-blue-700 transition active:scale-95"
         >
-          <FaPlus /> Add Manual Review
+          <FaPlus /> Сэтгэгдэл гараар нэмэх
         </button>
       </div>
 
@@ -156,11 +156,11 @@ export default function CommentsManager({ initialComments }: { initialComments: 
         <table className="w-full text-left">
           <thead className="bg-slate-50 text-slate-500 text-sm uppercase">
             <tr>
-              <th className="p-4">User</th>
-              <th className="p-4">Review Content</th>
-              <th className="p-4">Trip & Rating</th>
-              <th className="p-4">Status</th>
-              <th className="p-4 text-right">Actions</th>
+              <th className="p-4">Хэрэглэгч</th>
+              <th className="p-4">Сэтгэгдэл</th>
+              <th className="p-4">Аялал & Үнэлгээ</th>
+              <th className="p-4">Төлөв</th>
+              <th className="p-4 text-right">Үйлдэл</th>
             </tr>
           </thead>
           <tbody className="divide-y divide-slate-100">
@@ -186,8 +186,8 @@ export default function CommentsManager({ initialComments }: { initialComments: 
                                 className="w-full border p-2 rounded text-sm min-h-[80px] focus:ring-2 focus:ring-blue-200 outline-none"
                             />
                             <div className="flex gap-2">
-                                <button onClick={() => saveEdit(comment._id)} className="flex items-center gap-1 px-3 py-1 bg-blue-500 text-white text-xs rounded hover:bg-blue-600"><FaSave /> Save</button>
-                                <button onClick={cancelEdit} className="px-3 py-1 bg-slate-200 text-slate-600 text-xs rounded hover:bg-slate-300">Cancel</button>
+                                <button onClick={() => saveEdit(comment._id)} className="flex items-center gap-1 px-3 py-1 bg-blue-500 text-white text-xs rounded hover:bg-blue-600"><FaSave /> Хадгалах</button>
+                                <button onClick={cancelEdit} className="px-3 py-1 bg-slate-200 text-slate-600 text-xs rounded hover:bg-slate-300">Болих</button>
                             </div>
                         </div>
                     ) : (
@@ -229,7 +229,7 @@ export default function CommentsManager({ initialComments }: { initialComments: 
                                 onClick={() => handleStatusChange(comment._id, 'approved')} 
                                 disabled={loading}
                                 className="p-2 bg-green-50 text-green-600 rounded hover:bg-green-100 tooltip" 
-                                title="Approve"
+                                title="Зөвшөөрөх"
                             >
                                 <FaCheck />
                             </button>
@@ -240,7 +240,7 @@ export default function CommentsManager({ initialComments }: { initialComments: 
                                 onClick={() => handleStatusChange(comment._id, 'rejected')} 
                                 disabled={loading}
                                 className="p-2 bg-yellow-50 text-yellow-600 rounded hover:bg-yellow-100 tooltip"
-                                title="Reject (Hide)"
+                                title="Татгалзах (Нуух)"
                              >
                                 <FaTimes />
                             </button>
@@ -249,7 +249,7 @@ export default function CommentsManager({ initialComments }: { initialComments: 
                         <button 
                             onClick={() => handleDelete(comment._id)} 
                             className="p-2 bg-red-50 text-red-600 rounded hover:bg-red-100 tooltip"
-                            title="Delete Permanently"
+                            title="Бүрмөсөн устгах"
                         >
                             <FaTrash />
                         </button>
@@ -261,7 +261,7 @@ export default function CommentsManager({ initialComments }: { initialComments: 
             {comments.length === 0 && (
                 <tr>
                     <td colSpan={5} className="p-8 text-center text-slate-400 italic">
-                        No comments found.
+                        Сэтгэгдэл олдсонгүй.
                     </td>
                 </tr>
             )}
@@ -281,7 +281,7 @@ export default function CommentsManager({ initialComments }: { initialComments: 
             >
               {/* Modal Header */}
               <div className="p-5 border-b flex justify-between items-center bg-slate-50">
-                <h2 className="text-lg font-bold text-slate-800">Add Manual Review</h2>
+                <h2 className="text-lg font-bold text-slate-800">Сэтгэгдэл гараар нэмэх</h2>
                 <button onClick={() => setIsModalOpen(false)} className="text-slate-400 hover:text-slate-600"><FaTimes /></button>
               </div>
 
@@ -290,7 +290,7 @@ export default function CommentsManager({ initialComments }: { initialComments: 
                 
                 {/* Language Select */}
                 <div>
-                   <label className="block text-xs font-bold text-slate-500 uppercase mb-1">Language</label>
+                   <label className="block text-xs font-bold text-slate-500 uppercase mb-1">Хэл</label>
                    <div className="flex gap-2">
                       {['mn', 'en', 'ko'].map((lang) => (
                         <button
@@ -312,7 +312,7 @@ export default function CommentsManager({ initialComments }: { initialComments: 
                 {/* Name & Location */}
                 <div className="grid grid-cols-2 gap-4">
                     <div>
-                        <label className="block text-xs font-bold text-slate-500 uppercase mb-1">User Name</label>
+                        <label className="block text-xs font-bold text-slate-500 uppercase mb-1">Хэрэглэгчийн нэр</label>
                         <input 
                             required
                             type="text" 
@@ -322,13 +322,13 @@ export default function CommentsManager({ initialComments }: { initialComments: 
                         />
                     </div>
                     <div>
-                        <label className="block text-xs font-bold text-slate-500 uppercase mb-1">Location</label>
+                        <label className="block text-xs font-bold text-slate-500 uppercase mb-1">Байршил</label>
                         <input 
                             type="text" 
                             className="w-full border p-2 rounded text-sm focus:ring-2 focus:ring-blue-100 outline-none"
                             value={newComment.location}
                             onChange={(e) => setNewComment({...newComment, location: e.target.value})}
-                            placeholder="e.g. Paris, France"
+                            placeholder="ж.нь. Улаанбаатар, Монгол"
                         />
                     </div>
                 </div>
@@ -336,7 +336,7 @@ export default function CommentsManager({ initialComments }: { initialComments: 
                 {/* Trip & Rating */}
                 <div className="grid grid-cols-2 gap-4">
                     <div>
-                        <label className="block text-xs font-bold text-slate-500 uppercase mb-1">Trip Name</label>
+                        <label className="block text-xs font-bold text-slate-500 uppercase mb-1">Аяллын нэр</label>
                         <input 
                             required
                             type="text" 
@@ -346,24 +346,24 @@ export default function CommentsManager({ initialComments }: { initialComments: 
                         />
                     </div>
                     <div>
-                        <label className="block text-xs font-bold text-slate-500 uppercase mb-1">Rating</label>
+                        <label className="block text-xs font-bold text-slate-500 uppercase mb-1">Үнэлгээ</label>
                         <select 
                             className="w-full border p-2 rounded text-sm bg-white"
                             value={newComment.rating}
                             onChange={(e) => setNewComment({...newComment, rating: Number(e.target.value)})}
                         >
-                           <option value={5}>5 Stars</option>
-                           <option value={4}>4 Stars</option>
-                           <option value={3}>3 Stars</option>
-                           <option value={2}>2 Stars</option>
-                           <option value={1}>1 Star</option>
+                           <option value={5}>5 Од</option>
+                           <option value={4}>4 Од</option>
+                           <option value={3}>3 Од</option>
+                           <option value={2}>2 Од</option>
+                           <option value={1}>1 Од</option>
                         </select>
                     </div>
                 </div>
 
                 {/* Review Text */}
                 <div>
-                    <label className="block text-xs font-bold text-slate-500 uppercase mb-1">Review Content</label>
+                    <label className="block text-xs font-bold text-slate-500 uppercase mb-1">Сэтгэгдлийн агуулга</label>
                     <textarea 
                         required
                         rows={4}
@@ -379,7 +379,7 @@ export default function CommentsManager({ initialComments }: { initialComments: 
                   disabled={loading}
                   className="w-full py-3 bg-blue-600 text-white font-bold rounded-lg hover:bg-blue-700 transition"
                 >
-                  {loading ? "Posting..." : "Post Review"}
+                  {loading ? "Нийтэлж байна..." : "Сэтгэгдэл нийтлэх"}
                 </button>
 
               </form>

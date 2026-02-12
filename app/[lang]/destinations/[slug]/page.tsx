@@ -35,6 +35,8 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
     };
 }
 
+import StructuredData from "@/app/components/seo/StructuredData";
+
 export default async function DestinationPage({ params }: PageProps) {
     const { slug, lang } = await params;
     const destination = await getDestinationBySlug(slug);
@@ -43,22 +45,17 @@ export default async function DestinationPage({ params }: PageProps) {
         return notFound();
     }
 
-    // Schema for Place + FAQ
-    const placeSchema = {
-        '@context': 'https://schema.org',
-        '@type': 'TouristDestination',
-        name: destination.name[lang],
-        description: destination.description[lang],
-        image: destination.images,
-        url: `https://www.mongoltrail.com/${lang}/destinations/${slug}`,
-        touristType: ["Adventure Travel", "Cultural Tourism"],
-    };
-
     return (
         <div className="min-h-screen bg-slate-50 font-sans">
-            <script
-                type="application/ld+json"
-                dangerouslySetInnerHTML={{ __html: JSON.stringify(placeSchema) }}
+            <StructuredData
+                type="TouristDestination"
+                data={{
+                    name: destination.name[lang],
+                    description: destination.description[lang],
+                    image: destination.images,
+                    url: `https://www.mongoltrail.com/${lang}/destinations/${slug}`,
+                    touristType: ["Adventure Travel", "Cultural Tourism"],
+                }}
             />
 
             {/* Hero Section */}

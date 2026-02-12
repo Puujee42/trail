@@ -55,17 +55,17 @@ export default function CustomTripsAdminPage() {
         }
     };
 
-    if (loading) return <div className="p-8 text-slate-500">Loading custom inquiries...</div>;
+    if (loading) return <div className="p-8 text-slate-500">Тусгай захиалгуудыг ачаалж байна...</div>;
 
     return (
         <div className="p-8 bg-slate-50 min-h-screen">
             <div className="mb-8 flex justify-between items-center">
                 <div>
-                    <h1 className="text-2xl font-bold text-slate-800">Custom Trip Inquiries</h1>
-                    <p className="text-slate-500">Manage bespoke travel requests</p>
+                    <h1 className="text-2xl font-bold text-slate-800">Тусгай аяллын хүсэлтүүд</h1>
+                    <p className="text-slate-500">Захиалгат аяллын хүсэлтүүдийг удирдах</p>
                 </div>
                 <div className="bg-white px-4 py-2 rounded-lg border border-slate-200 text-sm font-bold text-slate-600">
-                    Total: {trips.length}
+                    Нийт: {trips.length}
                 </div>
             </div>
 
@@ -86,7 +86,7 @@ export default function CustomTripsAdminPage() {
                                 </div>
                             </div>
                             <div className="text-right text-xs text-slate-400">
-                                Received<br />
+                                Ирсэн<br />
                                 <span className="font-bold text-slate-600">{format(new Date(trip.createdAt), 'MMM dd, yyyy')}</span>
                             </div>
                         </div>
@@ -95,34 +95,34 @@ export default function CustomTripsAdminPage() {
 
                             {/* Party */}
                             <div className="space-y-1">
-                                <p className="text-xs font-bold text-slate-400 uppercase tracking-wider mb-1">Party</p>
+                                <p className="text-xs font-bold text-slate-400 uppercase tracking-wider mb-1">Бүлэг</p>
                                 <div className="flex items-center gap-2 text-slate-700 font-medium">
                                     <Users size={16} className="text-blue-400" />
-                                    {trip.adults} Adults, {trip.children} Kids
+                                    {trip.adults} Том хүн, {trip.children} Хүүхэд
                                 </div>
                             </div>
 
                             {/* Date & Budget */}
                             <div className="space-y-1">
-                                <p className="text-xs font-bold text-slate-400 uppercase tracking-wider mb-1">Details</p>
+                                <p className="text-xs font-bold text-slate-400 uppercase tracking-wider mb-1">Дэлгэрэнгүй</p>
                                 <div className="flex items-center gap-2 text-slate-700">
                                     <Calendar size={16} className="text-blue-400" />
-                                    {trip.arrivalDate || "Flexible"}
+                                    {trip.arrivalDate || "Уян хатан"}
                                 </div>
                                 {trip.budget && (
                                     <div className="flex items-center gap-2 text-slate-700">
                                         <DollarSign size={16} className="text-green-500" />
-                                        ${trip.budget} / person
+                                        ${trip.budget} / хүн
                                     </div>
                                 )}
                             </div>
 
                             {/* Style */}
                             <div className="space-y-1">
-                                <p className="text-xs font-bold text-slate-400 uppercase tracking-wider mb-1">Preferences</p>
+                                <p className="text-xs font-bold text-slate-400 uppercase tracking-wider mb-1">Сонголтууд</p>
                                 <div className="flex items-center gap-2 text-slate-700">
                                     <Hotel size={16} className="text-orange-400" />
-                                    {trip.hotel === '5stars' ? 'Luxury (5★)' : trip.hotel === '4stars' ? 'Comfort (4★)' : trip.hotel}
+                                    {trip.hotel === '5stars' ? 'Тансаг (5★)' : trip.hotel === '4stars' ? 'Тухтай (4★)' : trip.hotel}
                                 </div>
                                 {trip.interests && trip.interests.length > 0 && (
                                     <div className="flex flex-wrap gap-1 mt-1">
@@ -135,7 +135,7 @@ export default function CustomTripsAdminPage() {
 
                             {/* Message */}
                             <div className="md:col-span-2 lg:col-span-1 bg-slate-50 p-3 rounded-lg border border-slate-100 italic text-slate-600 text-xs">
-                                "{trip.otherIdeas || "No specific requirements mentioned."}"
+                                "{trip.otherIdeas || "Тусгай шаардлага байхгүй."}"
                             </div>
 
                         </div>
@@ -144,7 +144,7 @@ export default function CustomTripsAdminPage() {
 
                 {trips.length === 0 && (
                     <div className="text-center py-12 bg-white rounded-xl border border-dashed border-slate-300">
-                        <p className="text-slate-400">No custom inquiries yet.</p>
+                        <p className="text-slate-400">Одоогоор тусгай захиалга ирээгүй байна.</p>
                     </div>
                 )}
             </div>

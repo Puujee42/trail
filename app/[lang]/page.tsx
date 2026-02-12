@@ -1,14 +1,23 @@
 import { Suspense } from "react";
+import dynamic from "next/dynamic";
 import HeroWrapper from "../components/HeroWrapper";
 import FeaturedTripsWrapper from "../components/FeaturedTripsWrapper";
-import WhyChooseUs from "../components/WhyChooseUs";
-import TopDestinations from "../components/TopDestinations";
-import FAQ from "../components/FAQ";
-import TripReviews from "../components/TripReviews";
 import { Metadata } from 'next';
 import { getDictionary } from "@/get-dictionary";
 import { Locale } from "@/i18n-config";
 import StructuredData from "../components/seo/StructuredData";
+
+// Code Splitting for below-the-fold components
+const WhyChooseUs = dynamic(() => import("../components/WhyChooseUs"), { 
+  loading: () => <div className="h-96 bg-slate-50 animate-pulse" /> 
+});
+const TopDestinations = dynamic(() => import("../components/TopDestinations"), {
+  loading: () => <div className="h-96 bg-white animate-pulse" />
+});
+const FAQ = dynamic(() => import("../components/FAQ"));
+const TripReviews = dynamic(() => import("../components/TripReviews"), {
+  loading: () => <div className="h-96 bg-slate-50 animate-pulse" />
+});
 
 export const revalidate = 3600;
 
@@ -17,15 +26,15 @@ export async function generateMetadata(props: { params: Promise<{ lang: Locale }
   const dict = await getDictionary(params.lang);
 
   const titles = {
-    en: 'Mongolia Travel & Tours - Visit Mongolia with Mongol Trail | Local Expert Guides',
-    mn: 'Монгол аялал - Mongol Trail | Орон нутгийн мэргэжлийн хөтөч',
-    ko: '몽골 여행 및 투어 - Mongol Trail과 함께 몽골 방문'
+    en: 'Mongol Trail - Discover the Wild Beauty of Mongolia',
+    mn: 'Mongol Trail - Монголын зэрлэг байгалийг нээ',
+    ko: 'Mongol Trail - 몽골의 야생의 아름다움을 발견하세요'
   };
 
   const descriptions = {
-    en: 'Discover authentic Mongolia travel experiences with Mongol Trail. Expert local guides, custom tours to the Gobi Desert, Altai Mountains & more. 100% locally-owned tour operator.',
-    mn: 'Монголын аяллаар бидэнтэй хамт. Орон нутгийн туршлагатай хөтөч, Говь, Алтай, Орхон хөндийн аяллууд.',
-    ko: 'Mongol Trail과 함께 진정한 몽골 여행을 경험하세요. 현지 전문 가이드, 고비 사막, 알타이 산맥 맞춤 투어.'
+    en: 'Explore the best hiking, horse, and bike trails in Mongolia. Get GPX maps and travel tips.',
+    mn: 'Монголын хамгийн шилдэг явган, морин болон дугуйн аяллын замуудтай танилц. GPX зураг болон аяллын зөвлөгөө аваарай.',
+    ko: '몽골 최고의 하이킹, 승마, 자전거 코스를 탐험하세요. GPX 지도와 여행 팁을 받으세요.'
   };
 
   const baseUrl = 'https://www.mongoltrail.com';
@@ -33,16 +42,21 @@ export async function generateMetadata(props: { params: Promise<{ lang: Locale }
     title: titles[params.lang] || titles.en,
     description: descriptions[params.lang] || descriptions.en,
     keywords: [
-      'Mongolia travel',
-      'Mongolia tours',
-      'visit Mongolia',
-      'Gobi Desert tours',
+      'Mongol Trail',
+      'Mongolia Trekking',
+      'Mongolia Hiking',
+      'Mongolia Travel',
+      'Mongolia Tours',
+      'Gobi Desert Trekking',
+      'Altai Mountains Hiking',
+      'Mongolia Horse Riding',
+      'Mongolia Bike Trails',
+      'Visit Mongolia',
+      'Mongolia GPX Maps',
+      'Adventure Travel Mongolia',
       'Mongolia tour operator',
-      'Altai Mountains',
       'Orkhon Valley',
-      'Mongolia visa',
-      'best time to visit Mongolia',
-      'Mongolia travel guide'
+      'best time to visit Mongolia'
     ],
     alternates: {
       canonical: `${baseUrl}/${params.lang}`,

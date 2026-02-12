@@ -32,7 +32,10 @@ export async function fetchTripsFromRust(params?: { type?: string; region?: stri
     }));
 
   } catch (error) {
-    console.warn("Rust service unreachable, skipping...");
+    // Only log warning in development
+    if (process.env.NODE_ENV === 'development') {
+      console.warn("Rust service unreachable, falling back to MongoDB...");
+    }
     return null;
   }
 }

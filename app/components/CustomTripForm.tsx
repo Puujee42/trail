@@ -273,6 +273,7 @@ const CustomTripForm = ({ dictionary }: { dictionary: any }) => {
                             >
                                 <input
                                     type="radio"
+                                    id={`hotel-${opt.id}`}
                                     name="hotel"
                                     className="hidden"
                                     value={opt.id}
@@ -323,8 +324,10 @@ const CustomTripForm = ({ dictionary }: { dictionary: any }) => {
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-12 pt-8 border-t border-slate-100">
                     <div className="space-y-8">
                         <div className="space-y-4">
-                            <label className="text-[10px] font-black uppercase text-slate-400 tracking-widest ml-1">{t.details?.arrivalDate || "Arrival Date"}</label>
+                            <label className="text-[10px] font-black uppercase text-slate-400 tracking-widest ml-1" htmlFor="arrival-date">{t.details?.arrivalDate || "Arrival Date"}</label>
                             <input
+                                id="arrival-date"
+                                name="arrivalDate"
                                 type="date"
                                 className="w-full p-5 bg-slate-50 border border-slate-100 rounded-3xl focus:outline-none focus:ring-4 focus:ring-sky-50 focus:border-sky-500 transition-all font-bold text-slate-700"
                                 value={formData.arrivalDate}
@@ -332,8 +335,10 @@ const CustomTripForm = ({ dictionary }: { dictionary: any }) => {
                             />
                         </div>
                         <div className="space-y-4">
-                            <label className="text-[10px] font-black uppercase text-slate-400 tracking-widest ml-1">{t.details?.budget || "Budget Per Soul ($)"}</label>
+                            <label className="text-[10px] font-black uppercase text-slate-400 tracking-widest ml-1" htmlFor="budget">{t.details?.budget || "Budget Per Soul ($)"}</label>
                             <input
+                                id="budget"
+                                name="budget"
                                 type="number"
                                 placeholder={t.details?.budgetPlaceholder || "e.g. 2500"}
                                 className="w-full p-5 bg-slate-50 border border-slate-100 rounded-3xl focus:outline-none focus:ring-4 focus:ring-sky-50 focus:border-sky-500 transition-all font-bold text-slate-700 placeholder:text-slate-300"
@@ -344,8 +349,10 @@ const CustomTripForm = ({ dictionary }: { dictionary: any }) => {
                     </div>
 
                     <div className="space-y-6">
-                        <label className="text-[10px] font-black uppercase text-slate-400 tracking-widest ml-1">{t.details?.narrative || "The Narrative"}</label>
+                        <label className="text-[10px] font-black uppercase text-slate-400 tracking-widest ml-1" htmlFor="narrative">{t.details?.narrative || "The Narrative"}</label>
                         <textarea
+                            id="narrative"
+                            name="otherIdeas"
                             rows={6}
                             placeholder={t.details?.narrativePlaceholder || "Share your specific dreams or requirements for this journey..."}
                             className="w-full p-6 bg-slate-50 border border-slate-100 rounded-3xl focus:outline-none focus:ring-4 focus:ring-sky-50 focus:border-sky-500 transition-all font-bold text-slate-700 placeholder:text-slate-300 resize-none"
@@ -364,24 +371,33 @@ const CustomTripForm = ({ dictionary }: { dictionary: any }) => {
                     </div>
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                         <input
-                            type="text" placeholder={t.contact?.namePlaceholder || "Full Name"}
+                            type="text" 
+                            name="fullName"
+                            placeholder={t.contact?.namePlaceholder || "Full Name"}
                             className="w-full p-5 bg-white border border-slate-100 rounded-2xl focus:outline-none focus:border-sky-500 font-bold transition-all"
                             value={formData.fullName}
                             onChange={(e) => setFormData(prev => ({ ...prev, fullName: e.target.value }))}
                             required
+                            aria-label="Full Name"
                         />
                         <input
-                            type="email" placeholder={t.contact?.emailPlaceholder || "Email Address"}
+                            type="email" 
+                            name="email"
+                            placeholder={t.contact?.emailPlaceholder || "Email Address"}
                             className="w-full p-5 bg-white border border-slate-100 rounded-2xl focus:outline-none focus:border-sky-500 font-bold transition-all"
                             value={formData.email}
                             onChange={(e) => setFormData(prev => ({ ...prev, email: e.target.value }))}
                             required
+                            aria-label="Email Address"
                         />
                         <input
-                            type="tel" placeholder={t.contact?.phonePlaceholder || "Phone Number"}
+                            type="tel" 
+                            name="phone"
+                            placeholder={t.contact?.phonePlaceholder || "Phone Number"}
                             className="w-full p-5 bg-white border border-slate-100 rounded-2xl focus:outline-none focus:border-sky-500 font-bold transition-all"
                             value={formData.phone}
                             onChange={(e) => setFormData(prev => ({ ...prev, phone: e.target.value }))}
+                            aria-label="Phone Number"
                         />
                     </div>
                 </div>

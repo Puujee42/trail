@@ -55,17 +55,17 @@ export default function SettingsManager() {
 
       if (!res.ok) throw new Error("Failed to save");
       
-      setMessage({ type: 'success', text: "Settings saved successfully!" });
+      setMessage({ type: 'success', text: "Тохиргоо амжилттай хадгалагдлаа!" });
       setTimeout(() => setMessage(null), 3000);
 
     } catch (err) {
-      setMessage({ type: 'error', text: "Error saving settings." });
+      setMessage({ type: 'error', text: "Тохиргоо хадгалахад алдаа гарлаа." });
     } finally {
       setSaving(false);
     }
   };
 
-  if (loading) return <div className="p-8 text-center text-slate-500">Loading settings...</div>;
+  if (loading) return <div className="p-8 text-center text-slate-500">Тохиргоог ачаалж байна...</div>;
 
   return (
     <div className="max-w-4xl mx-auto">
@@ -82,22 +82,22 @@ export default function SettingsManager() {
 
       <form onSubmit={handleSave} className="space-y-8">
         {/* --- General Information --- */}
-        <Section title="General Information" icon={FaGlobe}>
-            <TrilingualInput label="Application Name" field="siteName" value={settings.siteName} onChange={handleTrilingualChange} />
-            <Input label="Support Email" value={settings.supportEmail} onChange={v => setSettings({...settings, supportEmail: v})} type="email" />
-            <TrilingualInput label="Global Announcement (Banner)" field="announcementBar" value={settings.announcementBar} onChange={handleTrilingualChange} />
+        <Section title="Ерөнхий мэдээлэл" icon={FaGlobe}>
+            <TrilingualInput label="Аппликейшны нэр" field="siteName" value={settings.siteName} onChange={handleTrilingualChange} />
+            <Input label="Тусламжийн и-мэйл" value={settings.supportEmail} onChange={v => setSettings({...settings, supportEmail: v})} type="email" />
+            <TrilingualInput label="Глобал зарлал (Баннер)" field="announcementBar" value={settings.announcementBar} onChange={handleTrilingualChange} />
         </Section>
 
         {/* --- System Controls --- */}
-        <Section title="System Controls" icon={FaShieldAlt}>
-            <Toggle label="Allow New Registrations" description="If disabled, new users cannot sign up." enabled={settings.allowRegistration} onChange={v => setSettings({...settings, allowRegistration: v})} />
-            <Toggle label="Maintenance Mode" description="Show a maintenance page to all non-admin users." enabled={settings.maintenanceMode} onChange={v => setSettings({...settings, maintenanceMode: v})} danger />
+        <Section title="Системийн удирдлага" icon={FaShieldAlt}>
+            <Toggle label="Шинэ бүртгэл зөвшөөрөх" description="Идэвхгүй бол шинэ хэрэглэгч бүртгүүлэх боломжгүй." enabled={settings.allowRegistration} onChange={v => setSettings({...settings, allowRegistration: v})} />
+            <Toggle label="Засварын горим" description="Админаас бусад бүх хэрэглэгчдэд засварын хуудас харуулна." enabled={settings.maintenanceMode} onChange={v => setSettings({...settings, maintenanceMode: v})} danger />
         </Section>
 
         {/* --- Save Button --- */}
         <div className="flex justify-end">
             <button type="submit" disabled={saving} className="flex items-center gap-2 bg-blue-600 text-white px-8 py-3 rounded-lg font-bold hover:bg-blue-700 transition-all shadow-lg disabled:opacity-50">
-                {saving ? "Saving..." : <><FaSave /> Save Changes</>}
+                {saving ? "Хадгалж байна..." : <><FaSave /> Өөрчлөлтийг хадгалах</>}
             </button>
         </div>
       </form>

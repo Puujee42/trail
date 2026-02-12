@@ -1,5 +1,24 @@
 @import "tailwindcss";
 
+@theme {
+  --font-sans: var(--font-inter), ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+  --color-mongol-blue: #00AEEF;
+  --color-mongol-green: #4F7942;
+  --color-mongol-sand: #C2B280;
+  --color-mongol-sky: #419FD9;
+  --color-mongol-cloud: #F5F7F9;
+  --color-mongol-sunset: #FF8C00;
+
+  /* Z-Index System */
+  --z-negative: -1;
+  --z-base: 0;
+  --z-navbar: 100;
+  --z-dropdown: 200;
+  --z-modal: 300;
+  --z-toast: 400;
+  --z-max: 9999;
+}
+
 :root {
   --trippy-green: #ccff00;
   --trippy-blue: #2c00ff;

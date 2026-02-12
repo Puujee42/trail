@@ -10,6 +10,18 @@ const nextConfig: NextConfig = {
         port: '',
         pathname: '**', // Allow any path from this host
       },
+      {
+        protocol: 'https',
+        hostname: 'img.clerk.com',
+        port: '',
+        pathname: '**',
+      },
+      {
+        protocol: 'https',
+        hostname: 'api.dicebear.com',
+        port: '',
+        pathname: '**',
+      },
     ],
   },
   async redirects() {
