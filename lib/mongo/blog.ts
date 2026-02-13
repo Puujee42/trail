@@ -8,6 +8,7 @@ interface LocalizedString {
   mn: string;
   en: string;
   ko: string;
+  de: string;
 }
 
 export interface BlogPost {

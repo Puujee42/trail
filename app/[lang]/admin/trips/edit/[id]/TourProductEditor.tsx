@@ -31,6 +31,7 @@ interface LocalizedString {
     mn: string;
     en: string;
     ko: string;
+    de: string;
 }
 
 interface ItineraryDay {

@@ -9,6 +9,7 @@ interface LocalizedString {
   mn: string;
   en: string;
   ko: string;
+  de: string;
 }
 
 interface BlogPost {
@@ -25,11 +26,11 @@ interface BlogPost {
 
 /* ────────────────────── Static Content ────────────────────── */
 const categories = [
-  { id: "all", label: { mn: "Бүгд", en: "All", ko: "전체"} },
-  { id: "guide", label: { mn: "Аяллын хөтөч", en: "Travel Guide", ko: "여행 가이드" } },
-  { id: "tips", label: { mn: "Зөвлөгөө", en: "Tips", ko: "팁" } },
-  { id: "food", label: { mn: "Хоол & Соёл", en: "Food & Culture", ko: "음식 및 문화" } },
-  { id: "stories", label: { mn: "Аялагчийн түүх", en: "Travel Stories", ko: "여행 이야기" } },
+  { id: "all", label: { mn: "Бүгд", en: "All", ko: "전체", de: "Alle" } },
+  { id: "guide", label: { mn: "Аяллын хөтөч", en: "Travel Guide", ko: "여행 가이드", de: "Reiseführer" } },
+  { id: "tips", label: { mn: "Зөвлөгөө", en: "Tips", ko: "팁", de: "Tipps" } },
+  { id: "food", label: { mn: "Хоол & Соёл", en: "Food & Culture", ko: "음식 및 문화", de: "Essen & Kultur" } },
+  { id: "stories", label: { mn: "Аялагчийн түүх", en: "Travel Stories", ko: "여행 이야기", de: "Reiseberichte" } },
 ];
 
 interface BlogListProps {
@@ -57,6 +58,11 @@ export default function BlogList({ posts, featuredPost, initialCategory }: BlogL
       featuredTitle: "특성 있는 기사",
       readMore: "더 읽기 →",
       noPosts: "기사가 없습니다."
+    },
+    de: {
+      featuredTitle: "Vorgestellter Artikel",
+      readMore: "Weiterlesen →",
+      noPosts: "Keine Beiträge gefunden."
     }
   };
 

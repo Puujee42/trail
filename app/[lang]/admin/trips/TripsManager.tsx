@@ -11,11 +11,13 @@ interface LocalizedString {
   mn: string;
   en: string;
   ko: string;
+  de: string;
 }
 interface LocalizedPrice {
   mn: number;
   en: number;
   ko: number;
+  de: number;
 }
 interface ItineraryItem {
   day: number;
@@ -79,29 +81,29 @@ interface Passenger {
   userEmail: string;
   status: string;
 }
-type Language = 'mn' | 'en' | 'ko';
+type Language = 'mn' | 'en' | 'ko' | 'de';
 interface TrilingualInputProps {
   label: string;
   field?: keyof Trip;
-  value: { mn: string; en: string; ko: string };
+  value: LocalizedString;
   onChange: (field: keyof Trip, lang: Language, value: string) => void;
   isTextarea?: boolean;
 }
 interface TrilingualItinProps {
   label: string;
-  value: { mn: string; en: string; ko: string };
+  value: LocalizedString;
   onChange: (lang: Language, value: string) => void;
   isTextarea?: boolean;
 }
 const BLANK_FORM_DATA: Partial<Trip> = {
-  title: { mn: "", en: "", ko: "" },
-  location: { mn: "", en: "", ko: "" },
-  description: { mn: "", en: "", ko: "" },
-  duration: { mn: "", en: "", ko: "" },
-  ageGroup: { mn: "Бүх нас", en: "All Ages", ko: "전연령" },
-  price: { mn: 0, en: 0, ko: 0 },
-  priceChild: { mn: 0, en: 0, ko: 0 },
-  salePrice: { mn: 0, en: 0, ko: 0 },
+  title: { mn: "", en: "", ko: "", de: "" },
+  location: { mn: "", en: "", ko: "", de: "" },
+  description: { mn: "", en: "", ko: "", de: "" },
+  duration: { mn: "", en: "", ko: "", de: "" },
+  ageGroup: { mn: "Бүх нас", en: "All Ages", ko: "전연령", de: "Alle Altersgruppen" },
+  price: { mn: 0, en: 0, ko: 0, de: 0 },
+  priceChild: { mn: 0, en: 0, ko: 0, de: 0 },
+  salePrice: { mn: 0, en: 0, ko: 0, de: 0 },
   discountPercentage: 0,
   rating: 5.0,
   type: "standard",
@@ -142,10 +144,11 @@ const TrilingualArrayInput: React.FC<{
     <div className="space-y-2">
       {items.map((item, idx) => (
         <div key={idx} className="flex gap-2 items-start">
-          <div className="flex-1 grid grid-cols-1 md:grid-cols-3 gap-2">
+          <div className="flex-1 grid grid-cols-1 md:grid-cols-4 gap-2">
             <input value={item.mn} onChange={e => onChange(idx, 'mn', e.target.value)} placeholder="MONGOLIAN" className={`w-full border p-2 rounded text-xs transition-all ${activeLang === 'mn' ? 'ring-2 ring-blue-500/20 border-blue-400 bg-blue-50/10' : 'bg-white'}`} />
             <input value={item.en} onChange={e => onChange(idx, 'en', e.target.value)} placeholder="ENGLISH" className={`w-full border p-2 rounded text-xs transition-all ${activeLang === 'en' ? 'ring-2 ring-blue-500/20 border-blue-400 bg-blue-50/10' : 'bg-white'}`} />
             <input value={item.ko} onChange={e => onChange(idx, 'ko', e.target.value)} placeholder="KOREAN" className={`w-full border p-2 rounded text-xs transition-all ${activeLang === 'ko' ? 'ring-2 ring-blue-500/20 border-blue-400 bg-blue-50/10' : 'bg-white'}`} />
+            <input value={item.de} onChange={e => onChange(idx, 'de', e.target.value)} placeholder="GERMAN" className={`w-full border p-2 rounded text-xs transition-all ${activeLang === 'de' ? 'ring-2 ring-blue-500/20 border-blue-400 bg-blue-50/10' : 'bg-white'}`} />
           </div>
           <button type="button" onClick={() => onRemove(idx)} className="mt-1 text-red-300 hover:text-red-500 transition-colors p-1"><FaTrash size={12} /></button>
         </div>
@@ -250,7 +253,8 @@ export default function TripsManager({ initialTrips }: { initialTrips: Trip[] })
     return {
       mn: saleMnt,
       en: exchangeRates.USD > 0 ? Math.round(saleMnt / exchangeRates.USD) : 0,
-      ko: exchangeRates.KRW > 0 ? Math.round(saleMnt / exchangeRates.KRW) : 0
+      ko: exchangeRates.KRW > 0 ? Math.round(saleMnt / exchangeRates.KRW) : 0,
+      de: exchangeRates.USD > 0 ? Math.round(saleMnt / exchangeRates.USD) : 0 // Assuming USD as proxy for EUR if needed, or keep same as EN
     };
   };
 
@@ -262,7 +266,8 @@ export default function TripsManager({ initialTrips }: { initialTrips: Trip[] })
       const updatedPrice = {
         mn: numValue,
         en: exchangeRates.USD > 0 ? Math.round(numValue / exchangeRates.USD) : 0,
-        ko: exchangeRates.KRW > 0 ? Math.round(numValue / exchangeRates.KRW) : 0
+        ko: exchangeRates.KRW > 0 ? Math.round(numValue / exchangeRates.KRW) : 0,
+        de: exchangeRates.USD > 0 ? Math.round(numValue / exchangeRates.USD) : 0
       };
 
       let nextState = { ...prev, [field]: updatedPrice };
@@ -295,8 +300,8 @@ export default function TripsManager({ initialTrips }: { initialTrips: Trip[] })
       return {
         ...prev,
         discountPercentage: discount,
-        salePrice: newSalePrice || { mn: 0, en: 0, ko: 0 },
-        salePriceChild: newSalePriceChild || { mn: 0, en: 0, ko: 0 }
+        salePrice: newSalePrice || { mn: 0, en: 0, ko: 0, de: 0 },
+        salePriceChild: newSalePriceChild || { mn: 0, en: 0, ko: 0, de: 0 }
       };
     });
   };
@@ -308,7 +313,7 @@ export default function TripsManager({ initialTrips }: { initialTrips: Trip[] })
     });
   };
   const addLocalizedArrayItem = (field: 'highlights' | 'includedServices' | 'excludedServices') => {
-    setFormData(prev => ({ ...prev, [field]: [...(prev[field] || []), { mn: "", en: "", ko: "" }] }));
+    setFormData(prev => ({ ...prev, [field]: [...(prev[field] || []), { mn: "", en: "", ko: "", de: "" }] }));
   };
   const removeLocalizedArrayItem = (field: 'highlights' | 'includedServices' | 'excludedServices', index: number) => {
     setFormData(prev => ({ ...prev, [field]: (prev[field] || []).filter((_, i) => i !== index) }));
@@ -359,7 +364,7 @@ export default function TripsManager({ initialTrips }: { initialTrips: Trip[] })
     }
   };
   const addItineraryDay = () => {
-    setFormData(prev => ({ ...prev, itinerary: [...(prev.itinerary || []), { day: (prev.itinerary?.length || 0) + 1, title: { mn: '', en: '', ko: '' }, desc: { mn: '', en: '', ko: '' } }] }));
+    setFormData(prev => ({ ...prev, itinerary: [...(prev.itinerary || []), { day: (prev.itinerary?.length || 0) + 1, title: { mn: '', en: '', ko: '', de: '' }, desc: { mn: '', en: '', ko: '', de: '' } }] }));
   };
   const removeItineraryDay = (index: number) => {
     setFormData(prev => ({ ...prev, itinerary: (prev.itinerary || []).filter((_, i) => i !== index) }));
@@ -557,7 +562,7 @@ export default function TripsManager({ initialTrips }: { initialTrips: Trip[] })
         <h1 className="text-3xl font-bold text-slate-800">Аялал удирдах</h1>
         <div className="flex items-center gap-4">
           <div className="flex bg-slate-100 p-1 rounded-lg border border-slate-200">
-            {(['mn', 'en', 'ko'] as Language[]).map(lang => (
+            {(['mn', 'en', 'ko', 'de'] as Language[]).map(lang => (
               <button
                 key={lang}
                 onClick={() => setActiveAdminLang(lang)}
@@ -692,11 +697,11 @@ export default function TripsManager({ initialTrips }: { initialTrips: Trip[] })
                 </div>
                 {/* 2. Trilingual & Details */}
                 <div className="space-y-4 border-t pt-6">
-                  <TrilingualInput label={activeAdminLang === 'mn' ? 'Аяллын нэр' : 'Trip Title'} field="title" value={formData.title || { mn: '', en: '', ko: '' }} activeLang={activeAdminLang} onChange={handleTrilingualChange} />
-                  <TrilingualInput label={activeAdminLang === 'mn' ? 'Байршил' : 'Location'} field="location" value={formData.location || { mn: '', en: '', ko: '' }} activeLang={activeAdminLang} onChange={handleTrilingualChange} />
-                  <TrilingualInput label={activeAdminLang === 'mn' ? 'Тайлбар' : 'Description'} field="description" value={formData.description || { mn: '', en: '', ko: '' }} activeLang={activeAdminLang} onChange={handleTrilingualChange} isTextarea={true} />
-                  <TrilingualInput label={activeAdminLang === 'mn' ? 'Үргэлжлэх хугацаа' : 'Duration'} field="duration" value={formData.duration || { mn: '', en: '', ko: '' }} activeLang={activeAdminLang} onChange={handleTrilingualChange} />
-                  <TrilingualInput label={activeAdminLang === 'mn' ? 'Насны ангилал' : 'Age Group'} field="ageGroup" value={formData.ageGroup || { mn: '', en: '', ko: '' }} activeLang={activeAdminLang} onChange={handleTrilingualChange} />
+                  <TrilingualInput label={activeAdminLang === 'mn' ? 'Аяллын нэр' : 'Trip Title'} field="title" value={formData.title as LocalizedString} activeLang={activeAdminLang} onChange={handleTrilingualChange} />
+                  <TrilingualInput label={activeAdminLang === 'mn' ? 'Байршил' : 'Location'} field="location" value={formData.location as LocalizedString} activeLang={activeAdminLang} onChange={handleTrilingualChange} />
+                  <TrilingualInput label={activeAdminLang === 'mn' ? 'Тайлбар' : 'Description'} field="description" value={formData.description as LocalizedString} activeLang={activeAdminLang} onChange={handleTrilingualChange} isTextarea={true} />
+                  <TrilingualInput label={activeAdminLang === 'mn' ? 'Үргэлжлэх хугацаа' : 'Duration'} field="duration" value={formData.duration as LocalizedString} activeLang={activeAdminLang} onChange={handleTrilingualChange} />
+                  <TrilingualInput label={activeAdminLang === 'mn' ? 'Насны ангилал' : 'Age Group'} field="ageGroup" value={formData.ageGroup as LocalizedString} activeLang={activeAdminLang} onChange={handleTrilingualChange} />
                 </div>
 
                 <div className="space-y-4 border-t pt-6">
@@ -713,18 +718,20 @@ export default function TripsManager({ initialTrips }: { initialTrips: Trip[] })
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <div className="space-y-3">
                       <label className="block text-xs font-bold text-slate-500 mb-1 uppercase tracking-wider">{activeAdminLang === 'mn' ? 'Үндсэн үнэ (Том хүн)' : 'Base Price (Adult)'}</label>
-                      <div className="grid grid-cols-3 gap-2">
+                      <div className="grid grid-cols-4 gap-2">
                         <input type="number" value={formData.price?.mn || ''} onChange={(e) => handlePriceChange('price', 'mn', e.target.value)} placeholder="MNT" className="w-full border p-2 rounded text-sm bg-blue-50 border-blue-200" />
                         <input type="number" value={formData.price?.en || ''} readOnly placeholder="USD" className="w-full border p-2 rounded text-sm bg-slate-50 text-slate-500 cursor-not-allowed" />
                         <input type="number" value={formData.price?.ko || ''} readOnly placeholder="KRW" className="w-full border p-2 rounded text-sm bg-slate-50 text-slate-500 cursor-not-allowed" />
+                        <input type="number" value={formData.price?.de || ''} readOnly placeholder="DE" className="w-full border p-2 rounded text-sm bg-slate-50 text-slate-500 cursor-not-allowed" />
                       </div>
                     </div>
                     <div className="space-y-3">
                       <label className="block text-xs font-bold text-slate-500 mb-1 uppercase tracking-wider">{activeAdminLang === 'mn' ? 'Хүүхдийн үнэ' : 'Child Price'}</label>
-                      <div className="grid grid-cols-3 gap-2">
+                      <div className="grid grid-cols-4 gap-2">
                         <input type="number" value={formData.priceChild?.mn || ''} onChange={(e) => handlePriceChange('priceChild', 'mn', e.target.value)} placeholder="MNT" className="w-full border p-2 rounded text-sm bg-blue-50 border-blue-200" />
                         <input type="number" value={formData.priceChild?.en || ''} readOnly placeholder="USD" className="w-full border p-2 rounded text-sm bg-slate-50 text-slate-500 cursor-not-allowed" />
                         <input type="number" value={formData.priceChild?.ko || ''} readOnly placeholder="KRW" className="w-full border p-2 rounded text-sm bg-slate-50 text-slate-500 cursor-not-allowed" />
+                        <input type="number" value={formData.priceChild?.de || ''} readOnly placeholder="DE" className="w-full border p-2 rounded text-sm bg-slate-50 text-slate-500 cursor-not-allowed" />
                       </div>
                     </div>
                     <div className="space-y-3">
@@ -740,18 +747,20 @@ export default function TripsManager({ initialTrips }: { initialTrips: Trip[] })
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                       <div className="space-y-3">
                         <label className="block text-xs font-bold text-green-600 mb-1 uppercase tracking-wider">{activeAdminLang === 'mn' ? 'Хямдарсан үнэ (Том хүн)' : 'Adult Sale Price'}</label>
-                        <div className="grid grid-cols-3 gap-2">
+                        <div className="grid grid-cols-4 gap-2">
                           <input type="number" value={formData.salePrice?.mn || ''} readOnly className="w-full border p-2 rounded text-sm bg-green-50 text-green-700 font-bold border-green-200" />
                           <input type="number" value={formData.salePrice?.en || ''} readOnly className="w-full border p-2 rounded text-sm bg-slate-50 text-slate-400" />
                           <input type="number" value={formData.salePrice?.ko || ''} readOnly className="w-full border p-2 rounded text-sm bg-slate-50 text-slate-400" />
+                          <input type="number" value={formData.salePrice?.de || ''} readOnly className="w-full border p-2 rounded text-sm bg-slate-50 text-slate-400" />
                         </div>
                       </div>
                       <div className="space-y-3">
                         <label className="block text-xs font-bold text-green-600 mb-1 uppercase tracking-wider">{activeAdminLang === 'mn' ? 'Хямдарсан үнэ (Хүүхэд)' : 'Child Sale Price'}</label>
-                        <div className="grid grid-cols-3 gap-2">
+                        <div className="grid grid-cols-4 gap-2">
                           <input type="number" value={formData.salePriceChild?.mn || ''} readOnly className="w-full border p-2 rounded text-sm bg-green-50 text-green-700 font-bold border-green-200" />
                           <input type="number" value={formData.salePriceChild?.en || ''} readOnly className="w-full border p-2 rounded text-sm bg-slate-50 text-slate-400" />
                           <input type="number" value={formData.salePriceChild?.ko || ''} readOnly className="w-full border p-2 rounded text-sm bg-slate-50 text-slate-400" />
+                          <input type="number" value={formData.salePriceChild?.de || ''} readOnly className="w-full border p-2 rounded text-sm bg-slate-50 text-slate-400" />
                         </div>
                       </div>
                     </div>
@@ -1062,10 +1071,11 @@ const TrilingualInput: React.FC<TrilingualInputProps & { activeLang: Language }>
   return (
     <div className="mb-2">
       <label className="block text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1.5">{label}</label>
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-2">
+      <div className="grid grid-cols-1 md:grid-cols-4 gap-2">
         <InputComponent value={value?.mn || ''} onChange={(e) => onChange(currentField, 'mn', e.target.value)} placeholder="MONGOLIAN" className={`w-full border p-2 rounded text-sm transition-all outline-none ${activeLang === 'mn' ? 'ring-2 ring-blue-500/20 border-blue-400 bg-blue-50/10' : 'bg-white'}`} rows={isTextarea ? 3 : undefined} />
         <InputComponent value={value?.en || ''} onChange={(e) => onChange(currentField, 'en', e.target.value)} placeholder="ENGLISH" className={`w-full border p-2 rounded text-sm transition-all outline-none ${activeLang === 'en' ? 'ring-2 ring-blue-500/20 border-blue-400 bg-blue-50/10' : 'bg-white'}`} rows={isTextarea ? 3 : undefined} />
         <InputComponent value={value?.ko || ''} onChange={(e) => onChange(currentField, 'ko', e.target.value)} placeholder="KOREAN" className={`w-full border p-2 rounded text-sm transition-all outline-none ${activeLang === 'ko' ? 'ring-2 ring-blue-500/20 border-blue-400 bg-blue-50/10' : 'bg-white'}`} rows={isTextarea ? 3 : undefined} />
+        <InputComponent value={value?.de || ''} onChange={(e) => onChange(currentField, 'de', e.target.value)} placeholder="GERMAN" className={`w-full border p-2 rounded text-sm transition-all outline-none ${activeLang === 'de' ? 'ring-2 ring-blue-500/20 border-blue-400 bg-blue-50/10' : 'bg-white'}`} rows={isTextarea ? 3 : undefined} />
       </div>
     </div>
   );
@@ -1076,10 +1086,11 @@ const TrilingualItinInput: React.FC<TrilingualItinProps & { activeLang: Language
   return (
     <div className="mb-2">
       <label className="block text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1.5">{label}</label>
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-2">
+      <div className="grid grid-cols-1 md:grid-cols-4 gap-2">
         <InputComponent value={value?.mn || ''} onChange={(e: any) => onChange('mn', e.target.value)} placeholder="MONGOLIAN" className={`w-full border p-2 rounded text-sm transition-all outline-none ${activeLang === 'mn' ? 'ring-2 ring-blue-500/20 border-blue-400 bg-blue-50/10' : 'bg-white'}`} rows={isTextarea ? 3 : undefined} />
         <InputComponent value={value?.en || ''} onChange={(e: any) => onChange('en', e.target.value)} placeholder="ENGLISH" className={`w-full border p-2 rounded text-sm transition-all outline-none ${activeLang === 'en' ? 'ring-2 ring-blue-500/20 border-blue-400 bg-blue-50/10' : 'bg-white'}`} rows={isTextarea ? 3 : undefined} />
         <InputComponent value={value?.ko || ''} onChange={(e: any) => onChange('ko', e.target.value)} placeholder="KOREAN" className={`w-full border p-2 rounded text-sm transition-all outline-none ${activeLang === 'ko' ? 'ring-2 ring-blue-500/20 border-blue-400 bg-blue-50/10' : 'bg-white'}`} rows={isTextarea ? 3 : undefined} />
+        <InputComponent value={value?.de || ''} onChange={(e: any) => onChange('de', e.target.value)} placeholder="GERMAN" className={`w-full border p-2 rounded text-sm transition-all outline-none ${activeLang === 'de' ? 'ring-2 ring-blue-500/20 border-blue-400 bg-blue-50/10' : 'bg-white'}`} rows={isTextarea ? 3 : undefined} />
       </div>
     </div>
   );

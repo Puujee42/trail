@@ -19,159 +19,409 @@ import GoogleBusinessCard, { GoogleCardLabels } from "../../components/ui/Google
 const ContactClient = () => {
     const { language } = useLanguage();
 
-    const content = {
-        mn: {
-            // ... existing
-            headerTitlePrefix: "Бидэнтэй",
-            headerTitleSuffix: "Холбогдоорой",
-            headerDesc: "Таны дараагийн аяллын талаар ярилцахад бид үргэлж бэлэн. Асуух зүйл байвал доорх хэсгийг ашиглана уу.",
+        const content = {
 
-            formTitle: "Зурвас үлдээх",
-            formDesc: "Бид тантай 24 цагийн дотор эргэн холбогдох болно.",
-            formName: "Нэр",
-            formEmail: "И-мэйл",
-            formSubject: "Гарчиг",
-            formMessage: "Таны асуулт...",
-            formBtn: "Илгээх",
+            mn: {
 
-            infoAddress: "Улаанбаатар хот, Баруун 4 зам, Эрхи Төв, 5 давхар, 502 тоот",
-            infoPhone: "+976 7766-1626",
-            infoEmail: "Eurotrails1@gmail.com",
+                headerTitlePrefix: "Бидэнтэй",
 
-            infoHours: "Даваа - Баасан: 09:00 - 18:00",
-            infoLabels: ["Манай оффис", "Холбоо барих", "И-мэйл хаяг", "Ажиллах цагийн хуваарь"],
-            mapPlaceholder: "Интерактив Газрын Зураг",
+                headerTitleSuffix: "Холбогдоорой",
 
-            googleCard: {
-                title: "Mongol Trail (Mongol Ayalal)",
-                subtitle: "Аялал жуулчлалын агентлаг",
-                reviews: "120 Google сэтгэгдэл",
-                website: "Вэбсайт",
-                directions: "Чиглэл",
-                save: "Хадгалах",
-                call: "Залгах",
-                share: "Хуваалцах",
-                mapView: "Газрын зураг",
-                seePhotos: "Зураг үзэх",
-                address: "Улаанбаатар, Баруун 4 зам, Эрхи Төв, 5 давхар",
-                hours: "Нээлттэй",
-                phone: "+976 7766-1626",
-                suggestEdit: "Засвар санал болгох",
-                ownThisBusiness: "Энэ бизнес таных уу?",
-                openStatus: "Нээлттэй",
-                opensAt: "Хаах цаг 18:00"
+                headerDesc: "Таны дараагийн аяллын талаар ярилцахад бид үргэлж бэлэн. Асуух зүйл байвал доорх хэсгийг ашиглана уу.",
+
+    
+
+                formTitle: "Зурвас үлдээх",
+
+                formDesc: "Бид тантай 24 цагийн дотор эргэн холбогдох болно.",
+
+                formName: "Нэр",
+
+                formEmail: "И-мэйл",
+
+                formSubject: "Гарчиг",
+
+                formMessage: "Таны асуулт...",
+
+                formBtn: "Илгээх",
+
+    
+
+                infoAddress: "Улаанбаатар хот, Баруун 4 зам, Эрхи Төв, 5 давхар, 502 тоот",
+
+                infoPhone: "+976 7766-1626",
+
+                infoEmail: "Eurotrails1@gmail.com",
+
+    
+
+                infoHours: "Даваа - Баасан: 09:00 - 18:00",
+
+                infoLabels: ["Манай оффис", "Холбоо барих", "И-мэйл хаяг", "Ажиллах цагийн хуваарь"],
+
+                mapPlaceholder: "Интерактив Газрын Зураг",
+
+    
+
+                googleCard: {
+
+                    title: "Mongol Trail (Mongol Ayalal)",
+
+                    subtitle: "Аялал жуулчлалын агентлаг",
+
+                    reviews: "120 Google сэтгэгдэл",
+
+                    website: "Вэбсайт",
+
+                    directions: "Чиглэл",
+
+                    save: "Хадгалах",
+
+                    call: "Залгах",
+
+                    share: "Хуваалцах",
+
+                    mapView: "Газрын зураг",
+
+                    seePhotos: "Зураг үзэх",
+
+                    address: "Улаанбаатар, Баруун 4 зам, Эрхи Төв, 5 давхар",
+
+                    hours: "Нээлттэй",
+
+                    phone: "+976 7766-1626",
+
+                    suggestEdit: "Засвар санал болгох",
+
+                    ownThisBusiness: "Энэ бизнес таных уу?",
+
+                    openStatus: "Нээлттэй",
+
+                    opensAt: "Хаах цаг 18:00"
+
+                },
+
+    
+
+                faqTitle: "Түгээмэл Асуултууд",
+
+                faqDesc: "Таны асуултын хариулт энд байж магадгүй.",
+
+                faqs: [
+
+                    { q: "Аялал захиалахад урьдчилгаа төлбөр шаардлагатай юу?", a: "Тийм, ихэнх аяллын хувьд нийт үнийн дүнгийн 30%-ийн урьдчилгаа төлбөр шаардлагатай." },
+
+                    { q: "Визний материал бүрдүүлэхэд туслах уу?", a: "Мэдээж. Манай баг танд виз мэдүүлэхэд шаардлагатай бүх бичиг баримтыг бүрдүүлэхэд тусална." },
+
+                    { q: "Аяллаа цуцлах боломжтой юу?", a: "Аялал эхлэхээс 14-өөс доошгүй хоногийн өмнө цуцлахад урьдчилгаа төлбөрийг буцаан олгох боломжтой." },
+
+                    { q: "Ганцаараа аялахад аюулгүй юу?", a: "Бидний зохион байгуулдаг бүх аялал аюулгүй байдлын стандартыг бүрэн хангасан байдаг." }
+
+                ]
+
             },
 
-            faqTitle: "Түгээмэл Асуултууд",
-            faqDesc: "Таны асуултын хариулт энд байж магадгүй.",
-            faqs: [
-                { q: "Аялал захиалахад урьдчилгаа төлбөр шаардлагатай юу?", a: "Тийм, ихэнх аяллын хувьд нийт үнийн дүнгийн 30%-ийн урьдчилгаа төлбөр шаардлагатай." },
-                { q: "Визний материал бүрдүүлэхэд туслах уу?", a: "Мэдээж. Манай баг танд виз мэдүүлэхэд шаардлагатай бүх бичиг баримтыг бүрдүүлэхэд тусална." },
-                { q: "Аяллаа цуцлах боломжтой юу?", a: "Аялал эхлэхээс 14-өөс доошгүй хоногийн өмнө цуцлахад урьдчилгаа төлбөрийг буцаан олгох боломжтой." },
-                { q: "Ганцаараа аялахад аюулгүй юу?", a: "Бидний зохион байгуулдаг бүх аялал аюулгүй байдлын стандартыг бүрэн хангасан байдаг." }
-            ]
-        },
-        en: {
-            headerTitlePrefix: "Get In",
-            headerTitleSuffix: "Touch",
-            headerDesc: "We are always ready to discuss your next trip. Please use the form below for any inquiries.",
+            en: {
 
-            formTitle: "Leave a Message",
-            formDesc: "We will get back to you within 24 hours.",
-            formName: "Name",
-            formEmail: "Email",
-            formSubject: "Subject",
-            formMessage: "Your message...",
-            formBtn: "Send",
+                headerTitlePrefix: "Get In",
 
-            infoAddress: "Room 502, 5th Floor, Erkhi Center, West 4 Intersection, Ulaanbaatar",
-            infoPhone: "+976 7766-1626",
-            infoEmail: "Eurotrails1@gmail.com",
+                headerTitleSuffix: "Touch",
 
-            infoHours: "Mon - Fri: 09:00 - 18:00",
-            infoLabels: ["Our Office", "Contact Us", "Email Address", "Working Hours"],
-            mapPlaceholder: "Interactive Map",
+                headerDesc: "We are always ready to discuss your next trip. Please use the form below for any inquiries.",
 
-            googleCard: {
-                title: "Mongol Trail (Mongol Ayalal)",
-                subtitle: "Travel agency",
-                reviews: "120 Google reviews",
-                website: "Website",
-                directions: "Directions",
-                save: "Save",
-                call: "Call",
-                share: "Share",
-                mapView: "Map View",
-                seePhotos: "See photos",
-                address: "Room 502, 5th Floor, Erkhi Center, Ulaanbaatar",
-                hours: "Open",
-                phone: "+976 7766-1626",
-                suggestEdit: "Suggest an edit",
-                ownThisBusiness: "Own this business?",
-                openStatus: "Open",
-                opensAt: "Closes 6PM"
+    
+
+                formTitle: "Leave a Message",
+
+                formDesc: "We will get back to you within 24 hours.",
+
+                formName: "Name",
+
+                formEmail: "Email",
+
+                formSubject: "Subject",
+
+                formMessage: "Your message...",
+
+                formBtn: "Send",
+
+    
+
+                infoAddress: "Room 502, 5th Floor, Erkhi Center, West 4 Intersection, Ulaanbaatar",
+
+                infoPhone: "+976 7766-1626",
+
+                infoEmail: "Eurotrails1@gmail.com",
+
+    
+
+                infoHours: "Mon - Fri: 09:00 - 18:00",
+
+                infoLabels: ["Our Office", "Contact Us", "Email Address", "Working Hours"],
+
+                mapPlaceholder: "Interactive Map",
+
+    
+
+                googleCard: {
+
+                    title: "Mongol Trail (Mongol Ayalal)",
+
+                    subtitle: "Travel agency",
+
+                    reviews: "120 Google reviews",
+
+                    website: "Website",
+
+                    directions: "Directions",
+
+                    save: "Save",
+
+                    call: "Call",
+
+                    share: "Share",
+
+                    mapView: "Map View",
+
+                    seePhotos: "See photos",
+
+                    address: "Room 502, 5th Floor, Erkhi Center, Ulaanbaatar",
+
+                    hours: "Open",
+
+                    phone: "+976 7766-1626",
+
+                    suggestEdit: "Suggest an edit",
+
+                    ownThisBusiness: "Own this business?",
+
+                    openStatus: "Open",
+
+                    opensAt: "Closes 6PM"
+
+                },
+
+    
+
+                faqTitle: "Frequently Asked Questions",
+
+                faqDesc: "You might find your answer here.",
+
+                faqs: [
+
+                    { q: "Is a deposit required to book a trip?", a: "Yes, a 30% deposit of the total amount is required for most trips." },
+
+                    { q: "Do you help with visa applications?", a: "Absolutely. Our team will assist you in preparing all necessary documents for your visa application." },
+
+                    { q: "Can I cancel my trip?", a: "Deposits are refundable if cancelled at least 14 days before the trip starts." },
+
+                    { q: "Is it safe to travel alone?", a: "All our organized trips fully meet safety standards. Our experienced guides will assist you throughout the journey." }
+
+                ]
+
             },
 
-            faqTitle: "Frequently Asked Questions",
-            faqDesc: "You might find your answer here.",
-            faqs: [
-                { q: "Is a deposit required to book a trip?", a: "Yes, a 30% deposit of the total amount is required for most trips." },
-                { q: "Do you help with visa applications?", a: "Absolutely. Our team will assist you in preparing all necessary documents for your visa application." },
-                { q: "Can I cancel my trip?", a: "Deposits are refundable if cancelled at least 14 days before the trip starts." },
-                { q: "Is it safe to travel alone?", a: "All our organized trips fully meet safety standards. Our experienced guides will assist you throughout the journey." }
-            ]
-        },
-        ko: {
-            headerTitlePrefix: "문의하기",
-            headerTitleSuffix: "연락하세요",
-            headerDesc: "다음 여행에 대해 논의할 준비가 항상 되어 있습니다. 문의 사항이 있으시면 아래 양식을 사용하십시오.",
+            ko: {
 
-            formTitle: "메시지 남기기",
-            formDesc: "24시간 이내에 연락드리겠습니다.",
-            formName: "이름",
-            formEmail: "이메일",
-            formSubject: "제목",
-            formMessage: "메시지...",
-            formBtn: "보내기",
+                headerTitlePrefix: "문의하기",
 
-            infoAddress: "울란바토르 서부 4거리, 에르키 센터 5층 502호",
-            infoPhone: "+976 7766-1626",
-            infoEmail: "Eurotrails1@gmail.com",
+                headerTitleSuffix: "연락하세요",
 
-            infoHours: "월요일 - 금요일: 09:00 - 18:00",
-            infoLabels: ["우리 사무실", "문의하기", "이메일 주소", "근무 시간"],
-            mapPlaceholder: "인터랙티브 지도",
+                headerDesc: "다음 여행에 대해 논의할 준비가 항상 되어 있습니다. 문의 사항이 있으시면 아래 양식을 사용하십시오.",
 
-            googleCard: {
-                title: "Mongol Trail (Mongol Ayalal)",
-                subtitle: "여행사",
-                reviews: "120 Google 리뷰",
-                website: "웹사이트",
-                directions: "길찾기",
-                save: "저장",
-                call: "전화",
-                share: "공유",
-                mapView: "지도 보기",
-                seePhotos: "사진 보기",
-                address: "울란바토르 서부 4거리, 에르키 센터 5층 502호",
-                hours: "영업 중",
-                phone: "+976 7766-1626",
-                suggestEdit: "수정 제안",
-                ownThisBusiness: "이 비즈니스의 소유주입니까?",
-                openStatus: "영업 중",
-                opensAt: "오후 6시 마감"
+    
+
+                formTitle: "메시지 남기기",
+
+                formDesc: "24시간 이내에 연락드리겠습니다.",
+
+                formName: "이름",
+
+                formEmail: "이메일",
+
+                formSubject: "제목",
+
+                formMessage: "메시지...",
+
+                formBtn: "보내기",
+
+    
+
+                infoAddress: "울란바토르 서부 4거리, 에르키 센터 5층 502호",
+
+                infoPhone: "+976 7766-1626",
+
+                infoEmail: "Eurotrails1@gmail.com",
+
+    
+
+                infoHours: "월요일 - 금요일: 09:00 - 18:00",
+
+                infoLabels: ["우리 사무실", "문의하기", "이메일 주소", "근무 시간"],
+
+                mapPlaceholder: "인터랙티브 지도",
+
+    
+
+                googleCard: {
+
+                    title: "Mongol Trail (Mongol Ayalal)",
+
+                    subtitle: "여행사",
+
+                    reviews: "120 Google 리뷰",
+
+                    website: "웹사이트",
+
+                    directions: "길찾기",
+
+                    save: "저장",
+
+                    call: "전화",
+
+                    share: "공유",
+
+                    mapView: "지도 보기",
+
+                    seePhotos: "사진 보기",
+
+                    address: "울란바토르 서부 4거리, 에르키 센터 5층 502호",
+
+                    hours: "영업 중",
+
+                    phone: "+976 7766-1626",
+
+                    suggestEdit: "수정 제안",
+
+                    ownThisBusiness: "이 비즈즈니스의 소유주입니까?",
+
+                    openStatus: "영업 중",
+
+                    opensAt: "오후 6시 마감"
+
+                },
+
+    
+
+                faqTitle: "자주 묻는 질문",
+
+                faqDesc: "여기에서 답을 찾을 수 있습니다.",
+
+                faqs: [
+
+                    { q: "여행 예약에 보증금이 필요합니까?", a: "예, 대부분의 여행에는 총 금액의 30% 보증금이 필요합니다." },
+
+                    { q: "비자 신청을 도와주나요?", a: "물론입니다. 저희 팀이 비자 신청에 필요한 모든 서류 준비를 도와드립니다." },
+
+                    { q: "여행을 취소할 수 있나요?", a: "여행 시작 최소 14일 전에 취소하는 경우 보증금은 환불됩니다." },
+
+                    { q: "혼자 여행하는 것이 안전한가요?", a: "저희가 조직하는 모든 여행은 안전 기준을 완전히 충족합니다. 경험이 풍부한 가이드가 여행 내내 도와드릴 것입니다." }
+
+                ]
+
             },
 
-            faqTitle: "자주 묻는 질문",
-            faqDesc: "여기에서 답을 찾을 수 있습니다.",
-            faqs: [
-                { q: "여행 예약에 보증금이 필요합니까?", a: "예, 대부분의 여행에는 총 금액의 30% 보증금이 필요합니다." },
-                { q: "비자 신청을 도와주나요?", a: "물론입니다. 저희 팀이 비자 신청에 필요한 모든 서류 준비를 도와드립니다." },
-                { q: "여행을 취소할 수 있나요?", a: "여행 시작 최소 14일 전에 취소하는 경우 보증금은 환불됩니다." },
-                { q: "혼자 여행하는 것이 안전한가요?", a: "저희가 조직하는 모든 여행은 안전 기준을 완전히 충족합니다. 경험이 풍부한 가이드가 여행 내내 도와드릴 것입니다." }
-            ]
-        }
-    };
+            de: {
+
+                headerTitlePrefix: "Kontaktieren Sie",
+
+                headerTitleSuffix: "uns",
+
+                headerDesc: "Wir sind immer bereit, Ihre nächste Reise zu besprechen. Bitte nutzen Sie das untenstehende Formular für Anfragen.",
+
+    
+
+                formTitle: "Hinterlassen Sie eine Nachricht",
+
+                formDesc: "Wir werden uns innerhalb von 24 Stunden bei Ihnen melden.",
+
+                formName: "Name",
+
+                formEmail: "E-Mail",
+
+                formSubject: "Betreff",
+
+                formMessage: "Ihre Nachricht...",
+
+                formBtn: "Senden",
+
+    
+
+                infoAddress: "Raum 502, 5. Stock, Erkhi Center, West 4 Road, Ulaanbaatar",
+
+                infoPhone: "+976 7766-1626",
+
+                infoEmail: "Eurotrails1@gmail.com",
+
+    
+
+                infoHours: "Mo - Fr: 09:00 - 18:00",
+
+                infoLabels: ["Unser Büro", "Kontakt", "E-Mail-Adresse", "Arbeitszeiten"],
+
+                mapPlaceholder: "Interaktive Karte",
+
+    
+
+                googleCard: {
+
+                    title: "Mongol Trail (Mongol Ayalal)",
+
+                    subtitle: "Reisebüro",
+
+                    reviews: "120 Google-Rezensionen",
+
+                    website: "Website",
+
+                    directions: "Wegbeschreibung",
+
+                    save: "Speichern",
+
+                    call: "Anrufen",
+
+                    share: "Teilen",
+
+                    mapView: "Kartenansicht",
+
+                    seePhotos: "Fotos ansehen",
+
+                    address: "Raum 502, 5. Stock, Erkhi Center, Ulaanbaatar",
+
+                    hours: "Geöffnet",
+
+                    phone: "+976 7766-1626",
+
+                    suggestEdit: "Änderung vorschlagen",
+
+                    ownThisBusiness: "Inhaber dieses Unternehmens?",
+
+                    openStatus: "Geöffnet",
+
+                    opensAt: "Schließt um 18:00 Uhr"
+
+                },
+
+    
+
+                faqTitle: "Häufig gestellte Fragen",
+
+                faqDesc: "Vielleicht finden Sie hier Ihre Antwort.",
+
+                faqs: [
+
+                    { q: "Ist für die Buchung einer Reise eine Anzahlung erforderlich?", a: "Ja, für die meisten Reisen ist eine Anzahlung von 30% des Gesamtbetrags erforderlich." },
+
+                    { q: "Helfen Sie bei Visumanträgen?", a: "Absolut. Unser Team unterstützt Sie bei der Vorbereitung aller notwendigen Dokumente für Ihren Visumantrag." },
+
+                    { q: "Kann ich meine Reise stornieren?", a: "Anzahlungen werden erstattet, wenn die Stornierung mindestens 14 Tage vor Reisebeginn erfolgt." },
+
+                    { q: "Ist es sicher, alleine zu reisen?", a: "Alle unsere organisierten Reisen entsprechen voll und ganz den Sicherheitsstandards. Unsere erfahrenen Guides werden Sie während der gesamten Reise unterstützen." }
+
+                ]
+
+            }
+
+        };
 
     const t = content[language];
 

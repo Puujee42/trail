@@ -34,14 +34,14 @@ interface LocalizedString {
   mn: string;
   en: string;
   ko: string;
-  de?: string;
+  de: string;
 }
 
 interface LocalizedPrice {
   mn: number;
   en: number;
   ko: number;
-  de?: number;
+  de: number;
 }
 
 interface ItineraryItem {
@@ -138,6 +138,7 @@ const TourDetailClient = ({ trip }: { trip: Trip }) => {
   const formatMoney = (amount: number) => {
     if (language === 'en') return `$${amount.toLocaleString()}`;
     if (language === 'ko') return `₩${amount.toLocaleString()}`;
+    if (language === 'de') return `$${amount.toLocaleString('de-DE')}`;
     return `${amount.toLocaleString()}₮`;
   };
 
@@ -150,7 +151,7 @@ const TourDetailClient = ({ trip }: { trip: Trip }) => {
       included: "Үнэд багтсан зүйлс",
       excluded: "Үнэд багтаагүй зүйлс",
       itineraryTitle: "Аяллын хөтөлбөр",
-      itineraryEmpty: "Дэлгэрэнгүй хөтөлбөр удахгүй орно.",
+      itineraryEmpty: "Дэлгэрэүүлэх хөтөлбөр удахгүй орно.",
       priceLabel: "Нийт үнэ (1 хүн)",
       adultLabel: "Том хүн (12+)",
       childLabel: "Хүүхэд (3-11)",
@@ -244,11 +245,44 @@ const TourDetailClient = ({ trip }: { trip: Trip }) => {
       successMsg: "예약이 확정되었습니다. 이메일로 확인 메세지를 보냈습니다.",
       errorMsg: "오류가 발생했습니다. 다시 시도해 주세요.",
       mapTitle: "노선도"
+    },
+    de: {
+      back: "Zurück",
+      about: "Über die Reise",
+      highlights: "Reise-Highlights",
+      included: "Inbegriffen",
+      excluded: "Nicht inbegriffen",
+      itineraryTitle: "Reiseverlauf",
+      itineraryEmpty: "Detaillierter Reiseverlauf folgt in Kürze.",
+      priceLabel: "Gesamtpreis (pro Person)",
+      adultLabel: "Erwachsener (12+)",
+      childLabel: "Kind (3-11)",
+      saveBadge: "RABATT",
+      typeLabel: "Reiseart:",
+      durationLabel: "Dauer:",
+      seatsLabel: "Verfügbare Plätze:",
+      seatsLeft: "Plätze übrig",
+      open: "Offen",
+      bookBtn: "Jetzt buchen",
+      terms: "Mit der Buchung akzeptieren Sie unsere Nutzungsbedingungen.",
+      questionTitle: "Haben Sie Fragen?",
+      questionDesc: "Kontaktieren Sie unseren Manager für weitere Informationen.",
+      modalTitle: "Diese Reise buchen",
+      formName: "Vollständiger Name",
+      formEmail: "E-Mail-Adresse",
+      formPhone: "Telefonnummer",
+      formDate: "Gewünschtes Datum",
+      formGuests: "Anzahl der Gäste",
+      submitBtn: "Buchung bestätigen",
+      submitting: "Wird gesendet...",
+      successTitle: "Buchung bestätigt!",
+      successMsg: "Ihr Termin steht fest. Wir haben eine Bestätigung an Ihre E-Mail gesendet.",
+      errorMsg: "Etwas ist schief gelaufen. Bitte versuchen Sie es erneut.",
+      mapTitle: "Routenkarte"
     }
   };
 
   const text = t[language as keyof typeof t] || t.en;
-  const activeLang = (language === 'de' ? 'en' : language) as 'en' | 'mn' | 'ko';
   const itinerary = trip.itinerary || [];
 
   // 5. NEW: Check auth before opening modal
@@ -321,7 +355,7 @@ const TourDetailClient = ({ trip }: { trip: Trip }) => {
       {/* ────────────────── HERO HEADER ────────────────── */}
       <div className="relative h-[70vh] min-h-[500px] w-full overflow-hidden">
         <motion.div style={{ y: y1 }} className="absolute inset-0">
-          {trip.image && <img src={trip.image} alt={trip.title[activeLang]} className="w-full h-full object-cover scale-110" />}
+          {trip.image && <img src={trip.image} alt={trip.title[language] || trip.title.en} className="w-full h-full object-cover scale-110" />}
           <div className="absolute inset-0 bg-slate-200 animate-pulse -z-10" /> {/* Fallback/Loading background */}
           <div className="absolute inset-0 bg-gradient-to-t from-slate-900 via-slate-900/30 to-transparent" />
         </motion.div>

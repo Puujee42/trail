@@ -6,7 +6,8 @@ import { motion } from "framer-motion";
 const LANGUAGES = [
   { code: "mn", label: "MN" },
   { code: "en", label: "EN" },
-  { code: "ko", label: "KO" }
+  { code: "ko", label: "KO" },
+  { code: "de", label: "DE" }
 ] as const;
 
 export const LanguageToggle = () => {

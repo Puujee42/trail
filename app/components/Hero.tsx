@@ -34,7 +34,7 @@ const AUTOPLAY_DURATION = 7000;
 import Image from 'next/image';
 
 /* ────────────────────── Main Component ────────────────────── */
-const Hero = ({ trips, lang, dictionary }: { trips: Trip[], lang: "mn" | "en" | "ko", dictionary: any }) => {
+const Hero = ({ trips, lang, dictionary }: { trips: Trip[], lang: "mn" | "en" | "ko" | "de", dictionary: any }) => {
   const { language } = useLanguage();
   const activeLang = language;
   const { t: translate } = useLanguage();

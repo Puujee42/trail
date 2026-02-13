@@ -12,6 +12,7 @@ interface LocalizedString {
   mn: string;
   en: string;
   ko: string;
+  de: string;
 }
 
 interface BlogPost {
@@ -62,6 +63,16 @@ const BlogPostClient = ({ post }: { post: BlogPost }) => {
       ctaDesc: "최신 여행 업데이트를 즉시 받으려면 뉴스레터를 구독하세요.",
       emailPlace: "이메일 주소",
       subscribe: "구독하기"
+    },
+    de: {
+      back: "Zurück zum Blog",
+      read: "lesen",
+      authorRole: "Reisejournalist",
+      share: "Teilen",
+      ctaTitle: "Hat Ihnen dieser Artikel gefallen?",
+      ctaDesc: "Abonnieren Sie unseren Newsletter, um sofort die neuesten Reise-Updates zu erhalten.",
+      emailPlace: "E-Mail-Adresse",
+      subscribe: "Abonnieren"
     }
   };
 
@@ -70,7 +81,7 @@ const BlogPostClient = ({ post }: { post: BlogPost }) => {
   // 👇 FIX: safely extract the content string based on language
   // If it's an object {mn, en}, pick the language. If it's just a string, use it as is.
   const displayContent = typeof post.content === 'object' 
-    ? post.content[language] 
+    ? (post.content as LocalizedString)[language] 
     : post.content;
 
   return (
@@ -157,18 +168,24 @@ const BlogPostClient = ({ post }: { post: BlogPost }) => {
                 <p>
                   {language === "mn" 
                     ? "Аялал жуулчлал бол зөвхөн шинэ газар үзэх тухай биш, харин өөрийгөө шинээр нээх боломж юм." 
+                    : language === "de"
+                    ? "Reisen bedeutet nicht nur, neue Orte zu sehen, sondern sich selbst neu zu entdecken."
                     : "Tourism is not just about seeing new places, but about discovering yourself anew."}
                 </p>
-                <h3>{language === "mn" ? "Яагаад энд очих хэрэгтэй вэ?" : "Why visit here?"}</h3>
+                <h3>
+                  {language === "mn" ? "Яагаад энд очих хэрэгтэй вэ?" : language === "de" ? "Warum hierher kommen?" : "Why visit here?"}
+                </h3>
                 <p>
                    {language === "mn" 
                     ? "Байгалийн үзэсгэлэн, түүх соёлын үнэт өвүүд болон нутгийн иргэдийн найрсаг зочломтгой зан таныг угтах болно." 
+                    : language === "de"
+                    ? "Sie werden von natürlicher Schönheit, reichem historischem Erbe und der Gastfreundschaft der Einheimischen begrüßt."
                     : "You will be welcomed by natural beauty, rich historical heritage, and the hospitality of the locals."}
                 </p>
                 <ul>
-                  <li>{language === "mn" ? "Өвөрмөц хоолны соёл" : "Unique food culture"}</li>
-                  <li>{language === "mn" ? "Түүхэн дурсгалт газрууд" : "Historical landmarks"}</li>
-                  <li>{language === "mn" ? "Адал явдалт үйл ажиллагаанууд" : "Adventure activities"}</li>
+                  <li>{language === "mn" ? "Өвөрмөц хоолны соёл" : language === "de" ? "Einzigartige Essenskultur" : "Unique food culture"}</li>
+                  <li>{language === "mn" ? "Түүхэн дурсгалт газрууд" : language === "de" ? "Historische Sehenswürdigkeiten" : "Historical landmarks"}</li>
+                  <li>{language === "mn" ? "Адал явдалт үйл ажиллагаанууд" : language === "de" ? "Abenteueraktivitäten" : "Adventure activities"}</li>
                 </ul>
               </div>
             )}

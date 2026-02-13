@@ -2,7 +2,7 @@
 import { Inter, Montserrat, Noto_Sans_KR } from 'next/font/google';
 import { Metadata } from 'next';
 import '../globals.css';
-import { LanguageProvider } from '../context/LanguageContext';
+import { LanguageProvider, Language } from '../context/LanguageContext';
 import { CurrencyProvider } from '../context/CurrencyContext';
 import { UserProvider } from '../context/UserContext';
 import Navbar from '../components/Navbar';
@@ -55,7 +55,7 @@ export async function generateMetadata({ params }: { params: Promise<{ lang: str
       default: localizedTitle,
       template: '%s | Mongol Trail',
     },
-    description: dict.featured.desc || 'Experience the ultimate adventure with Mongol Trail. Premier tours across Mongolia and the world.',
+    description: (dict.featured as any).desc || 'Experience the ultimate adventure with Mongol Trail. Premier tours across Mongolia and the world.',
     keywords: lang === 'mn' 
       ? [
           'Монгол аялал', 'Говийн аялал', 'Хөвсгөл нуур', 
@@ -89,7 +89,7 @@ export async function generateMetadata({ params }: { params: Promise<{ lang: str
       locale: lang === 'mn' ? 'mn_MN' : lang === 'ko' ? 'ko_KR' : 'en_US',
       url: `${baseUrl}/${lang}`,
       title: localizedTitle,
-      description: dict.featured.desc || 'Experience the ultimate adventure with Mongol Trail.',
+      description: (dict.featured as any).desc || 'Experience the ultimate adventure with Mongol Trail.',
       siteName: 'Mongol Trail',
       images: [
         {
@@ -103,7 +103,7 @@ export async function generateMetadata({ params }: { params: Promise<{ lang: str
     twitter: {
       card: 'summary_large_image',
       title: localizedTitle,
-      description: dict.featured.desc || 'Experience the ultimate adventure with Mongol Trail.',
+      description: (dict.featured as any).desc || 'Experience the ultimate adventure with Mongol Trail.',
       creator: '@mongoltrail',
       images: ['/logo.jpg'],
     },
@@ -201,16 +201,16 @@ export default async function RootLayout(props: {
         </head>
         <body className={`${inter.variable} ${montserrat.variable} ${notoSansKr.variable} font-sans bg-slate-50 text-slate-900 antialiased overflow-x-hidden selection:bg-sky-200 selection:text-sky-900`}>
           <AppInitializer />
-          <LanguageProvider initialLang={params.lang}>
+          <LanguageProvider initialLang={params.lang as Language}>
             <CurrencyProvider>
               <UserProvider>
                 <SafeAreaProvider>
-                  <MobileLayout dictionary={dict}>
+                  <MobileLayout>
                     <ExternalLinkHandler />
                     <ScrollProgressBar />
                     
                     {/* Fixed Navbars */}
-                    <Navbar dictionary={dict.navbar} />
+                    <Navbar dictionary={dict.nav} />
                     
                     {/* Main Content Area */}
                     <main className="min-h-screen w-full relative z-0 pb-20 md:pb-0">
@@ -218,10 +218,10 @@ export default async function RootLayout(props: {
                     </main>
 
                     {/* Footer - Hidden on pages that don't need it (like map view if applicable) */}
-                    <Footer dictionary={dict} navDictionary={dict.navbar} />
+                    <Footer dictionary={dict} navDictionary={dict.nav} />
                     
                     {/* Mobile Bottom Navigation */}
-                    <MobileBottomNav language={params.lang as any} dictionary={dict.navbar} />
+                    <MobileBottomNav language={params.lang as any} dictionary={dict.nav} />
                   </MobileLayout>
                 </SafeAreaProvider>
               </UserProvider>

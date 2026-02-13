@@ -8,7 +8,7 @@ export interface LocalizedString {
   mn: string;
   en: string;
   ko: string;
-  de?: string;
+  de: string;
 }
 export interface TripDate {
   id: string;           // Unique ID for this specific group (e.g., "group_01")

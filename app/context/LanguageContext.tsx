@@ -4,7 +4,7 @@ import { createContext, useContext, useState, ReactNode, useEffect } from "react
 import { usePathname, useRouter } from "next/navigation";
 import { i18n, Locale } from "@/i18n-config";
 
-type Language = Locale;
+export type Language = Locale;
 
 interface LanguageContextType {
   language: Language;

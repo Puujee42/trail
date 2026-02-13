@@ -37,13 +37,14 @@ export default function BookingForm({ trip }: { trip: Trip }) {
   });
 
   // Calculate Display Price
-  const currentLangKey = language as 'mn' | 'en' | 'ko';
-  const unitPrice = trip.price[currentLangKey] || trip.price.mn;
+  const currentLangKey = language as 'mn' | 'en' | 'ko' | 'de';
+  const unitPrice = trip.price[currentLangKey] || trip.price.en || trip.price.mn;
   const totalPrice = unitPrice * travelers;
 
   const formatMoney = (amount: number) => {
     if (language === 'en') return `$${amount.toLocaleString()}`;
     if (language === 'ko') return `₩${amount.toLocaleString()}`;
+    if (language === 'de') return `$${amount.toLocaleString('de-DE')}`;
     return `${amount.toLocaleString()}₮`;
   };
 
@@ -54,7 +55,6 @@ export default function BookingForm({ trip }: { trip: Trip }) {
       successDesc: "Таны захиалгыг хүлээн авлаа. Та 'Миний аяллууд' цэснээс харах боломжтой.",
       backHome: "Нүүр хуудас руу буцах",
       viewDashboard: "Миний захиалгууд",
-      // ... keep existing translations ...
       travelerInfo: "Аялагчийн мэдээлэл",
       nameLabel: "Овог нэр",
       phoneLabel: "Утасны дугаар",
@@ -76,7 +76,6 @@ export default function BookingForm({ trip }: { trip: Trip }) {
       successDesc: "Booking received! You can check it in your dashboard.",
       backHome: "Back to Home",
       viewDashboard: "My Bookings",
-      // ... keep existing translations ...
       travelerInfo: "Traveler Information",
       nameLabel: "Full Name",
       phoneLabel: "Phone Number",
@@ -98,7 +97,6 @@ export default function BookingForm({ trip }: { trip: Trip }) {
       successDesc: "예약이 접수되었습니다. 대시보드에서 확인할 수 있습니다.",
       backHome: "홈으로",
       viewDashboard: "내 예약",
-      // ... keep existing translations ...
       travelerInfo: "여행자 정보",
       nameLabel: "성명",
       phoneLabel: "전화번호",
@@ -113,6 +111,27 @@ export default function BookingForm({ trip }: { trip: Trip }) {
       errorDate: "시작 날짜를 선택하세요.",
       trustTitle: "결제 보안",
       trustDesc: "제출 후 매니저가 연락드립니다."
+    },
+    de: {
+      header: "Buchung bestätigen",
+      successTitle: "Buchung erfolgreich!",
+      successDesc: "Buchung erhalten! Sie können sie in Ihrem Dashboard überprüfen.",
+      backHome: "Zurück zur Startseite",
+      viewDashboard: "Meine Buchungen",
+      travelerInfo: "Reisendeninformationen",
+      nameLabel: "Vollständiger Name",
+      phoneLabel: "Telefonnummer",
+      emailLabel: "E-Mail-Adresse",
+      tripSchedule: "Reiseplan",
+      selectDate: "Startdatum wählen",
+      travelerCount: "Reisende",
+      submitBtn: "Buchung absenden",
+      pricePerPerson: "Preis pro Person:",
+      travelerCountLabel: "Reisende:",
+      totalLabel: "Gesamtbetrag:",
+      errorDate: "Bitte wählen Sie ein Startdatum.",
+      trustTitle: "Zahlungssicherheit",
+      trustDesc: "Nach dem Absenden wird sich unser Manager mit Ihnen in Verbindung setzen."
     }
   };
 
