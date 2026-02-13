@@ -24,8 +24,8 @@ const FeaturedTrips = ({ trips, lang, dictionary }: { trips: Trip[], lang: strin
   const targetRef = useRef<HTMLDivElement>(null);
   const { scrollYProgress } = useScroll({ target: targetRef });
   const { user } = useUser();
-  const wishlist = Array.isArray(user?.publicMetadata?.wishlist) 
-    ? (user?.publicMetadata?.wishlist as string[]) 
+  const wishlist = Array.isArray(user?.publicMetadata?.wishlist)
+    ? (user?.publicMetadata?.wishlist as string[])
     : [];
   const [toast, setToast] = useState<string | null>(null);
   const { openSignIn } = useClerk();
@@ -99,10 +99,10 @@ const FeaturedTrips = ({ trips, lang, dictionary }: { trips: Trip[], lang: strin
         {/* ─── CAROUSEL SCROLL ─── */}
         <div className="flex gap-4 md:gap-8 overflow-x-auto pb-12 pt-4 px-4 md:px-0 snap-x snap-mandatory scrollbar-hide -mx-4 md:mx-0">
           {trips.map((trip, i) => (
-            <TripCard 
-              key={trip._id} 
-              trip={trip} 
-              index={i} 
+            <TripCard
+              key={trip._id}
+              trip={trip}
+              index={i}
               language={language as "mn" | "en" | "ko"}
               wished={wishlist.includes(trip._id)}
               onToggle={async () => {
@@ -118,13 +118,13 @@ const FeaturedTrips = ({ trips, lang, dictionary }: { trips: Trip[], lang: strin
                     body: JSON.stringify({ tripId: trip._id, action })
                   });
                   if (!res.ok) return;
-                  
+
                   await user.reload();
                   router.refresh();
                   router.push(`/${language}/dashboard/wishlist`);
                   setToast(action === "add" ? "Аяллыг хүслийн жагсаалтад нэмлээ" : "Аяллыг жагсаалтаас хаслаа");
                   setTimeout(() => setToast(null), 2000);
-                } catch (_) {}
+                } catch (_) { }
               }}
             />
           ))}
@@ -212,8 +212,8 @@ const TripCard = ({ trip, index, language, wished, onToggle }: { trip: Trip, ind
             </span>
           </div>
 
-          <motion.button 
-            whileTap={{ scale: 0.9 }} 
+          <motion.button
+            whileTap={{ scale: 0.9 }}
             onClick={onToggle}
             className={`absolute top-3 right-3 z-20 w-8 h-8 rounded-full backdrop-blur-md flex items-center justify-center transition-all ${wished ? "bg-red-500 text-white shadow-red-500/30" : "bg-black/20 text-white hover:bg-white hover:text-red-500"}`}
           >
@@ -228,22 +228,22 @@ const TripCard = ({ trip, index, language, wished, onToggle }: { trip: Trip, ind
 
           {/* Glassmorphism Info Box */}
           <div className="absolute bottom-3 left-3 right-3 z-20">
-             <div className="bg-white/10 backdrop-blur-lg border border-white/20 rounded-xl p-3 flex items-center justify-between text-white">
-                <div className="flex items-center gap-1.5">
-                   <FaClock className="text-white/70" size={10} />
-                   <span className="text-xs font-[var(--font-inter)] font-semibold uppercase tracking-wider">{trip.duration[language] || trip.duration["mn"]}</span>
-                </div>
-                <div className="text-sm font-[var(--font-inter)] font-semibold uppercase tracking-wider">
-                   {formattedPrice}
-                </div>
-             </div>
+            <div className="bg-white/10 backdrop-blur-lg border border-white/20 rounded-xl p-3 flex items-center justify-between text-white">
+              <div className="flex items-center gap-1.5">
+                <FaClock className="text-white/70" size={10} />
+                <span className="text-xs font-[var(--font-inter)] font-semibold uppercase tracking-wider">{trip.duration[language] || trip.duration["mn"]}</span>
+              </div>
+              <div className="text-sm font-[var(--font-inter)] font-semibold uppercase tracking-wider">
+                {formattedPrice}
+              </div>
+            </div>
           </div>
 
           <Image
             src={imageSrc}
             alt={`${trip.title[language] || trip.title["mn"]} - Mongol Trail Adventure`}
             fill
-            sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+            sizes="(max-width: 768px) 300px, (max-width: 1200px) 50vw, 33vw"
             className="object-cover transition-transform duration-700 group-hover:scale-105"
           />
         </div>
@@ -261,7 +261,7 @@ const TripCard = ({ trip, index, language, wished, onToggle }: { trip: Trip, ind
           </div>
 
           <div className="flex items-center gap-1.5 text-slate-500 text-xs mb-4 font-medium">
-            <FaMapMarkerAlt className="text-slate-400" size={10} /> 
+            <FaMapMarkerAlt className="text-slate-400" size={10} />
             {trip.location[language] || trip.location["mn"]}
           </div>
         </div>

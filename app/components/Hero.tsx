@@ -198,7 +198,7 @@ const Hero = ({ trips, lang, dictionary }: { trips: Trip[], lang: "mn" | "en" | 
           playsInline
           preload="auto"
           crossOrigin="anonymous"
-          poster="https://res.cloudinary.com/dc127wztz/image/upload/v1770961573/hero-poster_c2nbaw.png"
+          poster="https://res.cloudinary.com/dc127wztz/image/upload/f_auto,q_auto/v1770961573/hero-poster_c2nbaw.png"
           className="w-full h-full object-cover opacity-100"
           onError={(e) => {
             // Fallback to image if video fails to load
@@ -214,7 +214,7 @@ const Hero = ({ trips, lang, dictionary }: { trips: Trip[], lang: "mn" | "en" | 
         </video>
         {/* Preload critical image for LCP if video fails or loads slow */}
         <Image
-          src="https://res.cloudinary.com/dc127wztz/image/upload/v1770961573/hero-poster_c2nbaw.png"
+          src="https://res.cloudinary.com/dc127wztz/image/upload/f_auto,q_auto/v1770961573/hero-poster_c2nbaw.png"
           alt="Mongolia Landscape"
           fill
           priority
@@ -228,7 +228,7 @@ const Hero = ({ trips, lang, dictionary }: { trips: Trip[], lang: "mn" | "en" | 
         {/* LCP Optimization: Visible prioritized image behind video */}
         <div className="absolute inset-0 -z-20">
           <Image
-            src="https://res.cloudinary.com/dc127wztz/image/upload/v1770961573/hero-poster_c2nbaw.png"
+            src="https://res.cloudinary.com/dc127wztz/image/upload/f_auto,q_auto/v1770961573/hero-poster_c2nbaw.png"
             alt="Mongolia Landscape"
             fill
             priority

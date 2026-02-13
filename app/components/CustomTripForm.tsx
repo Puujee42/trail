@@ -189,7 +189,7 @@ const CustomTripForm = ({ dictionary }: { dictionary: any }) => {
             <div className="bg-gradient-to-br from-sky-600 to-sky-400 p-10 text-white relative overflow-hidden">
                 <div className="relative z-10 flex flex-col md:flex-row gap-8 items-center">
                     <div className="w-24 h-24 bg-white rounded-3xl p-3 shadow-2xl shadow-sky-900/20 rotate-3 hover:rotate-0 transition-transform duration-500">
-                        <img src="/image.png" alt="Logo" className="w-full h-full object-contain" />
+                        <img src="https://res.cloudinary.com/dc127wztz/image/upload/w_200,f_auto,q_auto/v1770961573/hero-poster_c2nbaw.png" alt="Logo" className="w-full h-full object-contain" />
                     </div>
                     <div>
                         <h1 className="text-4xl font-black mb-3 tracking-tight">{t.header?.title || "Create Your Masterpiece"}</h1>
@@ -371,7 +371,7 @@ const CustomTripForm = ({ dictionary }: { dictionary: any }) => {
                     </div>
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                         <input
-                            type="text" 
+                            type="text"
                             name="fullName"
                             placeholder={t.contact?.namePlaceholder || "Full Name"}
                             className="w-full p-5 bg-white border border-slate-100 rounded-2xl focus:outline-none focus:border-sky-500 font-bold transition-all"
@@ -381,7 +381,7 @@ const CustomTripForm = ({ dictionary }: { dictionary: any }) => {
                             aria-label="Full Name"
                         />
                         <input
-                            type="email" 
+                            type="email"
                             name="email"
                             placeholder={t.contact?.emailPlaceholder || "Email Address"}
                             className="w-full p-5 bg-white border border-slate-100 rounded-2xl focus:outline-none focus:border-sky-500 font-bold transition-all"
@@ -391,7 +391,7 @@ const CustomTripForm = ({ dictionary }: { dictionary: any }) => {
                             aria-label="Email Address"
                         />
                         <input
-                            type="tel" 
+                            type="tel"
                             name="phone"
                             placeholder={t.contact?.phonePlaceholder || "Phone Number"}
                             className="w-full p-5 bg-white border border-slate-100 rounded-2xl focus:outline-none focus:border-sky-500 font-bold transition-all"

@@ -196,6 +196,7 @@ export default async function RootLayout(props: {
           <link rel="preconnect" href="https://api.dicebear.com" />
           <link rel="preconnect" href="https://res.cloudinary.com" />
           <link rel="preconnect" href="https://touching-gobbler-96.clerk.accounts.dev" />
+          <link rel="preconnect" href="https://grainy-gradients.vercel.app" />
           <link rel="preconnect" href="https://www.transparenttextures.com" />
           {/* SEO Schema */}
           <TravelAgencySchema />
