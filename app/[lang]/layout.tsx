@@ -19,7 +19,7 @@ import TravelAgencySchema from '../components/seo/TravelAgencySchema';
 import MobileBottomNav from '../components/MobileBottomNav';
 import ScrollProgressBar from '../components/ui/ScrollProgressBar';
 
-const inter = Inter({ 
+const inter = Inter({
   subsets: ['latin'],
   variable: '--font-inter',
   display: 'swap',
@@ -56,17 +56,17 @@ export async function generateMetadata({ params }: { params: Promise<{ lang: str
       template: '%s | Mongol Trail',
     },
     description: (dict.featured as any).desc || 'Experience the ultimate adventure with Mongol Trail. Premier tours across Mongolia and the world.',
-    keywords: lang === 'mn' 
+    keywords: lang === 'mn'
       ? [
-          'Монгол аялал', 'Говийн аялал', 'Хөвсгөл нуур', 
-          'Монголд аялах', 'Жуулчлал', 'Аялал жуулчлал', 
-          'Mongol Trail', 'Морин аялал', 'Явган аялал'
-        ]
+        'Монгол аялал', 'Говийн аялал', 'Хөвсгөл нуур',
+        'Монголд аялах', 'Жуулчлал', 'Аялал жуулчлал',
+        'Mongol Trail', 'Морин аялал', 'Явган аялал'
+      ]
       : [
-          'Mongolia Travel', 'Gobi Desert Tours', 'Nomadic Expeditions',
-          'Mongolia Hiking', 'Adventure Travel Mongolia', 'Horseback Riding Mongolia',
-          'Mongol Trail', 'Visit Mongolia', 'Mongolia Tourism'
-        ],
+        'Mongolia Travel', 'Gobi Desert Tours', 'Nomadic Expeditions',
+        'Mongolia Hiking', 'Adventure Travel Mongolia', 'Horseback Riding Mongolia',
+        'Mongol Trail', 'Visit Mongolia', 'Mongolia Tourism'
+      ],
     authors: [{ name: 'Mongol Trail Team' }],
     creator: 'Mongol Trail',
     publisher: 'Mongol Trail',
@@ -172,7 +172,7 @@ export default async function RootLayout(props: {
   };
 
   return (
-    <ClerkProvider 
+    <ClerkProvider
       signInUrl={`/${params.lang}/sign-in`}
       signUpUrl={`/${params.lang}/sign-up`}
       localization={params.lang === 'mn' ? mnLocalization : undefined}
@@ -193,11 +193,12 @@ export default async function RootLayout(props: {
     >
       <html lang={params.lang}>
         <head>
-        <link rel="preconnect" href="https://api.dicebear.com" />
-        <link rel="preconnect" href="https://touching-gobbler-96.clerk.accounts.dev" />
-        <link rel="preconnect" href="https://www.transparenttextures.com" />
-        {/* SEO Schema */}
-        <TravelAgencySchema />
+          <link rel="preconnect" href="https://api.dicebear.com" />
+          <link rel="preconnect" href="https://res.cloudinary.com" />
+          <link rel="preconnect" href="https://touching-gobbler-96.clerk.accounts.dev" />
+          <link rel="preconnect" href="https://www.transparenttextures.com" />
+          {/* SEO Schema */}
+          <TravelAgencySchema />
         </head>
         <body className={`${inter.variable} ${montserrat.variable} ${notoSansKr.variable} font-sans bg-slate-50 text-slate-900 antialiased overflow-x-hidden selection:bg-sky-200 selection:text-sky-900`}>
           <AppInitializer />
@@ -208,10 +209,10 @@ export default async function RootLayout(props: {
                   <MobileLayout>
                     <ExternalLinkHandler />
                     <ScrollProgressBar />
-                    
+
                     {/* Fixed Navbars */}
                     <Navbar dictionary={dict.nav} />
-                    
+
                     {/* Main Content Area */}
                     <main className="min-h-screen w-full relative z-0 pb-20 md:pb-0">
                       {children}
@@ -219,7 +220,7 @@ export default async function RootLayout(props: {
 
                     {/* Footer - Hidden on pages that don't need it (like map view if applicable) */}
                     <Footer dictionary={dict} navDictionary={dict.nav} />
-                    
+
                     {/* Mobile Bottom Navigation */}
                     <MobileBottomNav language={params.lang as any} dictionary={dict.nav} />
                   </MobileLayout>
