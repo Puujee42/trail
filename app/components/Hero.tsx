@@ -225,6 +225,18 @@ const Hero = ({ trips, lang, dictionary }: { trips: Trip[], lang: "mn" | "en" | 
           blurDataURL="data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAMCAgICAgMCAgIDAwMDBAYEBAQEBAgGBgUGCQgKCgkICQkKDA8MCgsOCwkJDRENDg8QEBEQCgwSExIQEw8QEBD/2wBDAQMDAwQDBAgEBAgQCwkLEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBD/wAARCAAKAAoDASIAAhEBAxEB/8QAFQABAQAAAAAAAAAAAAAAAAAAAAf/xAAhEAACAQMFAQEAAAAAAAAAAAABAgMABBEFBhIhMTiQf/EABUBAQEAAAAAAAAAAAAAAAAAAAMF/8QAGhEAAgIDAAAAAAAAAAAAAAAAAAECERIxQf/aAAwDAQACEQMRAD8AqnO7jEj2d9lc1YtG2iQf/9k="
           style={{ display: 'none' }} // Hidden by default, shown only if video fails
         />
+        {/* LCP Optimization: Visible prioritized image behind video */}
+        <div className="absolute inset-0 -z-20">
+          <Image
+            src="https://res.cloudinary.com/dc127wztz/image/upload/v1770961573/hero-poster_c2nbaw.png"
+            alt="Mongolia Landscape"
+            fill
+            priority
+            fetchPriority="high"
+            className="object-cover"
+            sizes="100vw"
+          />
+        </div>
       </motion.div>
 
       {/* ─── 2. Gradient Overlays ─── */}

@@ -1,4 +1,5 @@
 import { ObjectId } from "mongodb";
+import { unstable_cache } from "next/cache";
 
 import clientPromise from "./index";
 
@@ -97,17 +98,21 @@ function mapTrip(doc: any): Trip {
 ────────────────────────────────────────────────────── */
 
 // 1. Get ALL trips
-export async function getAllTrips() {
-  const client = await clientPromise;
-  const collection = client.db(DB_NAME).collection(COLLECTION);
+export const getAllTrips = unstable_cache(
+  async () => {
+    const client = await clientPromise;
+    const collection = client.db(DB_NAME).collection(COLLECTION);
 
-  const trips = await collection
-    .find({})
-    .sort({ featured: -1, _id: -1 })
-    .toArray();
+    const trips = await collection
+      .find({})
+      .sort({ featured: -1, _id: -1 })
+      .toArray();
 
-  return trips.map(mapTrip);
-}
+    return trips.map(mapTrip);
+  },
+  ['all-trips'],
+  { revalidate: 3600, tags: ['trips'] }
+);
 
 // 2. Get Trips by generic 'type' (family, solo, etc)
 export async function getTripsByType(type: string) {
@@ -143,31 +148,39 @@ export async function getMongoliaTrips() {
 }
 
 // 5. Get Featured trips
-export async function getFeaturedTrips() {
-  const client = await clientPromise;
-  const collection = client.db(DB_NAME).collection(COLLECTION);
+export const getFeaturedTrips = unstable_cache(
+  async () => {
+    const client = await clientPromise;
+    const collection = client.db(DB_NAME).collection(COLLECTION);
 
-  const trips = await collection
-    .find({ featured: true })
-    .limit(5)
-    .toArray();
+    const trips = await collection
+      .find({ featured: true })
+      .limit(5)
+      .toArray();
 
-  return trips.map(mapTrip);
-}
+    return trips.map(mapTrip);
+  },
+  ['featured-trips'],
+  { revalidate: 3600, tags: ['trips'] }
+);
 
 // 6. Get Recent trips
-export async function getRecentTrips() {
-  const client = await clientPromise;
-  const collection = client.db(DB_NAME).collection(COLLECTION);
+export const getRecentTrips = unstable_cache(
+  async () => {
+    const client = await clientPromise;
+    const collection = client.db(DB_NAME).collection(COLLECTION);
 
-  const trips = await collection
-    .find({})
-    .sort({ _id: -1 })
-    .limit(6)
-    .toArray();
+    const trips = await collection
+      .find({})
+      .sort({ _id: -1 })
+      .limit(6)
+      .toArray();
 
-  return trips.map(mapTrip);
-}
+    return trips.map(mapTrip);
+  },
+  ['recent-trips'],
+  { revalidate: 3600, tags: ['trips'] }
+);
 
 // 7. Get Family trips
 export async function getFamilyTrips() {

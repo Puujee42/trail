@@ -1,6 +1,10 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
+  compress: true,
+  experimental: {
+    optimizePackageImports: ['react-icons', 'lucide-react', 'framer-motion'],
+  },
   // Add this 'images' configuration
   images: {
     remotePatterns: [
