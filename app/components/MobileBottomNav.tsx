@@ -73,14 +73,6 @@ const MobileBottomNav: React.FC<MobileBottomNavProps> = ({ language, dictionary 
                         }} 
                      />
                   </div>
-                  <motion.span 
-                    initial={{ opacity: 0, y: 5 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    className={`text-[10px] font-medium transition-colors duration-300 font-sans tracking-wide text-center ${
-                    isActive ? "text-blue-600" : "text-slate-500"
-                  }`}>
-                    {tab.label}
-                  </motion.span>
                   {isActive && (
                     <motion.div
                       layoutId="activeTabDot"
@@ -96,7 +88,7 @@ const MobileBottomNav: React.FC<MobileBottomNavProps> = ({ language, dictionary 
               <Link
                 key={tab.id}
                 href={tab.href}
-                className="relative flex flex-col items-center gap-1 p-2 group min-w-[44px] min-h-[44px]"
+                className="relative flex flex-col items-center gap-1 p-2 group min-w-[44px] min-h-[44px] justify-center"
                 aria-label={tab.label}
                 aria-current={isActive ? 'page' : undefined}
               >
@@ -109,7 +101,7 @@ const MobileBottomNav: React.FC<MobileBottomNavProps> = ({ language, dictionary 
                       isActive ? "text-blue-600 drop-shadow-[0_0_12px_rgba(37,99,235,0.4)]" : "text-slate-400 group-hover:text-slate-600"
                     }`}
                   >
-                    <Icon size={24} strokeWidth={isActive ? 2.5 : 1.5} />
+                    <Icon size={28} strokeWidth={isActive ? 2.5 : 1.5} />
                   </motion.div>
                   
                   {/* Badge Polish */}
@@ -126,16 +118,6 @@ const MobileBottomNav: React.FC<MobileBottomNavProps> = ({ language, dictionary 
                     </motion.span>
                   )}
                 </div>
-                
-                <motion.span 
-                  initial={{ opacity: 0.6 }}
-                  animate={{ opacity: isActive ? 1 : 0.6, fontWeight: isActive ? 600 : 500 }}
-                  className={`text-[10px] transition-colors duration-300 font-sans tracking-wide ${
-                    isActive ? "text-blue-600" : "text-slate-500 group-hover:text-slate-600"
-                  }`}
-                >
-                  {tab.label}
-                </motion.span>
 
                 {isActive && (
                   <motion.div
