@@ -21,8 +21,10 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
 
     if (!destination) return {};
 
-    const title = `${destination.name[lang]} Tours & Travel Guide | Mongol Trail`;
-    const description = `Explore ${destination.name[lang]} with Mongol Trail. Discover the best tours, hiking trails, and adventures in ${destination.name[lang]}.`;
+    const activeLang = (lang === 'de' ? 'en' : lang) as 'en' | 'mn' | 'ko';
+
+    const title = `${destination.name[activeLang]} Tours & Travel Guide | Mongol Trail`;
+    const description = `Explore ${destination.name[activeLang]} with Mongol Trail. Discover the best tours, hiking trails, and adventures in ${destination.name[activeLang]}.`;
 
     return {
         title,
@@ -45,13 +47,15 @@ export default async function DestinationPage({ params }: PageProps) {
         return notFound();
     }
 
+    const activeLang = (lang === 'de' ? 'en' : lang) as 'en' | 'mn' | 'ko';
+
     return (
         <div className="min-h-screen bg-slate-50 font-sans">
             <StructuredData
                 type="TouristDestination"
                 data={{
-                    name: destination.name[lang],
-                    description: destination.description[lang],
+                    name: destination.name[activeLang],
+                    description: destination.description[activeLang],
                     image: destination.images,
                     url: `https://www.mongoltrail.com/${lang}/destinations/${slug}`,
                     touristType: ["Adventure Travel", "Cultural Tourism"],
@@ -62,7 +66,7 @@ export default async function DestinationPage({ params }: PageProps) {
             <div className="relative h-[60vh] md:h-[70vh] w-full overflow-hidden">
                 <Image
                     src={destination.images[0] || '/hero-main.jpg'}
-                    alt={destination.name[lang]}
+                    alt={destination.name[activeLang]}
                     fill
                     className="object-cover"
                     priority
@@ -74,10 +78,10 @@ export default async function DestinationPage({ params }: PageProps) {
                         Destinations
                     </span>
                     <h1 className="text-5xl md:text-7xl font-black text-white mb-6 drop-shadow-2xl">
-                        {destination.name[lang]}
+                        {destination.name[activeLang]}
                     </h1>
                     <p className="max-w-2xl text-lg md:text-xl text-slate-100 font-medium leading-relaxed drop-shadow-md">
-                        {destination.description[lang]?.slice(0, 160)}...
+                        {destination.description[activeLang]?.slice(0, 160)}...
                     </p>
                 </div>
             </div>
@@ -88,10 +92,10 @@ export default async function DestinationPage({ params }: PageProps) {
                 {/* Intro */}
                 <div className="max-w-4xl mx-auto text-center mb-20">
                     <h2 className="text-3xl font-bold text-slate-900 mb-6">
-                        About {destination.name[lang]}
+                        About {destination.name[activeLang]}
                     </h2>
                     <div className="prose prose-lg prose-slate mx-auto text-slate-600">
-                        <p>{destination.description[lang]}</p>
+                        <p>{destination.description[activeLang]}</p>
                     </div>
                 </div>
 
@@ -99,7 +103,7 @@ export default async function DestinationPage({ params }: PageProps) {
                 <div className="mb-20">
                     <div className="flex items-center justify-between mb-10">
                         <h2 className="text-3xl md:text-4xl font-black text-slate-900">
-                            Tours visiting <span className="text-sky-600">{destination.name[lang]}</span>
+                            Tours visiting <span className="text-sky-600">{destination.name[activeLang]}</span>
                         </h2>
                         <span className="bg-sky-100 text-sky-700 font-bold px-4 py-2 rounded-full text-sm">
                             {destination.tours.length} Experiences
@@ -108,7 +112,7 @@ export default async function DestinationPage({ params }: PageProps) {
 
                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
                         {destination.tours.map(trip => (
-                            <DestinationTourCard key={trip._id} trip={trip} lang={lang} />
+                            <DestinationTourCard key={trip._id} trip={trip} lang={activeLang} />
                         ))}
                     </div>
                 </div>
@@ -121,11 +125,11 @@ export default async function DestinationPage({ params }: PageProps) {
                     <div className="space-y-6">
                         <details className="group border-b border-slate-100 pb-4">
                             <summary className="font-bold text-slate-800 cursor-pointer list-none flex justify-between items-center text-lg">
-                                Best time to visit {destination.name[lang]}?
+                                Best time to visit {destination.name[activeLang]}?
                                 <span className="text-sky-500 group-open:rotate-180 transition-transform">▼</span>
                             </summary>
                             <p className="mt-4 text-slate-600 leading-relaxed">
-                                The best time to visit {destination.name[lang]} is typically from June to September when the weather is mild and conducive to outdoor activities.
+                                The best time to visit {destination.name[activeLang]} is typically from June to September when the weather is mild and conducive to outdoor activities.
                             </p>
                         </details>
                         {/* More auto-generated FAQs will go here */}

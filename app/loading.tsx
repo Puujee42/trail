@@ -1,55 +1,38 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { FaPlane, FaGlobeAsia } from "react-icons/fa";
+import { FaPlane } from "react-icons/fa";
 
-const Loader = () => {
+export default function Loading() {
   return (
-    <div className="fixed inset-0 z-[100] flex flex-col items-center justify-center bg-white/80 backdrop-blur-md">
-      
-      {/* ────────────────── ANIMATION CONTAINER ────────────────── */}
-      <div className="relative w-24 h-24 flex items-center justify-center">
-        
-        {/* Central Globe */}
-        <div className="absolute text-slate-200 text-4xl">
-           <FaGlobeAsia />
-        </div>
-
-        {/* Orbiting Plane */}
-        <motion.div
-          animate={{ rotate: 360 }}
-          transition={{ duration: 2, repeat: Infinity, ease: "linear" }}
-          className="absolute w-full h-full"
-        >
-          <div className="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1/2 text-sky-500 text-2xl transform -rotate-45">
-            <FaPlane />
-          </div>
-        </motion.div>
-
-        {/* Orbit Path (Dashed Circle) */}
-        <div className="absolute inset-0 rounded-full border-2 border-dashed border-slate-300 opacity-50" />
-        
-        {/* Pulsing Effect */}
-        <motion.div
-           animate={{ scale: [1, 1.2, 1], opacity: [0.5, 0, 0.5] }}
-           transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
-           className="absolute inset-0 rounded-full bg-sky-100 -z-10"
-        />
-      </div>
-
-      {/* ────────────────── TEXT ────────────────── */}
+    <div className="fixed inset-0 z-50 flex flex-col items-center justify-center bg-slate-900">
       <motion.div
-        initial={{ opacity: 0, y: 10 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ delay: 0.5 }}
-        className="mt-6 text-center"
+        initial={{ opacity: 0, scale: 0.5 }}
+        animate={{ opacity: 1, scale: 1 }}
+        transition={{ duration: 0.5 }}
+        className="relative mb-8"
       >
-        <h3 className="text-lg font-bold text-slate-800">Түр хүлээнэ үү...</h3>
-        <p className="text-sm text-slate-500">Аяллын мэдээллийг татаж байна</p>
+        <div className="absolute inset-0 bg-blue-500/20 rounded-full blur-xl animate-pulse" />
+        <div className="w-24 h-24 bg-gradient-to-br from-sky-400 to-blue-600 rounded-2xl flex items-center justify-center shadow-2xl relative z-10">
+          <FaPlane className="text-4xl text-white transform -rotate-45" />
+        </div>
       </motion.div>
-
+      
+      <motion.h2
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 0.3 }}
+        className="text-2xl font-black text-white tracking-tight font-[var(--font-montserrat)]"
+      >
+        MONGOL TRAIL
+      </motion.h2>
+      
+      <motion.div
+        initial={{ width: 0 }}
+        animate={{ width: 100 }}
+        transition={{ delay: 0.5, duration: 1.5, repeat: Infinity }}
+        className="h-1 bg-sky-500 mt-4 rounded-full"
+      />
     </div>
   );
 }
-
-export default Loader;

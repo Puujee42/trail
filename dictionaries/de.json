@@ -1,0 +1,209 @@
+{
+    "nav": {
+        "home": "Startseite",
+        "course": "Reise",
+        "packages": "Touren",
+        "europe": "Europa",
+        "mongolia": "Mongolei",
+        "blog": "Blog",
+        "about": "Über uns",
+        "contact": "Kontakt",
+        "slogan": "Bereise die Welt mit Mongol Trail",
+        "login": "Anmelden",
+        "register": "Registrieren",
+        "book": "Jetzt buchen",
+        "menu": "Menü",
+        "myAccount": "Mein Konto",
+        "dashboard": "Dashboard"
+    },
+    "featured": {
+        "bestOffer": "Beste Angebote",
+        "titleMain": "Machen Sie Ihren Traum",
+        "titleAccent": "Reise",
+        "titleEnd": "zur Realität.",
+        "desc": "Reisen ist eine Investition. Nicht in materielle Dinge – sondern in sich selbst, Ihre Seele, Ihre Perspektive und die Qualität Ihres Lebens.",
+        "viewAll": "Alle Reisen ansehen"
+    },
+    "footer": {
+        "newsletterTitle": "Newsletter abonnieren?",
+        "newsletterDesc": "Erhalten Sie sofort die neuesten Updates zu Verkäufen und Aktionen.",
+        "emailPlaceholder": "E-Mail-Adresse...",
+        "brandDesc": "Wir bieten Ihnen die angenehmsten, sichersten und unvergesslichsten Reisen in jeden Winkel der Welt.",
+        "menuTitle": "Menü",
+        "trendingTitle": "Beliebt",
+        "contactTitle": "Kontaktieren Sie uns",
+        "address": "Raum 502, 5. Stock, Erkhi Center, West 4 Road, Ulaanbaatar",
+        "copyright": "© 2025 Mongol Trail. Alle Rechte vorbehalten.",
+        "policy": "Datenschutzrichtlinie",
+        "terms": "Nutzungsbedingungen",
+        "europe": "Europa",
+        "switzerland": "Schweiz"
+    },
+    "whyChooseUs": {
+        "badge": "Unsere Vorteile",
+        "title": "Warum wir?",
+        "titlePrefix": "Warum",
+        "titleSuffix": "wählen?",
+        "desc": "Wir verkaufen nicht nur Reisen. Wir versprechen Ihnen lebenslange Erinnerungen, Sicherheit und erstklassigen Service.",
+        "card1Title": "Grenzenloses globales Reisen",
+        "card1Desc": "Wir arbeiten mit offiziellen Agenturen in über 50 Ländern und 21 mongolischen Provinzen zusammen, um Sie überall hinzubringen.",
+        "card2Title": "24/7 Support",
+        "card2Desc": "Wir sind während der gesamten Reise bei Ihnen. Kontaktieren Sie uns jederzeit und überall, wenn Probleme auftreten.",
+        "card2Btn": "Jetzt chatten",
+        "card3Title": "Bester Preis",
+        "card3Desc": "Realistischste Marktpreise.",
+        "card3Badge": "-20% RABATT",
+        "card4Title": "100% Versicherung",
+        "card4Desc": "Ihre Sicherheit ist unsere Priorität. Alle Reisenden sind voll versichert.",
+        "card4Tags": [
+            "Globale Abdeckung",
+            "Medizinische Unterstützung",
+            "Reiseschutz"
+        ],
+        "card5Title": "Mach mit?",
+        "card5Desc": "Erhalten Sie sofort die neuesten Reise-Updates."
+    },
+    "rewards": {
+        "title": "Prämienprogramm",
+        "description": "Sammeln Sie Punkte und erhalten Sie exklusive Reisevorteile."
+    },
+    "customTrip": {
+        "header": {
+            "title": "Erschaffen Sie Ihr Meisterwerk",
+            "subtitle": "\"Maßgeschneiderte Expeditionen, entworfen nach Ihrer Neugier und Ihrem Tempo.\""
+        },
+        "travelParty": {
+            "title": "Reisegruppe",
+            "subtitle": "Wer reist mit?",
+            "adults": "Erwachsene",
+            "adultsSub": "12+ Jahre",
+            "children": "Kinder",
+            "childrenSub": "2-11 Jahre",
+            "infants": "Kleinkinder",
+            "infantsSub": "Unter 2J"
+        },
+        "hotelStyle": {
+            "title": "Unterkunftsstil",
+            "subtitle": "Wo möchten Sie übernachten?",
+            "options": {
+                "5stars": {
+                    "title": "5 Sterne",
+                    "desc": "Premium-Luxus und erstklassiger Service; 180$+/Zimmer"
+                },
+                "4stars": {
+                    "title": "4 Sterne",
+                    "desc": "Hoher Komfort und zentrale Lage; 100-180$/Zimmer"
+                },
+                "3stars": {
+                    "title": "3 Sterne",
+                    "desc": "Zuverlässige Standards und gutes Preis-Leistungs-Verhältnis; 60-100$/Zimmer"
+                },
+                "self": {
+                    "title": "Selbstbuchung",
+                    "desc": "Ich organisiere meine Unterkunft selbst"
+                }
+            }
+        },
+        "interests": {
+            "title": "Interessen",
+            "subtitle": "Was weckt Ihr Interesse?",
+            "items": {
+                "nature": "Natur und Wildnis",
+                "iconic": "Ikonische Orte",
+                "adventure": "Abenteuer",
+                "history": "Geschichte",
+                "local": "Lokales Leben",
+                "photography": "Fotografie",
+                "hiking": "Wandern"
+            }
+        },
+        "details": {
+            "arrivalDate": "Ankunftsdatum",
+            "budget": "Budget pro Person ($)",
+            "budgetPlaceholder": "z.B. 2500",
+            "narrative": "Die Geschichte",
+            "narrativePlaceholder": "Teilen Sie Ihre speziellen Träume oder Anforderungen für diese Reise..."
+        },
+        "contact": {
+            "title": "Persönliche Daten",
+            "namePlaceholder": "Vollständiger Name",
+            "emailPlaceholder": "E-Mail-Adresse"
+        },
+        "submit": "Anfrage senden"
+    },
+    "topDestinations": {
+        "badge": "Ikonische Landschaften",
+        "title": "Entdecken Sie die ikonischsten Reiseziele der Mongolei",
+        "subtitle": "Von der legendären Wüste Gobi bis zum majestätischen Altai-Gebirge, entdecken Sie die Landschaften, die die Mongolei definieren.",
+        "bestTimeLabel": "Beste Zeit:",
+        "perfectForLabel": "Perfekt für:",
+        "exploreLink": "Touren erkunden",
+        "gobi": {
+            "title": "Wüste Gobi – Die legendäre Südgrenze",
+            "description": "Die Wüste Gobi ist das Kronjuwel der Mongolei – eine riesige Wildnis aus singenden Sanddünen, dramatischen Canyons und seltener Tierwelt. Besuchen Sie die hoch aufragenden Khongoryn Els Dünen, erkunden Sie die flammenden Klippen von Bayanzag, wo Dinosaurierfossilien erstmals entdeckt wurden, und treffen Sie baktrische Kamele in ihrem natürlichen Lebensraum.",
+            "bestTime": "Mai bis September",
+            "perfectFor": "Wüstenabenteuer, Paläontologie-Enthusiasten, Fotografen"
+        },
+        "altai": {
+            "title": "Altai-Gebirge – Die majestätischen Westgipfel der Mongolei",
+            "description": "Im abgelegenen Westen erheben sich die Altai-Berge wie alte Wächter. Diese UNESCO-anerkannte Region ist die Heimat kasachischer Adlerjäger, Gletscherseen und Gipfel über 4.000 Meter. Wandern Sie durch Almwiesen, erleben Sie Steinadlerfestivals und tauchen Sie ein in die Traditionen der ethnischen Minderheiten der Mongolei.",
+            "bestTime": "Juni bis September",
+            "perfectFor": "Trekking, kulturelles Eintauchen, Tierbeobachtung"
+        },
+        "orkhon": {
+            "title": "Orkhon-Tal – Das Herz der mongolischen Geschichte",
+            "description": "Ein UNESCO-Weltkulturerbe, das Orkhon-Tal, ist der Ort, an dem Dschingis Khan sein Reich aufbaute. Erkunden Sie Karakorum, die alte mongolische Hauptstadt, besuchen Sie das Kloster Erdene Zuu (der älteste buddhistische Tempel der Mongolei) und reiten Sie durch vulkanische Landschaften mit heißen Quellen und Wasserfällen.",
+            "bestTime": "Mai bis Oktober",
+            "perfectFor": "Geschichtsinteressierte, Reiten, Kulturreisen"
+        }
+    },
+    "faq": {
+        "badge": "FAQ",
+        "title": "Alles, was Sie über Reisen in die Mongolei wissen müssen",
+        "subtitle": "Erhalten Sie Antworten auf die häufigsten Fragen zum Besuch der Mongolei mit Mongol Trail.",
+        "stillHaveQuestions": "Noch Fragen?",
+        "contactUs": "Kontaktieren Sie unser Team",
+        "questions": [
+            {
+                "question": "Ist die Mongolei sicher für Touristen?",
+                "answer": "Ja. Die Mongolei ist eines der sichersten Länder Asiens für Reisende. Gewaltverbrechen sind selten und die Mongolen sind berühmt für ihre Gastfreundschaft. Die lokale Expertise und der 24/7-Support von Mongol Trail gewährleisten Ihre Sicherheit in abgelegenen Gebieten."
+            },
+            {
+                "question": "Wie viel kostet eine Mongolei-Reise?",
+                "answer": "Die Reisekosten variieren je nach Dauer, Gruppengröße und Anpassung. Budgetreisen beginnen bei etwa 100-150 USD pro Tag, während Luxuserlebnisse zwischen 300-500+ USD pro Tag liegen. Mongol Trail bietet transparente Preise, die auf Ihr Budget zugeschnitten sind."
+            },
+            {
+                "question": "Brauche ich ein Visum für die Mongolei?",
+                "answer": "Die meisten Besucher aus den USA, der EU und vielen asiatischen Ländern können bis zu 30 Tage visumfrei in die Mongolei einreisen. Bürger einiger Länder benötigen ein Visum. Mongol Trail bietet vollständige Visumberatung bei der Buchung."
+            },
+            {
+                "question": "Wann ist die beste Reisezeit für die Mongolei?",
+                "answer": "Der Sommer (Juni-August) bietet warmes Wetter und Naadam-Festival-Feierlichkeiten. Frühling (Mai) und Herbst (September) bieten milde Temperaturen und weniger Menschenmassen. Der Winter (November-März) ist ideal für Kulturreisen und Eisfestivals, erfordert jedoch Kälteschutz."
+            },
+            {
+                "question": "Wann ist die beste Zeit für einen Besuch der Wüste Gobi?",
+                "answer": "Die Wüste Gobi besucht man am besten von Mai bis September, wenn die Temperaturen moderat sind (15-30°C). Vermeiden Sie Juli-August wegen extremer Hitze. Frühling und Herbst bieten angenehme Bedingungen und atemberaubendes Licht für die Fotografie."
+            },
+            {
+                "question": "Wie komme ich in die Mongolei?",
+                "answer": "Die meisten internationalen Reisenden fliegen zum internationalen Flughafen Chinggis Khaan in Ulaanbaatar, der Hauptstadt der Mongolei. Direktflüge verbinden Seoul, Peking, Tokio, Moskau und Istanbul. Mongol Trail kann die Abholung vom Flughafen und Inlandsreisen arrangieren."
+            },
+            {
+                "question": "Kann ich meine Mongolei-Reise individuell gestalten?",
+                "answer": "Absolut. Mongol Trail ist auf maßgeschneiderte Reiserouten spezialisiert. Egal, ob Sie einen 5-tägigen Gobi-Express, eine 14-tägige Trans-Mongolei-Expedition oder ein Luxus-Jurtenlager-Erlebnis wünschen, wir gestalten Touren nach Ihren Interessen, Ihrer Fitness und Ihrem Zeitplan."
+            },
+            {
+                "question": "Was sollte ich für die Mongolei einpacken?",
+                "answer": "Zu den wichtigsten Dingen gehören mehrschichtige Kleidung (die Temperaturen schwanken dramatisch), feste Wanderschuhe, Sonnenschutz und persönliche Medikamente. Für den Sommer packen Sie leichte Schichten und Regenbekleidung ein. Winterreisende benötigen extreme Kälteschutzkleidung. Mongol Trail stellt bei der Buchung detaillierte Packlisten zur Verfügung."
+            },
+            {
+                "question": "Welche Sprachen werden in der Mongolei gesprochen?",
+                "answer": "Mongolisch ist die Amtssprache. In Ulaanbaatar und Touristengebieten ist Englisch zunehmend verbreitet. Die Reiseleiter von Mongol Trail sprechen fließend Englisch und Deutsch und sorgen für eine klare Kommunikation während Ihrer Reise."
+            },
+            {
+                "question": "Was ist eine Ger (Jurte)?",
+                "answer": "Ein Ger (auch Jurte genannt) ist die traditionelle tragbare Behausung mongolischer Nomaden. Aus Filz und Holz gefertigt, sind Gers überraschend komfortabel, isoliert und kulturell bedeutsam. Die meisten Touren von Mongol Trail beinhalten authentische Ger-Aufenthalte bei Nomadenfamilien oder in komfortablen Touristen-Ger-Camps."
+            }
+        ]
+    }
+}

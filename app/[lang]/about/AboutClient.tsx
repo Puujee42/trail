@@ -1,5 +1,6 @@
 "use client";
 
+import { useRef, useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import CountUp from "react-countup";
 import Link from "next/link";
@@ -17,131 +18,52 @@ import {
 } from "react-icons/fa";
 import { useLanguage } from "../../context/LanguageContext";
 
+import { content } from "../../content";
+
 /* ────────────────────── Main Page Component ────────────────────── */
 const AboutClient = () => {
     const { language } = useLanguage();
 
-    const content = {
-        mn: {
-            heroTitlePrefix: "Тав тухтай, Аюулгүй,",
-            heroTitleSuffix: "Шударга Аялал",
-            heroDesc: "Таны хүсэл, цаг хугацаа, төсөвт яг тохирсон шийдлийг санал болгодог мэргэжлийн баг.",
+    // Map icons to arrays to reconstruct the object structure
+    const serviceIcons = [FaPlane, FaCalendarCheck, FaPassport, FaClipboardList];
+    const valueIcons = [FaUserShield, FaBalanceScale, FaBolt, FaLayerGroup];
 
-            introTitle: "Бидний тухай",
-            introText1: "Манай байгууллага таны аяллыг хамгийн",
-            introHighlight: "тав тухтай, аюулгүй, үнэнч шударгаар",
-            introText2: "зохион байгуулахыг зорьдог мэргэжлийн баг юм.",
-
-            servicesTitle: "Бидний Үзүүлдэг Үйлчилгээ",
-            servicesDesc: "Мэргэжлийн түвшинд танд дараах үйлчилгээнүүдийг үзүүлж байна.",
-            serviceItems: [
-                { icon: FaPlane, title: "Аяллын хөтөлбөрт болон захиалгат аялал", desc: "Таны сонголтод нийцүүлэн онцгой аяллын маршрутыг гаргаж, бүрэн зохион байгуулна." },
-                { icon: FaCalendarCheck, title: "Ярилцлагын цаг авах, материал бүрдүүлэлт", desc: "ЭСЯ-ны ярилцлагын цаг товлох, шаардлагатай материалуудыг мэргэжлийн түвшинд бүрдүүлж өгнө." },
-                { icon: FaPassport, title: "Визний цогц үйлчилгээ", desc: "Жуулчны, бизнес, оюутны зэрэг бүх төрлийн визэнд зөвлөгөө өгч, бүрэн дэмжлэг үзүүлнэ." },
-                { icon: FaClipboardList, title: "Аяллын төлөвлөгөө бичих үйлчилгээ", desc: "Шаардагдах бүх бичиг баримт, баталгаажуулалт, itinerary-г стандартын дагуу боловсруулж өгнө." }
-            ],
-
-            stats: [
-                { end: 98, suffix: "%", label: "Виз гарах магадлал" },
-                { end: 1200, suffix: "+", label: "Амжилттай материал" },
-                { end: 24, suffix: "/7", label: "Тусламж үйлчилгээ" }
-            ],
-
-            valuesTitle: "Яагаад биднийг сонгох вэ?",
-            valuesDesc: "Бидний давуу тал.",
-            valueItems: [
-                { icon: FaUserShield, title: "Мэргэжлийн баг", text: "Хариуцлагатай, туршлагатай мэргэжлийн баг танд үйлчилнэ." },
-                { icon: FaBalanceScale, title: "Шударга үйлчилгээ", text: "Шударга, ил тод үйлчилгээг эрхэмлэнэ." },
-                { icon: FaBolt, title: "Хурдан, найдвартай", text: "Цаг алдалгүй хурдан, найдвартай зөвлөгөө өгнө." },
-                { icon: FaLayerGroup, title: "Цогц шийдэл", text: "Аяллын бүх процессыг нэг дороос авах боломжтой." }
-            ],
-
-            ctaTitle: "Холбоо барих",
-            ctaDesc: "Бид таны мөрөөдлийн аяллыг бодит болгоход бэлэн байна.",
-            ctaPhone: "+976 7766-1626", // Updated Phone
-            ctaBtnMsg: "Зурвас илгээх"
-        },
-        en: {
-            heroTitlePrefix: "Comfortable, Safe,",
-            heroTitleSuffix: "Honest Travel",
-            heroDesc: "A professional team offering solutions tailored exactly to your wishes, time, and budget.",
-
-            introTitle: "About Us",
-            introText1: "Our organization is a professional team aiming to organize your trip most",
-            introHighlight: "comfortably, safely, and honestly.",
-            introText2: "We are experienced in international travel, visa services, and travel consulting.",
-
-            servicesTitle: "Our Services",
-            servicesDesc: "We provide the following services at a professional level.",
-            serviceItems: [
-                { icon: FaPlane, title: "Custom & Programmed Tours", desc: "We create and organize unique travel routes tailored to your choices." },
-                { icon: FaCalendarCheck, title: "Interview Scheduling & Document Preparation", desc: "Booking embassy interviews and professionally preparing required documents." },
-                { icon: FaPassport, title: "Comprehensive Visa Services", desc: "Consulting and full support for tourist, business, and student visas." },
-                { icon: FaClipboardList, title: "Travel Itinerary Planning", desc: "Preparing all necessary documents, confirmations, and standard itineraries." }
-            ],
-
-            stats: [
-                { end: 98, suffix: "%", label: "Visa Approval Rate" },
-                { end: 1200, suffix: "+", label: "Successful Applications" },
-                { end: 24, suffix: "/7", label: "Support Service" }
-            ],
-
-            valuesTitle: "Why Choose Us?",
-            valuesDesc: "Our Advantages.",
-            valueItems: [
-                { icon: FaUserShield, title: "Professional Team", text: "A responsible and experienced team at your service." },
-                { icon: FaBalanceScale, title: "Honest Service", text: "We value fair and transparent service." },
-                { icon: FaBolt, title: "Fast & Reliable", text: "Providing timely, fast, and reliable advice." },
-                { icon: FaLayerGroup, title: "Comprehensive Solutions", text: "All travel processes available in one place." }
-            ],
-
-            ctaTitle: "Contact Us",
-            ctaDesc: "We are ready to make your dream trip a reality.",
-            ctaPhone: "+976 7766-1626",
-            ctaBtnMsg: "Send Message"
-        },
-        ko: {
-            heroTitlePrefix: "편안하고, 안전하며,",
-            heroTitleSuffix: "정직한 여행",
-            heroDesc: "고객님의 희망, 시간, 예산에 딱 맞는 솔루션을 제공하는 전문 팀입니다.",
-
-            introTitle: "회사 소개",
-            introText1: "저희는 고객님의 여행을 가장",
-            introHighlight: "편안하고, 안전하며, 정직하게",
-            introText2: "계획하는 것을 목표로 하는 전문 팀입니다.",
-
-            servicesTitle: "제공 서비스",
-            servicesDesc: "전문적인 수준의 다양한 서비스를 제공합니다.",
-            serviceItems: [
-                { icon: FaPlane, title: "맞춤형 및 기획 여행", desc: "고객님의 선택에 맞춘 특별한 여행 경로를 기획하고 구성합니다." },
-                { icon: FaCalendarCheck, title: "인터뷰 예약 및 서류 준비", desc: "대사관 인터뷰 예약 및 필요한 서류를 전문적으로 준비해 드립니다." },
-                { icon: FaPassport, title: "종합 비자 서비스", desc: "관광, 비즈니스, 학생 등 모든 유형의 비자에 대한 상담 및 전폭적인 지원." },
-                { icon: FaClipboardList, title: "여행 일정 계획 서비스", desc: "필요한 모든 서류, 예약 확인 및 표준 여행 일정을 작성해 드립니다." }
-            ],
-
-            stats: [
-                { end: 98, suffix: "%", label: "비자 승인율" },
-                { end: 1200, suffix: "+", label: "성공적인 신청" },
-                { end: 24, suffix: "/7", label: "고객 지원" }
-            ],
-
-            valuesTitle: "왜 우리를 선택해야 할까요?",
-            valuesDesc: "우리의 장점.",
-            valueItems: [
-                { icon: FaUserShield, title: "전문 팀", text: "책임감 있고 경험이 풍부한 팀이 서비스를 제공합니다." },
-                { icon: FaBalanceScale, title: "정직한 서비스", text: "공정하고 투명한 서비스를 중요시합니다." },
-                { icon: FaBolt, title: "신속 & 정확", text: "지체 없이 빠르고 신뢰할 수 있는 조언을 제공합니다." },
-                { icon: FaLayerGroup, title: "통합 솔루션", text: "모든 여행 절차를 한곳에서 해결할 수 있습니다." }
-            ],
-
-            ctaTitle: "문의하기",
-            ctaDesc: "당신의 꿈꾸던 여행을 현실로 만들어 드릴 준비가 되어 있습니다.",
-            ctaPhone: "+976 7766-1626",
-            ctaBtnMsg: "메시지 보내기"
-        }
+    // Helper to resolve language
+    const tRaw = content.aboutPage;
+    
+    // Construct the 't' object to match the structure expected by components
+    const t = {
+        heroTitlePrefix: tRaw.heroTitlePrefix[language] || tRaw.heroTitlePrefix.en,
+        heroTitleSuffix: tRaw.heroTitleSuffix[language] || tRaw.heroTitleSuffix.en,
+        heroDesc: tRaw.heroDesc[language] || tRaw.heroDesc.en,
+        introTitle: tRaw.introTitle[language] || tRaw.introTitle.en,
+        introText1: tRaw.introText1[language] || tRaw.introText1.en,
+        introHighlight: tRaw.introHighlight[language] || tRaw.introHighlight.en,
+        introText2: tRaw.introText2[language] || tRaw.introText2.en,
+        servicesTitle: tRaw.servicesTitle[language] || tRaw.servicesTitle.en,
+        servicesDesc: tRaw.servicesDesc[language] || tRaw.servicesDesc.en,
+        serviceItems: tRaw.serviceItems.map((item, i) => ({
+            icon: serviceIcons[i],
+            title: item.title[language] || item.title.en,
+            desc: item.desc[language] || item.desc.en
+        })),
+        stats: tRaw.stats.map(item => ({
+             end: item.end,
+             suffix: item.suffix,
+             label: item.label[language] || item.label.en
+        })),
+        valuesTitle: tRaw.valuesTitle[language] || tRaw.valuesTitle.en,
+        valuesDesc: tRaw.valuesDesc[language] || tRaw.valuesDesc.en,
+        valueItems: tRaw.valueItems.map((item, i) => ({
+            icon: valueIcons[i],
+            title: item.title[language] || item.title.en,
+            text: item.text[language] || item.text.en
+        })),
+        ctaTitle: tRaw.ctaTitle[language] || tRaw.ctaTitle.en,
+        ctaDesc: tRaw.ctaDesc[language] || tRaw.ctaDesc.en,
+        ctaPhone: tRaw.ctaPhone,
+        ctaBtnMsg: tRaw.ctaBtnMsg[language] || tRaw.ctaBtnMsg.en
     };
-
-    const t = content[language];
 
     return (
         <div className="bg-white text-slate-800">
@@ -165,26 +87,33 @@ const HeroSection = ({ t }: any) => (
                 <source src="https://res.cloudinary.com/dc127wztz/video/upload/hero_uzq5wr.mp4" type="video/mp4" />
             </video>
         </div>
+        <div className="absolute inset-0 bg-black/50 z-10" />
         <div className="absolute inset-0 bg-gradient-to-b from-slate-900/70 via-slate-900/50 to-slate-900/90 z-10" />
 
-        <div className="relative z-20 container mx-auto px-4">
-            <motion.h1
-                initial={{ opacity: 0, y: -20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.8 }}
-                className="text-4xl md:text-6xl font-black mb-6 leading-tight max-w-4xl mx-auto"
+        <motion.div
+            initial="hidden"
+            animate="visible"
+            variants={{
+                hidden: { opacity: 0 },
+                visible: { opacity: 1, transition: { staggerChildren: 0.15 } }
+            }}
+            className="relative z-20 container mx-auto px-4"
+        >
+            <motion.div
+                variants={{ hidden: { opacity: 0, y: -12 }, visible: { opacity: 1, y: 0 } }}
+                className="bg-white/5 backdrop-blur-sm border border-white/10 rounded-2xl inline-block px-6 py-4 mx-auto"
             >
-                {t.heroTitlePrefix} <span className="text-sky-400">{t.heroTitleSuffix}</span>
-            </motion.h1>
+                <h1 className="text-4xl md:text-6xl font-[var(--font-montserrat)] font-bold leading-tight">
+                    {t.heroTitlePrefix} <span className="text-sky-400">{t.heroTitleSuffix}</span>
+                </h1>
+            </motion.div>
             <motion.p
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                transition={{ delay: 0.2 }}
-                className="text-lg md:text-xl text-slate-200 max-w-2xl mx-auto font-medium"
+                variants={{ hidden: { opacity: 0, y: 8 }, visible: { opacity: 1, y: 0 } }}
+                className="mt-6 text-lg md:text-xl text-slate-200 max-w-2xl mx-auto font-medium bg-white/5 backdrop-blur-sm border border-white/10 rounded-2xl px-6 py-4"
             >
                 {t.heroDesc}
             </motion.p>
-        </div>
+        </motion.div>
     </section>
 );
 
@@ -215,7 +144,7 @@ const ServicesSection = ({ t }: any) => (
                 <p className="text-slate-500">{t.servicesDesc}</p>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-8">
                 {t.serviceItems.map((item: any, i: number) => (
                     <ServiceCard key={i} icon={item.icon} title={item.title} desc={item.desc} />
                 ))}
@@ -229,11 +158,12 @@ const ServiceCard = ({ icon: Icon, title, desc }: any) => (
         initial={{ opacity: 0, y: 20 }}
         whileInView={{ opacity: 1, y: 0 }}
         viewport={{ once: true }}
-        whileHover={{ y: -5 }}
-        className="bg-white p-8 rounded-2xl border border-slate-100 shadow-sm hover:shadow-xl hover:shadow-sky-100/50 transition-all group"
+        whileHover={{ y: -10 }}
+        className="bg-white p-8 rounded-2xl border border-slate-100 shadow-sm hover:shadow-2xl hover:shadow-sky-100/50 transition-all group mb-4 md:mb-0"
     >
-        <div className="w-14 h-14 bg-sky-50 text-sky-500 rounded-xl flex items-center justify-center mb-6 group-hover:bg-sky-500 group-hover:text-white transition-colors">
-            <Icon size={24} />
+        <div className="w-14 h-14 bg-sky-50 text-sky-500 rounded-xl flex items-center justify-center mb-6 group-hover:bg-sky-500 group-hover:text-white transition-colors relative">
+            <div className="absolute inset-0 bg-sky-400/30 blur-2xl rounded-full opacity-0 group-hover:opacity-100 transition-opacity" />
+            <Icon size={24} className="relative z-10 drop-shadow-[0_0_12px_rgba(56,189,248,0.35)]" />
         </div>
         <h3 className="font-bold text-lg text-slate-800 mb-3 min-h-[56px] flex items-center">{title}</h3>
         <p className="text-slate-500 text-sm leading-relaxed">{desc}</p>
@@ -241,22 +171,45 @@ const ServiceCard = ({ icon: Icon, title, desc }: any) => (
 );
 
 // 4. Stats Section
-const StatsSection = ({ t }: any) => (
-    <section className="bg-gradient-to-r from-sky-500 to-blue-600 text-white py-16">
-        <div className="container mx-auto px-4">
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-8 text-center">
-                {t.stats.map((stat: any, i: number) => (
-                    <div key={i} className="p-4">
-                        <h3 className="text-5xl font-black mb-2 flex items-center justify-center gap-2">
-                            <CountUp end={stat.end} duration={3} />{stat.suffix}
-                        </h3>
-                        <p className="text-sky-100 font-bold uppercase tracking-wider">{stat.label}</p>
-                    </div>
-                ))}
+const StatsSection = ({ t }: any) => {
+    const sectionRef = useRef<HTMLDivElement>(null);
+    const [active, setActive] = useState(false);
+
+    useEffect(() => {
+        const el = sectionRef.current;
+        if (!el) return;
+        const observer = new IntersectionObserver(
+            (entries) => {
+                entries.forEach((entry) => {
+                    if (entry.isIntersecting) {
+                        setActive(true);
+                        observer.disconnect();
+                    }
+                });
+            },
+            { root: null, threshold: 0.3 }
+        );
+        observer.observe(el);
+        return () => observer.disconnect();
+    }, []);
+
+    return (
+        <section ref={sectionRef} className="bg-gradient-to-r from-sky-500 to-blue-600 text-white py-16">
+            <div className="container mx-auto px-4">
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-8 text-center">
+                    {t.stats.map((stat: any, i: number) => (
+                        <div key={i} className="p-4">
+                            <h3 className="text-5xl font-black mb-2 flex items-center justify-center gap-2">
+                                {active ? <CountUp end={stat.end} duration={2.5} /> : 0}{stat.suffix}
+                            </h3>
+                            <p className="text-sky-100 font-bold uppercase tracking-wider">{stat.label}</p>
+                        </div>
+                    ))}
+                </div>
             </div>
-        </div>
-    </section>
-);
+        </section>
+    );
+};
 
 // 5. Core Values
 const ValuesSection = ({ t }: any) => (
@@ -266,7 +219,7 @@ const ValuesSection = ({ t }: any) => (
                 <h2 className="text-4xl font-black text-slate-800 mb-4">{t.valuesTitle}</h2>
                 <p className="text-slate-500 text-lg">{t.valuesDesc}</p>
             </div>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6">
                 {t.valueItems.map((val: any, i: number) => (
                     <ValueCard key={i} icon={val.icon} title={val.title} text={val.text} />
                 ))}

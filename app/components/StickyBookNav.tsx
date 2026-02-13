@@ -18,10 +18,11 @@ const StickyBookNav = ({ onBook, price, onDownloadGpx }: StickyBookNavProps) => 
   const t = {
     mn: { book: "Захиалах", map: "Газрын зураг", from: "Эхлэх үнэ" },
     en: { book: "Book Now", map: "Download GPX", from: "From" },
-    ko: { book: "예약하기", map: "GPX 다운로드", from: "시작 가격" }
+    ko: { book: "예약하기", map: "GPX 다운로드", from: "시작 가격" },
+    de: { book: "Buchen", map: "GPX herunterladen", from: "Ab" }
   };
 
-  const text = t[language] || t.en;
+  const text = t[language as keyof typeof t] || t.en;
 
   useEffect(() => {
     if (typeof window === 'undefined') return;

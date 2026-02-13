@@ -1,7 +1,7 @@
 @import "tailwindcss";
 
 @theme {
-  --font-sans: var(--font-inter), ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+  --font-sans: var(--font-inter), var(--font-noto-sans-kr), ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
   --color-mongol-blue: #00AEEF;
   --color-mongol-green: #4F7942;
   --color-mongol-sand: #C2B280;
@@ -77,4 +77,7 @@ body.native-app>* {
 .native-app main {
   padding-bottom: 120px;
   /* Space for bottom nav + safe area */
+}
+.nextjs-portal {
+  display: none !important;
 }

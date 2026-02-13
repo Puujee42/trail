@@ -11,12 +11,13 @@ interface PageProps {
 export async function generateMetadata(props: PageProps): Promise<Metadata> {
   const { id } = await props.params;
   const lang = (await props.params).lang as Locale;
+  const activeLang = (lang === 'de' ? 'en' : lang) as 'en' | 'mn' | 'ko';
   const post = await getPostById(id);
 
   if (!post) return {};
 
-  const title = `${post.title[lang] || post.title.en} | Mongol Trail Blog`;
-  const description = post.excerpt[lang] || post.excerpt.en;
+  const title = `${post.title[activeLang] || post.title.en} | Mongol Trail Blog`;
+  const description = post.excerpt[activeLang] || post.excerpt.en;
 
   const baseUrl = 'https://www.mongoltrail.com';
 
@@ -62,6 +63,7 @@ export default async function BlogPostPage(props: PageProps) {
   }
 
   const lang = params.lang as Locale;
+  const activeLang = (lang === 'de' ? 'en' : lang) as 'en' | 'mn' | 'ko';
   const baseUrl = 'https://www.mongoltrail.com';
 
   // 4. Render Client UI
@@ -70,14 +72,14 @@ export default async function BlogPostPage(props: PageProps) {
       <StructuredData
         type="BlogPosting"
         data={{
-          headline: post.title[lang] || post.title.en,
+          headline: post.title[activeLang] || post.title.en,
           image: post.image,
           datePublished: post.date || new Date().toISOString(),
           author: {
             '@type': 'Person',
             name: post.author || 'Mongol Trail Team',
           },
-          description: post.excerpt[lang] || post.excerpt.en,
+          description: post.excerpt[activeLang] || post.excerpt.en,
           url: `${baseUrl}/${lang}/blog/${params.id}`,
         }}
       />
@@ -100,7 +102,7 @@ export default async function BlogPostPage(props: PageProps) {
             {
               '@type': 'ListItem',
               position: 3,
-              name: post.title[lang] || post.title.en,
+              name: post.title[activeLang] || post.title.en,
               item: `${baseUrl}/${lang}/blog/${params.id}`,
             },
           ],

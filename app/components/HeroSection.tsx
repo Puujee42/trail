@@ -62,7 +62,7 @@ const HeroSection = () => {
   }, []);
 
   /* ────────────────────── Content Data ────────────────────── */
-  const content: Record<"mn" | "en" | "ko", Content> = {
+  const content: Record<string, Content> = {
     mn: {
       badge: "Аялагчдын #1 Сонголт",
       headlinePrefix: "Дараагийн аялал тань",
@@ -128,7 +128,7 @@ const HeroSection = () => {
     }
   };
 
-  const t = content[language];
+  const t = content[language] || content.en;
 
   return (
     <section className="relative min-h-[100vh] flex flex-col items-center justify-center overflow-hidden bg-white pt-20">
@@ -253,7 +253,7 @@ const HeroSection = () => {
 
           {/* Quick Tags below search - STAGGERED ENTRANCE */}
           <div className="flex flex-wrap justify-center gap-3 mt-6">
-            {t.tags.map((tag, i) => (
+            {t.tags.map((tag: TagItem, i: number) => (
               <motion.span
                 key={i}
                 initial={{ opacity: 0, scale: 0.8, y: 10 }}
@@ -270,7 +270,7 @@ const HeroSection = () => {
 
         {/* ────────────────── FLOATING STATS: ANTIGRAVITY ────────────────── */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-4xl mx-auto">
-          {t.stats.map((stat, i) => (
+          {t.stats.map((stat: StatItem, i: number) => (
             <motion.div
               key={i}
               initial={{ opacity: 0, y: 40 }}

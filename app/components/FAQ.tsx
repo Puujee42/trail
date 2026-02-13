@@ -3,19 +3,38 @@
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { FaChevronDown, FaQuestionCircle } from "react-icons/fa";
-
-interface FAQProps {
-    dictionary: any;
-}
+import { content } from "../content";
+import { useLanguage } from "../context/LanguageContext";
 
 interface FAQItem {
     question: string;
     answer: string;
 }
 
-const FAQ: React.FC<FAQProps> = ({ dictionary }) => {
-    const t = dictionary;
+const FAQ = () => {
+    const { language } = useLanguage();
+    const activeLang = language as keyof typeof content.faq.title;
     const [openIndex, setOpenIndex] = useState<number | null>(0);
+
+    const getContent = (key: keyof typeof content.faq) => {
+        const item = content.faq[key];
+        return item[activeLang] || item.en;
+    };
+
+    const t = {
+        badge: getContent('badge'),
+        title: getContent('title'),
+        subtitle: getContent('subtitle'),
+        stillHaveQuestions: getContent('stillHaveQuestions'),
+        contactUs: getContent('contactUs'),
+    };
+
+    const questions: FAQItem[] = [
+        { question: getContent('q1Question'), answer: getContent('q1Answer') },
+        { question: getContent('q2Question'), answer: getContent('q2Answer') },
+        { question: getContent('q3Question'), answer: getContent('q3Answer') },
+        { question: getContent('q4Question'), answer: getContent('q4Answer') },
+    ];
 
     const toggleFAQ = (index: number) => {
         setOpenIndex(openIndex === index ? null : index);
@@ -64,7 +83,7 @@ const FAQ: React.FC<FAQProps> = ({ dictionary }) => {
 
                 {/* FAQ Accordion */}
                 <div className="space-y-4">
-                    {t.questions.map((faq: FAQItem, index: number) => (
+                    {questions.map((faq: FAQItem, index: number) => (
                         <motion.div
                             key={index}
                             initial={{ opacity: 0, y: 20 }}

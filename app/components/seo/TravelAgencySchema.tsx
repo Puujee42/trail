@@ -30,16 +30,16 @@ export default function TravelAgencySchema({
     description = 'Premier travel agency specializing in authentic Mongolia tours, Gobi Desert adventures, and cultural experiences.',
     url = 'https://www.mongoltrail.com',
     logo = 'https://www.mongoltrail.com/logo.jpg',
-    telephone = '+976-99123456',
+    telephone = '+976 7766-1626',
     priceRange = '$$$',
-    streetAddress = 'Peace Avenue', // Update with actual
+    streetAddress = 'Room 502, 5th Floor, Erkhi Center, West 4 Road',
     addressLocality = 'Ulaanbaatar',
     addressRegion = 'Ulaanbaatar',
     postalCode = '14210',
     addressCountry = 'MN',
     sameAs = [
-        'https://www.facebook.com/mongoltrail',
-        'https://www.instagram.com/mongoltrail',
+        'https://www.facebook.com/profile.php?id=61580867289571',
+        'https://www.instagram.com/euro.trails/',
         'https://x.com/mongoltrail'
     ],
     image = 'https://www.mongoltrail.com/hero.jpg', // Default hero image

@@ -2,10 +2,19 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { FaMapMarkerAlt, FaClock, FaStar, FaArrowRight } from "react-icons/fa";
+import { FaMapMarkerAlt, FaClock, FaStar, FaArrowRight, FaHeart } from "react-icons/fa";
 import { Trip } from "@/lib/mongo/trips";
+import { useState } from "react";
+import { motion, AnimatePresence } from "framer-motion";
+import { useClerk, useUser } from "@clerk/nextjs";
+import { useRouter } from "next/navigation";
 
 export default function DestinationTourCard({ trip, lang }: { trip: Trip, lang: "en" | "mn" | "ko" }) {
+    const { user } = useUser();
+    const wished = Array.isArray(user?.publicMetadata?.wishlist) && (user?.publicMetadata?.wishlist as string[]).includes(trip._id);
+    const [toast, setToast] = useState<string | null>(null);
+    const { openSignIn } = useClerk();
+    const router = useRouter();
     // Price formatting helper
     const getLocalizedPrice = (priceObj: any) => {
         if (typeof priceObj === 'number') return priceObj;
@@ -39,6 +48,41 @@ export default function DestinationTourCard({ trip, lang }: { trip: Trip, lang: 
                             {trip.category}
                         </span>
                     </div>
+                    <motion.button
+                        whileTap={{ scale: 0.9 }}
+                        onClick={async (e) => {
+                            e.preventDefault();
+                            e.stopPropagation();
+                            if (!user) {
+                                openSignIn({ redirectUrl: window.location.href });
+                                return;
+                            }
+                            const action = wished ? "remove" : "add";
+                            try {
+                                const res = await fetch("/api/wishlist", {
+                                    method: "POST",
+                                    headers: { "Content-Type": "application/json" },
+                                    body: JSON.stringify({ tripId: trip._id, action })
+                                });
+                                if (!res.ok) return;
+                                
+                                await user.reload();
+                                router.refresh();
+                                router.push(`/${lang}/dashboard/wishlist`);
+                                setToast(action === "add" ? "Аяллыг хүслийн жагсаалтад нэмлээ" : "Аяллыг жагсаалтаас хаслаа");
+                                setTimeout(() => setToast(null), 2000);
+                            } catch (_) {}
+                        }}
+                        className={`absolute top-4 right-4 z-20 w-8 h-8 rounded-full backdrop-blur-md flex items-center justify-center transition-all ${wished ? "bg-red-500 text-white shadow-red-500/30" : "bg-black/20 text-white hover:bg-white hover:text-red-500"}`}
+                    >
+                        <motion.span
+                            initial={false}
+                            animate={wished ? { scale: [1, 1.2, 1], rotate: [0, 10, 0] } : { scale: 1, rotate: 0 }}
+                            transition={{ duration: 0.3 }}
+                        >
+                            <FaHeart size={12} />
+                        </motion.span>
+                    </motion.button>
 
                     <div className="absolute bottom-4 right-4 bg-white text-slate-900 text-sm font-bold px-4 py-2 rounded-xl shadow-lg">
                         {formattedPrice}
@@ -82,6 +126,18 @@ export default function DestinationTourCard({ trip, lang }: { trip: Trip, lang: 
                     </div>
                 </div>
             </div>
+            <AnimatePresence>
+                {toast && (
+                    <motion.div
+                        initial={{ opacity: 0, y: 20 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        exit={{ opacity: 0, y: 20 }}
+                        className="fixed bottom-20 left-1/2 -translate-x-1/2 bg-slate-900 text-white px-4 py-2 rounded-full text-xs font-bold shadow-lg"
+                    >
+                        {toast}
+                    </motion.div>
+                )}
+            </AnimatePresence>
         </Link>
     );
 }

@@ -1,7 +1,9 @@
 "use client";
 
-import { useRef } from "react";
-import { motion, useScroll, useTransform, useMotionValue, useSpring } from "framer-motion";
+import { useRef, useEffect, useState } from "react";
+import { motion, useScroll, useTransform, useMotionValue, useSpring, AnimatePresence } from "framer-motion";
+import { useClerk, useUser } from "@clerk/nextjs";
+import { useRouter } from "next/navigation";
 import {
   FaMapMarkerAlt,
   FaClock,
@@ -21,6 +23,13 @@ const FeaturedTrips = ({ trips, lang, dictionary }: { trips: Trip[], lang: strin
   const language = lang as "mn" | "en" | "ko"; // Use prop
   const targetRef = useRef<HTMLDivElement>(null);
   const { scrollYProgress } = useScroll({ target: targetRef });
+  const { user } = useUser();
+  const wishlist = Array.isArray(user?.publicMetadata?.wishlist) 
+    ? (user?.publicMetadata?.wishlist as string[]) 
+    : [];
+  const [toast, setToast] = useState<string | null>(null);
+  const { openSignIn } = useClerk();
+  const router = useRouter();
 
   const xTitle = useTransform(scrollYProgress, [0, 1], [0, -100]);
   const opacityDesc = useTransform(scrollYProgress, [0, 0.5], [1, 0.5]);
@@ -57,14 +66,14 @@ const FeaturedTrips = ({ trips, lang, dictionary }: { trips: Trip[], lang: strin
 
             <motion.h2
               style={{ x: xTitle }}
-              className="text-4xl md:text-6xl font-black text-slate-900 mb-4 tracking-tighter leading-none font-sans"
+              className="text-5xl font-black text-slate-900 mb-4 tracking-tighter leading-none font-[var(--font-montserrat)]"
             >
               {text.titleMain} <span className="text-slate-500">{text.titleAccent}</span>
             </motion.h2>
 
             <motion.p
               style={{ opacity: opacityDesc }}
-              className="text-slate-500 text-base md:text-lg font-medium max-w-lg font-sans"
+              className="text-slate-500 text-lg font-light max-w-2xl font-[var(--font-inter)]"
             >
               {text.desc}
             </motion.p>
@@ -77,8 +86,8 @@ const FeaturedTrips = ({ trips, lang, dictionary }: { trips: Trip[], lang: strin
             className="hidden md:block"
           >
             <Link href="/packages">
-              <button className="group flex items-center gap-3 px-6 py-3 bg-slate-900 text-white rounded-full shadow-lg hover:shadow-xl transition-all duration-300">
-                <span className="font-bold text-sm">
+              <button className="group flex items-center gap-3 px-8 py-4 bg-slate-900 text-white rounded-full shadow-lg hover:shadow-2xl hover:scale-105 transition-all duration-300">
+                <span className="font-medium text-xs uppercase tracking-[0.2em] font-[var(--font-inter)]">
                   {text.viewAll}
                 </span>
                 <FaArrowRight className="text-xs group-hover:translate-x-1 transition-transform" />
@@ -90,10 +99,51 @@ const FeaturedTrips = ({ trips, lang, dictionary }: { trips: Trip[], lang: strin
         {/* ─── CAROUSEL SCROLL ─── */}
         <div className="flex gap-4 md:gap-8 overflow-x-auto pb-12 pt-4 px-4 md:px-0 snap-x snap-mandatory scrollbar-hide -mx-4 md:mx-0">
           {trips.map((trip, i) => (
-            <TripCard key={trip._id} trip={trip} index={i} language={language as "mn" | "en" | "ko"} />
+            <TripCard 
+              key={trip._id} 
+              trip={trip} 
+              index={i} 
+              language={language as "mn" | "en" | "ko"}
+              wished={wishlist.includes(trip._id)}
+              onToggle={async () => {
+                if (!user) {
+                  openSignIn({ redirectUrl: window.location.href });
+                  return;
+                }
+                const action = wishlist.includes(trip._id) ? "remove" : "add";
+                try {
+                  const res = await fetch("/api/wishlist", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ tripId: trip._id, action })
+                  });
+                  if (!res.ok) return;
+                  
+                  await user.reload();
+                  router.refresh();
+                  router.push(`/${language}/dashboard/wishlist`);
+                  setToast(action === "add" ? "Аяллыг хүслийн жагсаалтад нэмлээ" : "Аяллыг жагсаалтаас хаслаа");
+                  setTimeout(() => setToast(null), 2000);
+                } catch (_) {}
+              }}
+            />
           ))}
           <div className="min-w-[20px]" />
         </div>
+
+        {/* Toast */}
+        <AnimatePresence>
+          {toast && (
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: 20 }}
+              className="fixed bottom-20 left-1/2 -translate-x-1/2 bg-slate-900 text-white px-4 py-2 rounded-full text-xs font-bold shadow-lg"
+            >
+              {toast}
+            </motion.div>
+          )}
+        </AnimatePresence>
 
       </div>
     </section>
@@ -101,7 +151,7 @@ const FeaturedTrips = ({ trips, lang, dictionary }: { trips: Trip[], lang: strin
 };
 
 /* ────────────────────── 3D Tilt Card Component ────────────────────── */
-const TripCard = ({ trip, index, language }: { trip: Trip, index: number, language: "mn" | "en" | "ko" }) => {
+const TripCard = ({ trip, index, language, wished, onToggle }: { trip: Trip, index: number, language: "mn" | "en" | "ko", wished: boolean, onToggle: () => void }) => {
   const x = useMotionValue(0);
   const y = useMotionValue(0);
   const rotateX = useSpring(useTransform(y, [-100, 100], [5, -5]), { stiffness: 150, damping: 20 });
@@ -150,7 +200,7 @@ const TripCard = ({ trip, index, language }: { trip: Trip, index: number, langua
       transition={{ delay: index * 0.1, duration: 0.5, ease: "easeOut" }}
       className="min-w-[280px] w-[280px] md:min-w-[340px] snap-center relative group"
     >
-      <div className="bg-white rounded-2xl p-0 shadow-sm hover:shadow-md transition-shadow duration-300 h-full flex flex-col relative z-10 overflow-hidden border border-slate-100">
+      <div className="bg-white rounded-[32px] p-0 shadow-sm hover:shadow-2xl hover:scale-105 transition-all duration-300 h-full flex flex-col relative z-10 overflow-hidden border border-slate-100">
 
         {/* 1. Image Container */}
         <div className="relative h-[200px] md:h-[240px] overflow-hidden">
@@ -162,18 +212,28 @@ const TripCard = ({ trip, index, language }: { trip: Trip, index: number, langua
             </span>
           </div>
 
-          <button className="absolute top-3 right-3 z-20 w-8 h-8 rounded-full bg-black/20 backdrop-blur-md flex items-center justify-center text-white hover:bg-white hover:text-red-500 transition-all active:scale-90">
-            <FaHeart size={12} />
-          </button>
+          <motion.button 
+            whileTap={{ scale: 0.9 }} 
+            onClick={onToggle}
+            className={`absolute top-3 right-3 z-20 w-8 h-8 rounded-full backdrop-blur-md flex items-center justify-center transition-all ${wished ? "bg-red-500 text-white shadow-red-500/30" : "bg-black/20 text-white hover:bg-white hover:text-red-500"}`}
+          >
+            <motion.span
+              initial={false}
+              animate={wished ? { scale: [1, 1.2, 1], rotate: [0, 10, 0] } : { scale: 1, rotate: 0 }}
+              transition={{ duration: 0.3 }}
+            >
+              <FaHeart size={12} />
+            </motion.span>
+          </motion.button>
 
           {/* Glassmorphism Info Box */}
           <div className="absolute bottom-3 left-3 right-3 z-20">
-             <div className="bg-white/10 backdrop-blur-md border border-white/20 rounded-xl p-2.5 flex items-center justify-between text-white">
+             <div className="bg-white/10 backdrop-blur-lg border border-white/20 rounded-xl p-3 flex items-center justify-between text-white">
                 <div className="flex items-center gap-1.5">
                    <FaClock className="text-white/70" size={10} />
-                   <span className="text-xs font-medium">{trip.duration[language] || trip.duration["mn"]}</span>
+                   <span className="text-xs font-[var(--font-inter)] font-semibold uppercase tracking-wider">{trip.duration[language] || trip.duration["mn"]}</span>
                 </div>
-                <div className="font-bold text-sm">
+                <div className="text-sm font-[var(--font-inter)] font-semibold uppercase tracking-wider">
                    {formattedPrice}
                 </div>
              </div>

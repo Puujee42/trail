@@ -24,7 +24,7 @@ const InlineGPXCTA = () => {
     }
   };
 
-  const text = t[language] || t.en;
+  const text = t[language as keyof typeof t] || t.en;
 
   return (
     <div className="bg-gradient-to-r from-slate-50 to-white rounded-2xl p-6 border border-slate-100 flex flex-col sm:flex-row items-center justify-between gap-4 my-8 group hover:shadow-md transition-all">

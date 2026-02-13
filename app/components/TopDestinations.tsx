@@ -4,38 +4,52 @@ import { motion } from "framer-motion";
 import { FaMountain, FaMapMarkedAlt, FaLandmark } from "react-icons/fa";
 import Link from "next/link";
 
-interface TopDestinationsProps {
-    dictionary: any;
-}
+import { content } from "../content";
+import { useLanguage } from "../context/LanguageContext";
 
-const TopDestinations: React.FC<TopDestinationsProps> = ({ dictionary }) => {
-    const t = dictionary;
+const TopDestinations = () => {
+    const { language } = useLanguage();
+    const activeLang = language as keyof typeof content.topDestinations.title;
+
+    const getContent = (key: keyof typeof content.topDestinations) => {
+        const item = content.topDestinations[key];
+        return item[activeLang] || item.en;
+    };
+
+    const t = {
+        badge: getContent('badge'),
+        title: getContent('title'),
+        subtitle: getContent('subtitle'),
+        bestTimeLabel: getContent('bestTimeLabel'),
+        perfectForLabel: getContent('perfectForLabel'),
+        exploreLink: getContent('exploreLink'),
+    };
 
     const destinations = [
         {
             icon: FaMapMarkedAlt,
-            title: t.gobi.title,
-            description: t.gobi.description,
-            bestTime: t.gobi.bestTime,
-            perfectFor: t.gobi.perfectFor,
+            title: getContent('gobiTitle'),
+            description: getContent('gobiDesc'),
+            bestTime: getContent('gobiBestTime'),
+            perfectFor: getContent('gobiPerfectFor'),
             gradient: "from-orange-500 to-yellow-500",
             bgGradient: "from-orange-50 to-yellow-50",
         },
         {
             icon: FaMountain,
-            title: t.altai.title,
-            description: t.altai.description,
-            bestTime: t.altai.bestTime,
-            perfectFor: t.altai.perfectFor,
+            title: getContent('altaiTitle'),
+            description: getContent('altaiDesc'),
+            bestTime: getContent('altaiBestTime'),
+            perfectFor: getContent('altaiPerfectFor'),
             gradient: "from-blue-600 to-purple-600",
             bgGradient: "from-blue-50 to-purple-50",
         },
         {
             icon: FaLandmark,
-            title: t.orkhon.title,
-            description: t.orkhon.description,
-            bestTime: t.orkhon.bestTime,
-            perfectFor: t.orkhon.perfectFor,
+            title: getContent('orkhonTitle'),
+            description: getContent('orkhonDesc'),
+            bestTime: getContent('orkhonBestTime'),
+            perfectFor: getContent('orkhonPerfectFor'),
             gradient: "from-green-600 to-teal-600",
             bgGradient: "from-green-50 to-teal-50",
         },

@@ -28,13 +28,15 @@ export async function generateMetadata(props: { params: Promise<{ lang: Locale }
   const titles = {
     en: 'Mongol Trail - Discover the Wild Beauty of Mongolia',
     mn: 'Mongol Trail - Монголын зэрлэг байгалийг нээ',
-    ko: 'Mongol Trail - 몽골의 야생의 아름다움을 발견하세요'
+    ko: 'Mongol Trail - 몽골의 야생의 아름다움을 발견하세요',
+    de: 'Mongol Trail - Entdecken Sie die wilde Schönheit der Mongolei'
   };
 
   const descriptions = {
     en: 'Explore the best hiking, horse, and bike trails in Mongolia. Get GPX maps and travel tips.',
     mn: 'Монголын хамгийн шилдэг явган, морин болон дугуйн аяллын замуудтай танилц. GPX зураг болон аяллын зөвлөгөө аваарай.',
-    ko: '몽골 최고의 하이킹, 승마, 자전거 코스를 탐험하세요. GPX 지도와 여행 팁을 받으세요.'
+    ko: '몽골 최고의 하이킹, 승마, 자전거 코스를 탐험하세요. GPX 지도와 여행 팁을 받으세요.',
+    de: 'Erkunden Sie die besten Wander-, Reit- und Radwege in der Mongolei. Holen Sie sich GPX-Karten und Reisetipps.'
   };
 
   const baseUrl = 'https://www.mongoltrail.com';
@@ -179,15 +181,15 @@ export default async function Home(props: { params: Promise<{ lang: Locale }> })
         <FeaturedTripsWrapper lang={params.lang} dictionary={dict.featured} />
       </Suspense>
 
-      <WhyChooseUs dictionary={dict.whyChooseUs} />
+      <WhyChooseUs />
 
       {/* Top Destinations Section */}
-      {(dict as any).topDestinations && <TopDestinations dictionary={(dict as any).topDestinations} />}
+      <TopDestinations />
 
       <TripReviews />
 
       {/* FAQ Section */}
-      {(dict as any).faq && <FAQ dictionary={(dict as any).faq} />}
+      <FAQ />
     </>
   );
 }

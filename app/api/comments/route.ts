@@ -98,6 +98,31 @@ export async function PUT(req: Request) {
         image: "https://images.unsplash.com/photo-1533240332313-0db49b459ad6?q=80&w=300&auto=format&fit=crop", // Added sample photo
         createdAt: new Date()
       },
+      // German Reviews
+      {
+        name: "Müller Schmidt",
+        trip: "Gobi Desert Expedition",
+        text: "Eine absolut unvergessliche Erfahrung! Die Wüste Gobi ist atemberaubend und die Organisation war perfekt. Unser Guide sprach hervorragendes Deutsch.",
+        location: "München, Deutschland",
+        rating: 5,
+        language: "de",
+        status: "approved",
+        dateStr: "2025-10-15",
+        image: "https://images.unsplash.com/photo-1506748686214-e9df14d4d9d0?q=80&w=300&auto=format&fit=crop",
+        createdAt: new Date()
+      },
+      {
+        name: "Julia Weber",
+        trip: "Altai Mountains Trekking",
+        text: "Die Wanderung im Altai-Gebirge war herausfordernd, aber wunderschön. Die Adlerjäger zu treffen war ein Highlight.",
+        location: "Berlin, Deutschland",
+        rating: 4,
+        language: "de",
+        status: "approved",
+        dateStr: "2025-09-02",
+        image: "https://images.unsplash.com/photo-1519681393784-d120267933ba?q=80&w=300&auto=format&fit=crop",
+        createdAt: new Date()
+      },
       {
         name: "С. Анужин",
         trip: "Парис Тур",
@@ -152,6 +177,30 @@ export async function PUT(req: Request) {
         location: "파리, 프랑스",
         rating: 5,
         language: "ko",
+        status: "approved",
+        dateStr: "2025-11-15",
+        createdAt: new Date()
+      },
+      // German Reviews
+      {
+        name: "B. Bat-Erdene",
+        trip: "Khuvsgul Reise",
+        text: "Es war eine wunderbar organisierte Reise. Unser Guide war sehr sachkundig und das Essen war köstlich. Nächstes Jahr auf jeden Fall wieder!",
+        location: "Khatgal, Mongolei",
+        rating: 5,
+        language: "de",
+        status: "approved",
+        dateStr: "2025-11-20",
+        image: "https://images.unsplash.com/photo-1533240332313-0db49b459ad6?q=80&w=300&auto=format&fit=crop",
+        createdAt: new Date()
+      },
+      {
+        name: "S. Anujin",
+        trip: "Paris Tour",
+        text: "Ich habe meine Traumreise mit der Mongolia Trails Agency verwirklicht. Das Abendessen auf dem Eiffelturm war der beste Moment.",
+        location: "Paris, Frankreich",
+        rating: 5,
+        language: "de",
         status: "approved",
         dateStr: "2025-11-15",
         createdAt: new Date()

@@ -34,12 +34,14 @@ interface LocalizedString {
   mn: string;
   en: string;
   ko: string;
+  de?: string;
 }
 
 interface LocalizedPrice {
   mn: number;
   en: number;
   ko: number;
+  de?: number;
 }
 
 interface ItineraryItem {
@@ -245,7 +247,8 @@ const TourDetailClient = ({ trip }: { trip: Trip }) => {
     }
   };
 
-  const text = t[language];
+  const text = t[language as keyof typeof t] || t.en;
+  const activeLang = (language === 'de' ? 'en' : language) as 'en' | 'mn' | 'ko';
   const itinerary = trip.itinerary || [];
 
   // 5. NEW: Check auth before opening modal
@@ -318,7 +321,7 @@ const TourDetailClient = ({ trip }: { trip: Trip }) => {
       {/* ────────────────── HERO HEADER ────────────────── */}
       <div className="relative h-[70vh] min-h-[500px] w-full overflow-hidden">
         <motion.div style={{ y: y1 }} className="absolute inset-0">
-          {trip.image && <img src={trip.image} alt={trip.title[language]} className="w-full h-full object-cover scale-110" />}
+          {trip.image && <img src={trip.image} alt={trip.title[activeLang]} className="w-full h-full object-cover scale-110" />}
           <div className="absolute inset-0 bg-slate-200 animate-pulse -z-10" /> {/* Fallback/Loading background */}
           <div className="absolute inset-0 bg-gradient-to-t from-slate-900 via-slate-900/30 to-transparent" />
         </motion.div>

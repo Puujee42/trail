@@ -21,7 +21,7 @@ const RecentActivity = () => {
         ko: { view: "명이 현재 보고 있습니다", book: "시간 전 예약됨" }
       };
       
-      const langText = t[language] || t.en;
+      const langText = t[language as keyof typeof t] || t.en;
 
       if (isView) {
         setActivity({ type: 'view', count: randomCount, text: langText.view });

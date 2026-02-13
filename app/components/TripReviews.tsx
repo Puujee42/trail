@@ -12,10 +12,19 @@ import {
   FaSpinner
 } from "react-icons/fa";
 import { useLanguage } from "../context/LanguageContext";
+import { content } from "../content";
 
 /* ────────────────────── Main Component ────────────────────── */
 const TripReviews = () => {
   const { language } = useLanguage();
+  const activeLang = language;
+
+  // Helper to safely get content
+  const getContent = (key: keyof typeof content.tripReviews) => {
+    const item = content.tripReviews[key];
+    // @ts-ignore
+    return item[activeLang] || item.en;
+  };
 
   // 1. State for Dynamic Data
   const [reviews, setReviews] = useState<any[]>([]);
@@ -25,35 +34,19 @@ const TripReviews = () => {
   const [width, setWidth] = useState(0);
   const carousel = useRef<HTMLDivElement>(null);
 
-  // 3. Static UI Text (Kept hardcoded because this doesn't change)
-  const uiText = {
-    mn: {
-      badge: "Аялагчдын сэтгэгдэл",
-      titlePrefix: "Бидний тухай",
-      titleSuffix: "Тэд юу хэлэв?",
-      desc: "Мянга мянган аялагчид Mongolia Trails Agency-г сонгон дэлхийгээр аялж, мартагдашгүй дурсамжийг бүтээсэн байна.",
-      drag: "Чирж үзэх",
-      empty: "Одоогоор сэтгэгдэл байхгүй байна."
-    },
-    en: {
-      badge: "Traveler Reviews",
-      titlePrefix: "What do they say",
-      titleSuffix: "About Us?",
-      desc: "Thousands of travelers choose Mongolia Trails Agency to explore the world and create unforgettable memories.",
-      drag: "Drag to view",
-      empty: "No reviews yet."
-    },
-    ko: {
-      badge: "여행자 리뷰",
-      titlePrefix: "그들이 말하는",
-      titleSuffix: "우리에게?",
-      desc: "수천 명의 여행자들이 Mongolia Trails Agency를 선택하여 세상을 탐험하고 잊지 못할 추억을 만듭니다.",
-      drag: "드래그하여 보기",
-      empty: "아직 리뷰가 없습니다."
-    }
+  // 3. Static UI Text (Localized for International Presentation)
+  const t = {
+    badge: getContent('badge'),
+    titlePrefix: getContent('titlePrefix'),
+    titleSuffix: getContent('titleSuffix'),
+    desc: getContent('desc'),
+    drag: getContent('drag'),
+    empty: getContent('empty'),
+    accommodation: getContent('accommodation'),
+    cultural: getContent('cultural'),
+    safety: getContent('safety'),
+    value: getContent('value')
   };
-
-  const t = uiText[language as keyof typeof uiText] || uiText.en;
 
   // 4. FETCH DATA FROM API
   useEffect(() => {
@@ -93,7 +86,7 @@ const TripReviews = () => {
     <section className="py-24 bg-gradient-to-b from-white to-slate-50 relative overflow-hidden">
 
       {/* ─── Background Decoration ─── */}
-      <div className="absolute inset-0 opacity-[0.03] pointer-events-none bg-[url('https://upload.wikimedia.org/wikipedia/commons/8/80/World_map_-_low_resolution.svg')] bg-center bg-no-repeat bg-cover" />
+      <div className="absolute inset-0 opacity-10 pointer-events-none bg-[url('https://upload.wikimedia.org/wikipedia/commons/8/80/World_map_-_low_resolution.svg')] bg-center bg-no-repeat bg-cover" />
       <div className="absolute top-20 left-10 w-32 h-32 bg-sky-200 rounded-full blur-[80px] opacity-60" />
       <div className="absolute bottom-20 right-10 w-40 h-40 bg-blue-200 rounded-full blur-[80px] opacity-60" />
 
@@ -115,7 +108,7 @@ const TripReviews = () => {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ delay: 0.1 }}
-            className="text-4xl md:text-5xl font-black text-slate-800 mb-4"
+            className="text-5xl font-black text-slate-900 mb-4 tracking-tighter font-[var(--font-montserrat)]"
           >
             {t.titlePrefix} <span className="text-transparent bg-clip-text bg-gradient-to-r from-sky-500 to-blue-600">{t.titleSuffix}</span>
           </motion.h2>
@@ -125,7 +118,7 @@ const TripReviews = () => {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ delay: 0.2 }}
-            className="text-slate-500 text-lg max-w-2xl mx-auto"
+            className="text-slate-500 text-lg max-w-2xl mx-auto font-[var(--font-inter)] font-light"
           >
             {t.desc}
           </motion.p>
@@ -143,39 +136,53 @@ const TripReviews = () => {
             </div>
 
             {/* Breakdown Bars */}
-            <div className="flex-grow w-full space-y-4">
-               {/* Nature/Scenery */}
+            <div className="flex-grow w-full space-y-5">
+               {/* Accommodation & Comfort */}
                <div className="flex items-center gap-4">
-                  <span className="text-slate-600 font-bold text-sm w-32 text-right">Nature/Scenery</span>
-                  <div className="flex-grow h-2.5 bg-slate-100 rounded-full overflow-hidden">
+                  <span className="text-slate-600 font-medium text-sm w-40 text-right font-[var(--font-inter)]">{t.accommodation}</span>
+                  <div className="flex-grow h-[6px] bg-slate-100 rounded-full overflow-hidden">
                     <motion.div 
                       initial={{ width: 0 }} whileInView={{ width: "98%" }} transition={{ duration: 1, delay: 0.2 }}
-                      className="h-full bg-green-500 rounded-full" 
+                      className="h-full bg-gradient-to-r from-emerald-500 to-blue-500 rounded-full" 
                     />
                   </div>
-                  <span className="text-slate-800 font-bold text-sm">5.0</span>
+                  <span className="text-slate-900 font-bold text-sm font-[var(--font-inter)]">4.9</span>
                </div>
-               {/* Guide Quality */}
+               
+               {/* Cultural Immersive */}
                <div className="flex items-center gap-4">
-                  <span className="text-slate-600 font-bold text-sm w-32 text-right">Guide Quality</span>
-                  <div className="flex-grow h-2.5 bg-slate-100 rounded-full overflow-hidden">
+                  <span className="text-slate-600 font-medium text-sm w-40 text-right font-[var(--font-inter)]">{t.cultural}</span>
+                  <div className="flex-grow h-[6px] bg-slate-100 rounded-full overflow-hidden">
                     <motion.div 
-                      initial={{ width: 0 }} whileInView={{ width: "96%" }} transition={{ duration: 1, delay: 0.3 }}
-                      className="h-full bg-sky-500 rounded-full" 
+                      initial={{ width: 0 }} whileInView={{ width: "100%" }} transition={{ duration: 1, delay: 0.3 }}
+                      className="h-full bg-gradient-to-r from-emerald-500 to-blue-500 rounded-full" 
                     />
                   </div>
-                  <span className="text-slate-800 font-bold text-sm">4.9</span>
+                  <span className="text-slate-900 font-bold text-sm font-[var(--font-inter)]">5.0</span>
                </div>
-               {/* Trail Difficulty */}
+
+               {/* Safety & Logistics */}
                <div className="flex items-center gap-4">
-                  <span className="text-slate-600 font-bold text-sm w-32 text-right">Trail Difficulty</span>
-                  <div className="flex-grow h-2.5 bg-slate-100 rounded-full overflow-hidden">
+                  <span className="text-slate-600 font-medium text-sm w-40 text-right font-[var(--font-inter)]">{t.safety}</span>
+                  <div className="flex-grow h-[6px] bg-slate-100 rounded-full overflow-hidden">
                     <motion.div 
-                      initial={{ width: 0 }} whileInView={{ width: "94%" }} transition={{ duration: 1, delay: 0.4 }}
-                      className="h-full bg-yellow-500 rounded-full" 
+                      initial={{ width: 0 }} whileInView={{ width: "100%" }} transition={{ duration: 1, delay: 0.4 }}
+                      className="h-full bg-gradient-to-r from-emerald-500 to-blue-500 rounded-full" 
                     />
                   </div>
-                  <span className="text-slate-800 font-bold text-sm">4.8</span>
+                  <span className="text-slate-900 font-bold text-sm font-[var(--font-inter)]">5.0</span>
+               </div>
+
+               {/* Value for Money */}
+               <div className="flex items-center gap-4">
+                  <span className="text-slate-600 font-medium text-sm w-40 text-right font-[var(--font-inter)]">{t.value}</span>
+                  <div className="flex-grow h-[6px] bg-slate-100 rounded-full overflow-hidden">
+                    <motion.div 
+                      initial={{ width: 0 }} whileInView={{ width: "96%" }} transition={{ duration: 1, delay: 0.5 }}
+                      className="h-full bg-gradient-to-r from-emerald-500 to-blue-500 rounded-full" 
+                    />
+                  </div>
+                  <span className="text-slate-900 font-bold text-sm font-[var(--font-inter)]">4.8</span>
                </div>
             </div>
         </div>
@@ -234,7 +241,7 @@ const ReviewCard = ({ review, index }: { review: any, index: number }) => {
       className="min-w-[320px] md:min-w-[400px] relative group"
     >
       {/* Glass Card */}
-      <div className="bg-white/80 backdrop-blur-xl rounded-[2rem] p-8 border border-white shadow-lg shadow-slate-200/50 group-hover:shadow-sky-200/50 group-hover:border-sky-100 transition-all duration-300 h-full flex flex-col">
+      <div className="bg-white/80 backdrop-blur-xl rounded-[32px] p-8 border border-white shadow-2xl shadow-slate-200/50 group-hover:shadow-sky-200/50 group-hover:border-sky-100 transition-all duration-300 h-full flex flex-col">
 
         <div className="absolute top-6 right-8 text-slate-100 text-6xl group-hover:text-sky-50 transition-colors pointer-events-none">
           <FaQuoteRight />
@@ -259,7 +266,7 @@ const ReviewCard = ({ review, index }: { review: any, index: number }) => {
           </div>
 
           <div>
-            <h4 className="font-bold text-slate-800 text-lg leading-tight flex items-center gap-2">
+            <h4 className="font-[var(--font-inter)] font-semibold text-slate-800 text-lg leading-tight flex items-center gap-2">
               {review.name}
               {review.verified && (
                 <span className="text-[10px] font-bold text-green-600 bg-green-50 border border-green-100 px-2 py-0.5 rounded-full flex items-center gap-1">
@@ -287,7 +294,7 @@ const ReviewCard = ({ review, index }: { review: any, index: number }) => {
         </div>
 
         {/* Review Text */}
-        <p className="text-slate-600 leading-relaxed italic mb-6 relative z-10 flex-grow min-h-[80px]">
+        <p className="text-slate-600 leading-relaxed font-[var(--font-inter)] font-light mb-6 relative z-10 flex-grow min-h-[80px]">
           "{review.text}"
         </p>
 

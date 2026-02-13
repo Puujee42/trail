@@ -27,7 +27,7 @@ const ElevationProfile = ({ data }: ElevationProfileProps) => {
     ko: { title: "고도 프로필", axisY: "고도 (m)", axisX: "거리 (km)" },
   };
 
-  const text = t[language] || t.en;
+  const text = t[language as keyof typeof t] || t.en;
 
   return (
     <div className="bg-white rounded-3xl p-6 shadow-sm border border-slate-100 my-8">

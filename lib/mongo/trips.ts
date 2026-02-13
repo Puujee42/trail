@@ -8,6 +8,7 @@ export interface LocalizedString {
   mn: string;
   en: string;
   ko: string;
+  de?: string;
 }
 export interface TripDate {
   id: string;           // Unique ID for this specific group (e.g., "group_01")
@@ -34,6 +35,7 @@ export interface LocalizedPrice {
   mn: number;
   en: number;
   ko: number;
+  de: number;
 }
 export interface PointOfInterest {
   lat: number;
