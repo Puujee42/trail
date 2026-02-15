@@ -193,11 +193,11 @@ export default async function RootLayout(props: {
     >
       <html lang={params.lang}>
         <head>
-          <link rel="preconnect" href="https://api.dicebear.com" />
-          <link rel="preconnect" href="https://res.cloudinary.com" />
+          {/* Critical preconnects: only LCP-relevant origins */}
+          <link rel="preconnect" href="https://res.cloudinary.com" crossOrigin="anonymous" />
           <link rel="preconnect" href="https://touching-gobbler-96.clerk.accounts.dev" />
-          <link rel="preconnect" href="https://grainy-gradients.vercel.app" />
-          <link rel="preconnect" href="https://www.transparenttextures.com" />
+          {/* Non-critical: dns-prefetch for below-fold resources */}
+          <link rel="dns-prefetch" href="https://api.dicebear.com" />
           {/* SEO Schema */}
           <TravelAgencySchema />
         </head>

@@ -196,9 +196,8 @@ const Hero = ({ trips, lang, dictionary }: { trips: Trip[], lang: "mn" | "en" | 
           loop
           muted
           playsInline
-          preload="auto"
-          crossOrigin="anonymous"
-          poster="https://res.cloudinary.com/dc127wztz/image/upload/f_auto,q_auto/v1770961573/hero-poster_c2nbaw.png"
+          preload="metadata"
+          poster="https://res.cloudinary.com/dc127wztz/image/upload/f_auto,q_auto,w_1920/v1770961573/hero-poster_c2nbaw.png"
           className="w-full h-full object-cover opacity-100"
           onError={(e) => {
             // Fallback to image if video fails to load
@@ -212,23 +211,10 @@ const Hero = ({ trips, lang, dictionary }: { trips: Trip[], lang: "mn" | "en" | 
         >
           <source src="https://res.cloudinary.com/dc127wztz/video/upload/v1769511944/hero_uzq5wr.mp4" type="video/mp4" />
         </video>
-        {/* Preload critical image for LCP if video fails or loads slow */}
-        <Image
-          src="https://res.cloudinary.com/dc127wztz/image/upload/f_auto,q_auto/v1770961573/hero-poster_c2nbaw.png"
-          alt="Mongolia Landscape"
-          fill
-          priority
-          fetchPriority="high"
-          className="object-cover -z-10 video-fallback-image"
-          sizes="100vw"
-          placeholder="blur"
-          blurDataURL="data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAMCAgICAgMCAgIDAwMDBAYEBAQEBAgGBgUGCQgKCgkICQkKDA8MCgsOCwkJDRENDg8QEBEQCgwSExIQEw8QEBD/2wBDAQMDAwQDBAgEBAgQCwkLEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBD/wAARCAAKAAoDASIAAhEBAxEB/8QAFQABAQAAAAAAAAAAAAAAAAAAAAf/xAAhEAACAQMFAQEAAAAAAAAAAAABAgMABBEFBhIhMTiQf/EABUBAQEAAAAAAAAAAAAAAAAAAAMF/8QAGhEAAgIDAAAAAAAAAAAAAAAAAAECERIxQf/aAAwDAQACEQMRAD8AqnO7jEj2d9lc1YtG2iQf/9k="
-          style={{ display: 'none' }} // Hidden by default, shown only if video fails
-        />
         {/* LCP Optimization: Visible prioritized image behind video */}
         <div className="absolute inset-0 -z-20">
           <Image
-            src="https://res.cloudinary.com/dc127wztz/image/upload/f_auto,q_auto/v1770961573/hero-poster_c2nbaw.png"
+            src="https://res.cloudinary.com/dc127wztz/image/upload/f_auto,q_auto,w_1920/v1770961573/hero-poster_c2nbaw.png"
             alt="Mongolia Landscape"
             fill
             priority

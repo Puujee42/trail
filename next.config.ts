@@ -3,7 +3,7 @@ import type { NextConfig } from "next";
 const nextConfig: NextConfig = {
   compress: true,
   experimental: {
-    optimizePackageImports: ['react-icons', 'lucide-react', 'framer-motion'],
+    optimizePackageImports: ['react-icons', 'lucide-react', 'framer-motion', 'date-fns', 'recharts'],
   },
   // Add this 'images' configuration
   images: {
@@ -56,6 +56,15 @@ const nextConfig: NextConfig = {
       },
       {
         source: '/:path*(jpg|jpeg|png|gif|ico|webp|svg)',
+        headers: [
+          {
+            key: 'Cache-Control',
+            value: 'public, max-age=31536000, immutable',
+          },
+        ],
+      },
+      {
+        source: '/:path*(woff|woff2|ttf|otf)',
         headers: [
           {
             key: 'Cache-Control',
