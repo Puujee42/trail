@@ -162,7 +162,7 @@ const TourProductEditor: React.FC<TourProductEditorProps> = ({ initialData }) =>
         formPayload.append("upload_preset", process.env.NEXT_PUBLIC_CLOUDINARY_PRESET || "euro_trails");
 
         try {
-            const res = await fetch(`https://api.cloudinary.com/v1_1/${process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME}/upload`, {
+            const res = await fetch(`https://api.cloudinary.com/v1_1/${process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME || "dxoxdiuwr"}/upload`, {
                 method: "POST",
                 body: formPayload
             });
@@ -183,7 +183,7 @@ const TourProductEditor: React.FC<TourProductEditorProps> = ({ initialData }) =>
         formPayload.append("upload_preset", process.env.NEXT_PUBLIC_CLOUDINARY_PRESET || "euro_trails");
 
         try {
-            const res = await fetch(`https://api.cloudinary.com/v1_1/${process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME}/upload`, {
+            const res = await fetch(`https://api.cloudinary.com/v1_1/${process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME || "dxoxdiuwr"}/upload`, {
                 method: "POST",
                 body: formPayload
             });
@@ -204,7 +204,7 @@ const TourProductEditor: React.FC<TourProductEditorProps> = ({ initialData }) =>
         formPayload.append("upload_preset", process.env.NEXT_PUBLIC_CLOUDINARY_PRESET || "euro_trails");
 
         try {
-            const res = await fetch(`https://api.cloudinary.com/v1_1/${process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME}/upload`, {
+            const res = await fetch(`https://api.cloudinary.com/v1_1/${process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME || "dxoxdiuwr"}/upload`, {
                 method: "POST",
                 body: formPayload
             });

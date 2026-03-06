@@ -23,10 +23,10 @@ const MenuBar = ({ editor }: { editor: any }) => {
     const formData = new FormData();
     formData.append("file", file);
     formData.append("upload_preset", process.env.NEXT_PUBLIC_CLOUDINARY_PRESET!);
-    formData.append("cloud_name", process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME!);
+    formData.append("cloud_name", process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME || "dxoxdiuwr");
 
     try {
-      const res = await fetch(`https://api.cloudinary.com/v1_1/${process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME}/image/upload`, { method: "POST", body: formData });
+      const res = await fetch(`https://api.cloudinary.com/v1_1/${process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME || "dxoxdiuwr"}/image/upload`, { method: "POST", body: formData });
       const data = await res.json();
       if (data.secure_url) {
         editor.chain().focus().setImage({ src: data.secure_url }).run();
@@ -37,7 +37,7 @@ const MenuBar = ({ editor }: { editor: any }) => {
       alert("Failed to upload image.");
     } finally {
       setIsUploading(false);
-      if(fileInputRef.current) fileInputRef.current.value = "";
+      if (fileInputRef.current) fileInputRef.current.value = "";
     }
   };
 
@@ -70,7 +70,7 @@ interface EditorProps {
 
 const RichTextEditor = ({ content, onChange, placeholder }: EditorProps) => {
   const editor = useEditor({
-    extensions: [ StarterKit, Image ],
+    extensions: [StarterKit, Image],
     immediatelyRender: false,
     content: content,
     onUpdate: ({ editor }) => {
@@ -93,7 +93,7 @@ const RichTextEditor = ({ content, onChange, placeholder }: EditorProps) => {
     // Only update content if it's actually different to avoid loops
     if (editor && content && editor.getHTML() !== content) {
       // Removed the 'false' argument to satisfy TypeScript
-      editor.commands.setContent(content); 
+      editor.commands.setContent(content);
     }
   }, [content, editor]);
 

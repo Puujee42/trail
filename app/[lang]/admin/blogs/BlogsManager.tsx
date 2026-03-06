@@ -64,25 +64,25 @@ export default function BlogsManager({ initialPosts }: { initialPosts: Post[] })
     const data = new FormData();
     data.append("file", file);
     data.append("upload_preset", process.env.NEXT_PUBLIC_CLOUDINARY_PRESET!);
-    data.append("cloud_name", process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME!);
+    data.append("cloud_name", process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME || "dxoxdiuwr");
 
     try {
-      const res = await fetch(`https://api.cloudinary.com/v1_1/${process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME}/image/upload`, { method: "POST", body: data });
+      const res = await fetch(`https://api.cloudinary.com/v1_1/${process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME || "dxoxdiuwr"}/image/upload`, { method: "POST", body: data });
       const json = await res.json();
       if (json.secure_url) setFormData(prev => ({ ...prev, image: json.secure_url }));
-    } catch (err) { alert("Зураг хуулж чадсангүй"); } 
+    } catch (err) { alert("Зураг хуулж чадсангүй"); }
     finally { setUploadingImage(false); }
   };
 
   const handleTrilingualChange = (field: 'title' | 'excerpt', lang: 'mn' | 'en' | 'ko', value: string) => {
     setFormData(prev => ({ ...prev, [field]: { ...(prev[field] as any), [lang]: value } }));
   };
-  
+
   // ✅ UPDATED: Handle object from RichTextEditor
   const handleContentChange = (lang: 'mn' | 'en' | 'ko', data: { html: string; readTime: number }) => {
     const readTimeText = lang === 'ko' ? `${data.readTime}분` : `${data.readTime} min`;
-    setFormData(prev => ({ 
-      ...prev, 
+    setFormData(prev => ({
+      ...prev,
       content: { ...(prev.content as any), [lang]: data.html },
       readTime: { ...(prev.readTime as any), [lang]: readTimeText }
     }));
@@ -97,8 +97,8 @@ export default function BlogsManager({ initialPosts }: { initialPosts: Post[] })
     try {
       await fetch("/api/admin/blogs", { method, headers: { "Content-Type": "application/json" }, body: JSON.stringify(body) });
       handleCloseModal();
-      router.refresh(); 
-    } catch (err) { alert("Алдаа гарлаа."); } 
+      router.refresh();
+    } catch (err) { alert("Алдаа гарлаа."); }
     finally { setLoading(false); }
   };
 
@@ -155,31 +155,31 @@ export default function BlogsManager({ initialPosts }: { initialPosts: Post[] })
                 <button onClick={handleCloseModal}><FaTimes /></button>
               </div>
               <form id="blogForm" onSubmit={handleSubmit} className="overflow-y-auto p-6 space-y-6">
-                
+
                 <TrilingualInput label="Гарчиг" field="title" value={formData.title} onChange={handleTrilingualChange} />
                 <TrilingualInput label="Товч агуулга" field="excerpt" value={formData.excerpt} onChange={handleTrilingualChange} />
 
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                    <Input label="Зохиогч" value={formData.author} onChange={v => setFormData({...formData, author: v})} />
-                    <Input type="date" label="Огноо" value={formData.date} onChange={v => setFormData({...formData, date: v})} />
-                    
-                    {/* Image Upload */}
-                    <div>
-                        <label className="block text-sm font-bold text-slate-700 mb-2">Зураг</label>
-                        <div onClick={() => fileInputRef.current?.click()} className="border-2 border-dashed rounded-lg p-4 flex items-center justify-center cursor-pointer hover:bg-slate-50">
-                            {uploadingImage ? "Хуулж байна..." : formData.image ? <img src={formData.image} className="h-20" /> : <FaCloudUploadAlt />}
-                        </div>
-                        <input type="file" ref={fileInputRef} className="hidden" onChange={handleImageUpload} />
+                  <Input label="Зохиогч" value={formData.author} onChange={v => setFormData({ ...formData, author: v })} />
+                  <Input type="date" label="Огноо" value={formData.date} onChange={v => setFormData({ ...formData, date: v })} />
+
+                  {/* Image Upload */}
+                  <div>
+                    <label className="block text-sm font-bold text-slate-700 mb-2">Зураг</label>
+                    <div onClick={() => fileInputRef.current?.click()} className="border-2 border-dashed rounded-lg p-4 flex items-center justify-center cursor-pointer hover:bg-slate-50">
+                      {uploadingImage ? "Хуулж байна..." : formData.image ? <img src={formData.image} className="h-20" /> : <FaCloudUploadAlt />}
                     </div>
+                    <input type="file" ref={fileInputRef} className="hidden" onChange={handleImageUpload} />
+                  </div>
                 </div>
 
                 <div>
-                    <label className="block text-sm font-bold text-slate-700 mb-2">Агуулга</label>
-                    <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                        <RichTextEditor content={formData.content?.mn || ''} onChange={data => handleContentChange('mn', data)} placeholder="Монгол агуулга..." />
-                        <RichTextEditor content={formData.content?.en || ''} onChange={data => handleContentChange('en', data)} placeholder="English content..." />
-                        <RichTextEditor content={formData.content?.ko || ''} onChange={data => handleContentChange('ko', data)} placeholder="한국어 콘텐츠..." />
-                    </div>
+                  <label className="block text-sm font-bold text-slate-700 mb-2">Агуулга</label>
+                  <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    <RichTextEditor content={formData.content?.mn || ''} onChange={data => handleContentChange('mn', data)} placeholder="Монгол агуулга..." />
+                    <RichTextEditor content={formData.content?.en || ''} onChange={data => handleContentChange('en', data)} placeholder="English content..." />
+                    <RichTextEditor content={formData.content?.ko || ''} onChange={data => handleContentChange('ko', data)} placeholder="한국어 콘텐츠..." />
+                  </div>
                 </div>
 
               </form>
@@ -199,24 +199,24 @@ export default function BlogsManager({ initialPosts }: { initialPosts: Post[] })
 
 // Helper Components
 const TrilingualInput = ({ label, field, value, onChange }: any) => (
-    <div>
-        <label className="block text-sm font-bold text-slate-700 mb-2">{label}</label>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-            <input value={value?.mn || ''} onChange={(e) => onChange(field, 'mn', e.target.value)} placeholder="MN" className="w-full border p-2 rounded" />
-            <input value={value?.en || ''} onChange={(e) => onChange(field, 'en', e.target.value)} placeholder="EN" className="w-full border p-2 rounded" />
-            <input value={value?.ko || ''} onChange={(e) => onChange(field, 'ko', e.target.value)} placeholder="KO" className="w-full border p-2 rounded" />
-        </div>
+  <div>
+    <label className="block text-sm font-bold text-slate-700 mb-2">{label}</label>
+    <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+      <input value={value?.mn || ''} onChange={(e) => onChange(field, 'mn', e.target.value)} placeholder="MN" className="w-full border p-2 rounded" />
+      <input value={value?.en || ''} onChange={(e) => onChange(field, 'en', e.target.value)} placeholder="EN" className="w-full border p-2 rounded" />
+      <input value={value?.ko || ''} onChange={(e) => onChange(field, 'ko', e.target.value)} placeholder="KO" className="w-full border p-2 rounded" />
     </div>
+  </div>
 );
 
 const Input = ({ label, value, onChange, type = "text" }: { label: string; value: string | undefined; onChange: (value: string) => void; type?: string; }) => (
-    <div>
-        <label className="block text-sm font-bold text-slate-700 mb-2">{label}</label>
-        <input 
-            type={type} 
-            value={value || ''} 
-            onChange={(e) => onChange(e.target.value)} 
-            className="w-full border p-2 rounded" 
-        />
-    </div>
+  <div>
+    <label className="block text-sm font-bold text-slate-700 mb-2">{label}</label>
+    <input
+      type={type}
+      value={value || ''}
+      onChange={(e) => onChange(e.target.value)}
+      className="w-full border p-2 rounded"
+    />
+  </div>
 );

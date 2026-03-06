@@ -349,7 +349,7 @@ export default function TripsManager({ initialTrips }: { initialTrips: Trip[] })
     formPayload.append("file", file);
     formPayload.append("upload_preset", process.env.NEXT_PUBLIC_CLOUDINARY_PRESET || "euro_trails");
     try {
-      const res = await fetch(`https://api.cloudinary.com/v1_1/${process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME}/upload`, { method: "POST", body: formPayload });
+      const res = await fetch(`https://api.cloudinary.com/v1_1/${process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME || "dxoxdiuwr"}/upload`, { method: "POST", body: formPayload });
       const data = await res.json();
       setFormData(prev => {
         const newItinerary = [...(prev.itinerary || [])];
@@ -377,7 +377,7 @@ export default function TripsManager({ initialTrips }: { initialTrips: Trip[] })
     formPayload.append("file", file);
     formPayload.append("upload_preset", process.env.NEXT_PUBLIC_CLOUDINARY_PRESET || "euro_trails");
     try {
-      const res = await fetch(`https://api.cloudinary.com/v1_1/${process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME}/upload`, { method: "POST", body: formPayload });
+      const res = await fetch(`https://api.cloudinary.com/v1_1/${process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME || "dxoxdiuwr"}/upload`, { method: "POST", body: formPayload });
       const data = await res.json();
       setFormData(prev => ({ ...prev, image: data.secure_url }));
     } catch (err) {
@@ -395,7 +395,7 @@ export default function TripsManager({ initialTrips }: { initialTrips: Trip[] })
     formPayload.append("file", file);
     formPayload.append("upload_preset", process.env.NEXT_PUBLIC_CLOUDINARY_PRESET || "euro_trails");
     try {
-      const res = await fetch(`https://api.cloudinary.com/v1_1/${process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME}/upload`, { method: "POST", body: formPayload });
+      const res = await fetch(`https://api.cloudinary.com/v1_1/${process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME || "dxoxdiuwr"}/upload`, { method: "POST", body: formPayload });
       const data = await res.json();
       setFormData(prev => ({ ...prev, map_image_url: data.secure_url }));
     } catch (err) {
