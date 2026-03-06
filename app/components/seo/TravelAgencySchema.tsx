@@ -14,6 +14,7 @@ interface TravelAgencySchemaProps {
     url?: string;
     logo?: string;
     telephone?: string;
+    email?: string;
     priceRange?: string;
     streetAddress?: string;
     addressLocality?: string;
