@@ -185,7 +185,7 @@ const Navbar: React.FC<{ dictionary: any }> = ({ dictionary }) => {
                 <Heart size={14} />
               </div>
               <span className="text-[13px] font-medium tracking-tight text-slate-900 font-[var(--font-inter)]">
-                Хүслийн жагсаалт
+                {translate(navT.wishlist) || "Wishlist"}
               </span>
               {wishlistCount > 0 && (
                 <span className="absolute -top-2 -right-2 bg-red-500 text-white text-[10px] font-bold px-2 py-0.5 rounded-full">
@@ -196,22 +196,35 @@ const Navbar: React.FC<{ dictionary: any }> = ({ dictionary }) => {
 
             {/* Auth/Profile - Pill Style */}
             <SignedIn>
-              <UserButton
-                afterSignOutUrl={`/`}
-                appearance={{
-                  elements: {
-                    avatarBox: "w-9 h-9 border-2 border-white shadow-sm",
-                    userButtonPopoverCard: "w-[calc(100vw-32px)] max-w-[360px] mx-auto font-[var(--font-inter)]",
-                    userButtonPopoverActionButton: "text-blue-600 hover:text-blue-700",
-                    userButtonPopoverActionButtonIcon: "text-blue-600"
-                  }
-                  ,
-                  variables: {
-                    colorPrimary: '#2563eb',
-                    fontFamily: 'var(--font-inter)'
-                  }
-                }}
-              />
+              <div className="flex items-center gap-3">
+                <Link
+                  href={`/${language}/profile`}
+                  className="flex items-center gap-2 bg-slate-100/50 border border-slate-200 rounded-full pl-2 pr-4 py-1.5 transition-all duration-300 hover:scale-105 hover:bg-white hover:shadow-md active:scale-95"
+                >
+                  <div className="w-7 h-7 rounded-full bg-white text-slate-600 flex items-center justify-center shadow-sm">
+                    <User size={14} />
+                  </div>
+                  <span className="text-[13px] font-medium tracking-tight text-slate-900 font-[var(--font-inter)]">
+                    {translate(navT.profile) || "Profile"}
+                  </span>
+                </Link>
+                <UserButton
+                  afterSignOutUrl={`/`}
+                  appearance={{
+                    elements: {
+                      avatarBox: "w-9 h-9 border-2 border-white shadow-sm",
+                      userButtonPopoverCard: "w-[calc(100vw-32px)] max-w-[360px] mx-auto font-[var(--font-inter)]",
+                      userButtonPopoverActionButton: "text-blue-600 hover:text-blue-700",
+                      userButtonPopoverActionButtonIcon: "text-blue-600"
+                    }
+                    ,
+                    variables: {
+                      colorPrimary: '#2563eb',
+                      fontFamily: 'var(--font-inter)'
+                    }
+                  }}
+                />
+              </div>
             </SignedIn>
             <SignedOut>
               <Link

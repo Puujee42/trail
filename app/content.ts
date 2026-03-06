@@ -267,6 +267,18 @@ export const content = {
       mn: "Гарах",
       ko: "로그아웃",
       de: "Abmelden"
+    },
+    wishlist: {
+      en: "Wishlist",
+      mn: "Хүслийн жагсаалт",
+      ko: "위시리스트",
+      de: "Wunschliste"
+    },
+    profile: {
+      en: "Profile",
+      mn: "Миний Профайл",
+      ko: "프로필",
+      de: "Profil"
     }
   },
   whyChooseUs: {
