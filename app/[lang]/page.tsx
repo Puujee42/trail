@@ -26,14 +26,14 @@ export async function generateMetadata(props: { params: Promise<{ lang: Locale }
   const dict = await getDictionary(params.lang);
 
   const titles = {
-    en: 'Mongol Trail - Discover the Wild Beauty of Mongolia',
+    en: 'Mongolia Travel & Tours | The Official Mongol Trail',
     mn: 'Mongol Trail - Монголын зэрлэг байгалийг нээ',
-    ko: 'Mongol Trail - 몽골의 야생의 아름다움을 발견하세요',
-    de: 'Mongol Trail - Entdecken Sie die wilde Schönheit der Mongolei'
+    ko: 'Mongol Trail - 몽골 프리미엄 여행 & 트레킹',
+    de: 'Mongolei Reisen & Touren | Der offizielle Mongol Trail'
   };
 
   const descriptions = {
-    en: 'Explore the best hiking, horse, and bike trails in Mongolia. Get GPX maps and travel tips.',
+    en: 'Looking for authentic Mongol travel experiences? Mongol Trail offers premier Mongolia travel packages, hiking trails, overland tours, and cultural trips.',
     mn: 'Монголын хамгийн шилдэг явган, морин болон дугуйн аяллын замуудтай танилц. GPX зураг болон аяллын зөвлөгөө аваарай.',
     ko: '몽골 최고의 하이킹, 승마, 자전거 코스를 탐험하세요. GPX 지도와 여행 팁을 받으세요.',
     de: 'Erkunden Sie die besten Wander-, Reit- und Radwege in der Mongolei. Holen Sie sich GPX-Karten und Reisetipps.'

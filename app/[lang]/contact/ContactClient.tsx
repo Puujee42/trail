@@ -127,7 +127,7 @@ const ContactClient = () => {
 
                 headerTitleSuffix: "Touch",
 
-                headerDesc: "We are always ready to discuss your next trip. Please use the form below for any inquiries.",
+                headerDesc: "We are always ready to discuss your next Mongolia travel adventure. Please use the form below for any inquiries.",
 
     
 

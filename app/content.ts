@@ -393,7 +393,7 @@ export const content = {
       de: "Entdecken Sie die ikonischsten Reiseziele der Mongolei"
     },
     subtitle: {
-      en: "From the legendary Gobi Desert to the majestic Altai Mountains, discover the landscapes that define Mongolia.",
+      en: "From the legendary Gobi Desert to the majestic Altai Mountains, discover the landscapes that define the ultimate Mongolia travel experience.",
       mn: "Домогт Говиос эхлээд сүрлэг Алтайн нуруу хүртэл, Монголын нүүр царай болсон байгалийн үзэсгэлэнт газруудтай танилц.",
       ko: "전설적인 고비 사막에서 웅장한 알타이 산맥까지, 몽골을 정의하는 풍경을 발견하세요.",
       de: "Von der legendären Wüste Gobi bis zum majestätischen Altai-Gebirge, entdecken Sie die Landschaften, die die Mongolei definieren."
@@ -497,13 +497,13 @@ export const content = {
       de: "FAQ"
     },
     title: {
-      en: "Everything You Need to Know",
+      en: "Everything You Need to Know About Mongolia Travel",
       mn: "Монголд аялах тухай мэдэх ёстой зүйлс",
       ko: "몽골 여행에 대해 알아야 할 모든 것",
       de: "Alles, was Sie über Reisen wissen müssen"
     },
     subtitle: {
-      en: "Get answers to the most common questions about visiting Mongolia with Mongol Trail.",
+      en: "Get answers to the most common questions about Mongolia travel and visiting with Mongol Trail.",
       mn: "Mongol Trail-тэй хамт Монголд зочлох талаарх түгээмэл асуултуудад хариулт аваарай.",
       ko: "Mongol Trail과 함께 몽골 방문에 대한 가장 일반적인 질문에 대한 답변을 확인하세요.",
       de: "Erhalten Sie Antworten auf die häufigsten Fragen zum Besuch der Mongolei mit Mongol Trail."
@@ -521,7 +521,7 @@ export const content = {
       de: "Kontaktieren Sie unser Team"
     },
     q1Question: {
-      en: "Is Mongolia safe for tourists?",
+      en: "Is Mongolia travel safe for tourists?",
       mn: "Монгол улс жуулчдад аюулгүй юу?",
       ko: "몽골은 관광객에게 안전한가요?",
       de: "Ist die Mongolei sicher für Touristen?"
@@ -557,7 +557,7 @@ export const content = {
       de: "Die meisten Besucher aus den USA, der EU und vielen asiatischen Ländern können bis zu 30 Tage visumfrei einreisen."
     },
     q4Question: {
-      en: "What is the best time to visit Mongolia?",
+      en: "What is the best time for Mongolia travel?",
       mn: "Монголд зочлоход хамгийн тохиромжтой үе хэзээ вэ?",
       ko: "몽골을 방문하기 가장 좋은 시기는 언제인가요?",
       de: "Wann ist die beste Reisezeit für die Mongolei?"
