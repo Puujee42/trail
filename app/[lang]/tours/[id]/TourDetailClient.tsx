@@ -525,8 +525,8 @@ const TourDetailClient = ({ trip }: { trip: Trip }) => {
 
                     <div className="text-slate-600 text-sm leading-7 bg-slate-50/50 p-4 rounded-xl border border-slate-50">
                       {day.imageUrl && (
-                        <div className="mb-4 rounded-lg overflow-hidden h-48 w-full relative">
-                          <img src={day.imageUrl} alt={day.title[language] || `Day ${day.day}`} className="w-full h-full object-cover" />
+                        <div className="mb-4 rounded-lg overflow-hidden w-full relative bg-slate-100">
+                          <img src={day.imageUrl} alt={day.title[language] || `Day ${day.day}`} className="w-full h-auto max-h-[600px] object-contain" />
                         </div>
                       )}
                       {day.desc[language]}
