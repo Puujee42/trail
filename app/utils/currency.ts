@@ -34,6 +34,9 @@ export const formatPrice = (priceInMNT: number, lang: string) => {
   return new Intl.NumberFormat(localeMap[lang] || 'mn-MN', {
     style: 'currency',
     currency: currency,
+    // Ensure deterministic SSR/CSR output across Node vs browser ICU data.
+    // Using `code` avoids symbol differences like "₮" vs "MNT" that can cause hydration warnings.
+    currencyDisplay: 'code',
     maximumFractionDigits: 0,
   }).formatToParts(roundedPrice);
 };

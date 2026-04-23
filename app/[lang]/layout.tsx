@@ -16,8 +16,8 @@ import { MobileWrapper } from '../components/MobileWrapper';
 import { ExternalLinkHandler } from '../components/ExternalLinkHandler';
 import { MobileLayout } from '../components/MobileLayout';
 import TravelAgencySchema from '../components/seo/TravelAgencySchema';
-import MobileBottomNav from '../components/MobileBottomNav';
 import ScrollProgressBar from '../components/ui/ScrollProgressBar';
+import MobileBottomNavNoSSR from '../components/MobileBottomNavNoSSR';
 
 const inter = Inter({
   subsets: ['latin'],
@@ -223,7 +223,7 @@ export default async function RootLayout(props: {
                     <Footer dictionary={dict} navDictionary={dict.nav} />
 
                     {/* Mobile Bottom Navigation */}
-                    <MobileBottomNav language={params.lang as any} dictionary={dict.nav} />
+                    <MobileBottomNavNoSSR language={params.lang as any} dictionary={dict.nav} />
                   </MobileLayout>
                 </SafeAreaProvider>
               </UserProvider>

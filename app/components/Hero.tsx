@@ -207,14 +207,26 @@ const Hero = ({ trips, lang, dictionary }: { trips: Trip[], lang: "mn" | "en" | 
           loop
           muted
           playsInline
-          preload={isMobile ? "none" : "metadata"}
+          // For a hero background, a smaller optimized stream starts faster than a large MP4.
+          // Keep SSR/CSR attributes stable to avoid hydration warnings during dev/HMR.
+          suppressHydrationWarning
+          preload="metadata"
           poster={isMobile
             ? "https://res.cloudinary.com/dc127wztz/image/upload/f_auto,q_auto,w_800/v1770961573/hero-poster_c2nbaw.png"
             : "https://res.cloudinary.com/dc127wztz/image/upload/f_auto,q_auto,w_1920/v1770961573/hero-poster_c2nbaw.png"
           }
           className="w-full h-full object-cover opacity-100"
         >
-          <source src="https://res.cloudinary.com/dc127wztz/video/upload/v1769511944/hero_uzq5wr.mp4" type="video/mp4" />
+          <source
+            // Cloudinary transformations to reduce initial download and speed up start:
+            // - f_auto: best format for the browser
+            // - q_auto: automatic quality
+            // - w_1280: cap resolution (hero background doesn't need full 4K)
+            // - ac_none: strip audio (it's muted anyway)
+            suppressHydrationWarning
+            src="https://res.cloudinary.com/dc127wztz/video/upload/f_auto,q_auto,w_1280,ac_none/v1769511944/hero_uzq5wr.mp4"
+            type="video/mp4"
+          />
           <track kind="captions" label="No captions" />
         </video>
         {/* LCP Optimization: Visible prioritized image behind video */}

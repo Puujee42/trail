@@ -83,8 +83,11 @@ const AboutClient = () => {
 const HeroSection = ({ t }: any) => (
     <section className="relative h-[70vh] min-h-[500px] flex items-center justify-center text-center text-white overflow-hidden">
         <div className="absolute inset-0 z-0">
-            <video autoPlay loop muted playsInline className="w-full h-full object-cover">
-                <source src="https://res.cloudinary.com/dc127wztz/video/upload/hero_uzq5wr.mp4" type="video/mp4" />
+            <video autoPlay loop muted playsInline preload="auto" className="w-full h-full object-cover">
+                <source
+                    src="https://res.cloudinary.com/dc127wztz/video/upload/f_auto,q_auto,w_1280,ac_none/hero_uzq5wr.mp4"
+                    type="video/mp4"
+                />
             </video>
         </div>
         <div className="absolute inset-0 bg-black/50 z-10" />

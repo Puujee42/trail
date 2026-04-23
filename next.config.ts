@@ -4,9 +4,14 @@ const nextConfig: NextConfig = {
   compress: true,
   experimental: {
     optimizePackageImports: ['react-icons', 'lucide-react', 'framer-motion', 'date-fns', 'recharts'],
+    // Cloudinary (and other remote) images can be slow on some networks.
+    // Increase the image optimizer timeout to avoid 500s from `/_next/image` in dev.
+    imgOptTimeoutInSeconds: 30,
   },
   // Add this 'images' configuration
   images: {
+    // Reduce repeated reprocessing of the same remote images.
+    minimumCacheTTL: 60 * 60, // 1 hour
     remotePatterns: [
       {
         protocol: 'https',
