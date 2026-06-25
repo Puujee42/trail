@@ -9,6 +9,9 @@ import {
   FaStar,
   FaArrowRight,
   FaPlane,
+  FaUsers,
+  FaMedal,
+  FaChevronDown,
 } from "react-icons/fa";
 import { useLanguage } from "../context/LanguageContext";
 import { Trip } from "@/lib/mongo/trips";
@@ -340,6 +343,39 @@ const Hero = ({ trips, lang, dictionary }: { trips: Trip[], lang: "mn" | "en" | 
                     </span>
                   </div>
                 </motion.div>
+                {/* CTA Buttons */}
+                <motion.div
+                  variants={itemVariants}
+                  className="flex flex-wrap gap-4 mt-10"
+                >
+                  <Link href={`/${lang}/packages`}>
+                    <motion.button
+                      whileHover="hover"
+                      whileTap={{ scale: 0.97 }}
+                      className="relative group inline-flex items-center gap-3 px-8 py-4 rounded-full bg-gradient-to-r from-sky-500 via-blue-600 to-teal-500 text-white font-bold text-base shadow-2xl shadow-blue-500/40 overflow-hidden transition-all duration-300 hover:-translate-y-1"
+                    >
+                      <motion.div
+                        className="absolute inset-0 bg-white/20 translate-x-[-110%] skew-x-12"
+                        variants={{ hover: { translateX: "110%", transition: { duration: 0.5 } } }}
+                      />
+                      <span className="relative z-10">
+                        {activeLang === 'mn' ? 'Аяллаа эхлэх' : activeLang === 'ko' ? '투어 탐색' : activeLang === 'de' ? 'Touren Erkunden' : 'Explore Packages'}
+                      </span>
+                      <div className="relative z-10 w-8 h-8 rounded-full bg-white/20 flex items-center justify-center group-hover:bg-white group-hover:text-blue-600 transition-all duration-300">
+                        <FaArrowRight className="text-sm -rotate-45 group-hover:rotate-0 transition-transform duration-300" />
+                      </div>
+                    </motion.button>
+                  </Link>
+
+                  <Link href={`/${lang}/custom-trip`}>
+                    <motion.button
+                      whileTap={{ scale: 0.97 }}
+                      className="inline-flex items-center gap-2 px-6 py-4 rounded-full bg-white/10 backdrop-blur-md border border-white/20 text-white font-semibold text-base hover:bg-white/20 transition-all duration-300 hover:-translate-y-1"
+                    >
+                      {activeLang === 'mn' ? 'Захиалгат аялал' : activeLang === 'ko' ? '맞춤 여행' : activeLang === 'de' ? 'Individuelle Tour' : 'Custom Trip'}
+                    </motion.button>
+                  </Link>
+                </motion.div>
               </motion.article>
             </AnimatePresence>
           </div>
@@ -382,6 +418,50 @@ const Hero = ({ trips, lang, dictionary }: { trips: Trip[], lang: "mn" | "en" | 
             })}
           </div>
         </div>
+
+        {/* ─── Stats Bar ─── */}
+        <motion.div
+          initial={{ opacity: 0, y: 30 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 2.0, duration: 0.6 }}
+          className="absolute bottom-20 md:bottom-10 left-6 md:left-12 flex flex-wrap gap-6 md:gap-10 z-20"
+        >
+          {[
+            { icon: <FaUsers className="text-sky-400" />, value: '500+', label: activeLang === 'mn' ? '\u0410\u044f\u043b\u0430\u0433\u0447' : activeLang === 'ko' ? '\uc5ec\ud589\uc790' : activeLang === 'de' ? 'Reisende' : 'Travelers' },
+            { icon: <FaStar className="text-yellow-400" />, value: '4.9', label: activeLang === 'mn' ? '\u04ae\u043d\u044d\u043b\u0433\u044d\u044d' : activeLang === 'ko' ? '\ud3c9\uc810' : activeLang === 'de' ? 'Bewertung' : 'Rating' },
+            { icon: <FaMedal className="text-emerald-400" />, value: '10+', label: activeLang === 'mn' ? '\u0416\u0438\u043b\u0438\u0439\u043d \u0442\u0443\u0440\u0448\u043b\u0430\u0433\u0430' : activeLang === 'ko' ? '\ub144 \uacbd\ud5d8' : activeLang === 'de' ? 'Jahre Erfahrung' : 'Years Exp.' },
+          ].map((stat, i) => (
+            <div key={i} className="flex items-center gap-2.5">
+              <div className="w-9 h-9 rounded-full bg-white/10 backdrop-blur-md border border-white/20 flex items-center justify-center text-sm flex-shrink-0">
+                {stat.icon}
+              </div>
+              <div>
+                <div className="text-white font-black text-lg leading-tight font-[var(--font-montserrat)]">{stat.value}</div>
+                <div className="text-white/60 text-[11px] font-medium tracking-wide uppercase font-[var(--font-inter)]">{stat.label}</div>
+              </div>
+            </div>
+          ))}
+        </motion.div>
+
+        {/* ─── Scroll Indicator ─── */}
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 2.5 }}
+          className="absolute bottom-6 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 z-20 cursor-pointer group"
+          onClick={() => window.scrollBy({ top: window.innerHeight, behavior: 'smooth' })}
+        >
+          <span className="text-white/40 text-[10px] tracking-[0.2em] uppercase font-[var(--font-inter)] group-hover:text-white/70 transition-colors">
+            {activeLang === 'mn' ? 'доош' : activeLang === 'ko' ? '스크롤' : activeLang === 'de' ? 'Scrollen' : 'Scroll'}
+          </span>
+          <motion.div
+            animate={{ y: [0, 8, 0] }}
+            transition={{ duration: 1.5, repeat: Infinity, ease: 'easeInOut' }}
+            className="text-white/40 group-hover:text-white/70 transition-colors"
+          >
+            <FaChevronDown className="text-lg" />
+          </motion.div>
+        </motion.div>
       </div>
     </section>
   );

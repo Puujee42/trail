@@ -81,3 +81,85 @@ body.native-app>* {
 .nextjs-portal {
   display: none !important;
 }
+
+/* =====================================
+   SMOOTH SCROLLING
+   ===================================== */
+html {
+  scroll-behavior: smooth;
+}
+
+/* =====================================
+   PREMIUM CUSTOM SCROLLBAR
+   ===================================== */
+::-webkit-scrollbar {
+  width: 6px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: linear-gradient(to bottom, #0ea5e9, #2563eb);
+  border-radius: 999px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: linear-gradient(to bottom, #38bdf8, #3b82f6);
+}
+
+/* =====================================
+   SHIMMER LOADING ANIMATION
+   ===================================== */
+@keyframes shimmer {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+
+.shimmer {
+  background: linear-gradient(
+    90deg,
+    #f1f5f9 25%,
+    #e2e8f0 50%,
+    #f1f5f9 75%
+  );
+  background-size: 200% 100%;
+  animation: shimmer 1.5s infinite;
+}
+
+/* =====================================
+   PAGE FADE-IN ANIMATION
+   ===================================== */
+@keyframes fadeInUp {
+  from { opacity: 0; transform: translateY(16px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.fade-in-up {
+  animation: fadeInUp 0.5s ease-out forwards;
+}
+
+/* =====================================
+   GLOW EFFECT UTILITY
+   ===================================== */
+.glow-sky {
+  box-shadow: 0 0 30px rgba(56, 189, 248, 0.35);
+}
+.glow-blue {
+  box-shadow: 0 0 30px rgba(59, 130, 246, 0.35);
+}
+
+/* =====================================
+   GLASS UTILITY
+   ===================================== */
+.glass {
+  background: rgba(255, 255, 255, 0.08);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+}
+.glass-dark {
+  background: rgba(15, 23, 42, 0.6);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
